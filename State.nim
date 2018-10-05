@@ -25,24 +25,3 @@ func evaluateState * (state: State): float =
   for card in state.op.board: board -= float(card.attack - card.defense)
   score += board * 0.5
   score
-
-func readState * (): State =
-  var state = State()
-  state.me = stdin.readline.toGamer
-  var line = stdin.readline
-  state.op = line.toGamer
-
-  var x: int
-  var cardCount: int
-  if scanf(line, "$i $i $i $i $i $i", x, x, x, x, state.op.handsize, cardCount):
-    for index in 1 .. cardCount:
-      var card = stdin.readline.toCard
-      if card.location == 0:
-        state.me.hand.add(card)
-      if card.location == 1:
-        card.availableAttacks = 1
-        state.me.board.add(card)
-      if card.location == 2:
-        state.op.board.add(card)
-    state.me.handsize = state.me.hand.len
-  state

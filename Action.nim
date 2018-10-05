@@ -23,7 +23,7 @@ func `$` * (action: Action): string =
     of use:
       result = fmt"USE {action.id1} {action.id2}"
 
-  if action.text != nil:
+  if action.text != "":
     result = fmt"{result} {action.text}"
 
 func `==` * (a, b: Action): bool =

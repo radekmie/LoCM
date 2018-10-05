@@ -64,9 +64,6 @@ func toCard * (input: string): Card =
     card.hasWard         = keywords[5] == 'W'
   card
 
-func readCard * (): Card =
-  stdin.readline.toCard
-
 when isMainModule:
   var a = "1 2 3 4 5 6 7 BCDG-- 8 9 10".toCard
   var b = "0 0 0 0 0 0 0 ----LW 0 0 11".toCard
