@@ -9,6 +9,30 @@ type
     me *: Gamer
     op *: Gamer
 
+func applyAction * (state: var State, action: Action, me, op: var Gamer): void =
+  if action.actionType == summon:
+    var card: Card
+    for cardIndex, cardOnHand in me.hand:
+      if cardOnHand.instanceId == action.id:
+        card = cardOnHand
+        me.hand.delete(cardIndex)
+        me.handsize -= 1
+        break
+
+    card.availableAttacks = if card.hasCharge: 1 else: 0
+    me.board.add(card)
+    me.currentMana -= card.cost
+    me.nextTurnDraw += card.cardDraw
+    me.modifyHealth(card.myHealthChange)
+    op.modifyHealth(card.opHealthChange)
+    return
+
+func applyMyAction * (state: var State, action: Action): void =
+  state.applyAction(action, state.me, state.op)
+
+func applyOpAction * (state: var State, action: Action): void =
+  state.applyAction(action, state.op, state.me)
+
 func computeActions * (state: State, me, op: Gamer): seq[Action] =
   # SUMMON [id]
   if (me.board.len < 6):
