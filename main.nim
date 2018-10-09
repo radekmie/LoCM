@@ -46,7 +46,7 @@ proc doDraft (): void =
   fmt"PICK {cardIndex}".echo
 
 proc doTurn (): void =
-  readState().depthFirstSearchOpt.join(";").echo
+  readState().searchDepthFirst.actions.join(";").echo
 
 when isMainModule:
   for turn in 1 .. 30:

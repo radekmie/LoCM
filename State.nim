@@ -1,4 +1,5 @@
 import strscans
+import times
 
 import Action
 import Card
@@ -8,6 +9,10 @@ type
   State * = object
     me *: Gamer
     op *: Gamer
+  StateResult * = object
+    actions *: seq[Action]
+    score   *: float
+    state   *: State
 
 func applyAction * (state: var State, action: Action, me, op: var Gamer): void =
   if action.actionType == summon:
@@ -69,9 +74,6 @@ func computeActions * (state: State, me, op: Gamer): seq[Action] =
       if card.cardType == itemBlue:
         result.add(Action(actionType: use, id1: card.instanceId, id2: -1))
 
-func depthFirstSearchOpt * (state: State): seq[Action] =
-  @[]
-
 func evaluateState * (state: State): float =
   var score = 0.0
   if state.op.health <= 0: score += 1000
@@ -82,3 +84,45 @@ func evaluateState * (state: State): float =
   for card in state.op.board: board -= float(card.attack - card.defense)
   score += board * 0.5
   score
+
+proc searchDepthFirst * (state: State): StateResult =
+  var timeLimit = 90 / 1000
+  var time = cpuTime()
+
+  var states: array[16, State]
+  var statesPointer = 0
+  var legals: array[20, seq[Action]]
+  var legalsPointers: array[16, int]
+
+  states[0] = state
+  legals[0] = state.computeActions(state.me, state.op)
+
+  result = StateResult(actions: legals[0], score: -999999, state: states[0])
+
+  while true:
+    if legalsPointers[statesPointer] >= legals[statesPointer].len:
+      statesPointer -= 1
+      if statesPointer < 0:
+        break
+      if statesPointer == 1 and cpuTime() - time > timeLimit:
+        break
+      legalsPointers[statesPointer] += 1
+      continue
+
+    statesPointer += 1
+    states[statesPointer] = state
+    states[statesPointer].applyMyAction(legals[statesPointer][legalsPointers[statesPointer]])
+    legals[statesPointer] = states[statesPointer].computeActions(states[statesPointer].me, states[statesPointer].op)
+    legalsPointers[statesPointer] = 0
+
+    if legals[statesPointer].len == 0:
+      var score = states[statesPointer].evaluateState
+      if score > result.score:
+        result.actions = @[]
+        for index in 0 .. statesPointer:
+          result.actions.add(legals[index][legalsPointers[index]])
+        result.score = score
+        result.state = state
+
+        if score > 1000:
+          break
