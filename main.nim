@@ -39,11 +39,11 @@ proc doDraft (): void =
   var cardIndex: int
   var cardScore: float = -99999
   for index in 0 .. 2:
-    var score = stdin.readline.toCard.evaluate1
+    var score = cards[index].evaluate1
     if score > cardScore:
       cardIndex = index
       cardScore = score
-  fmt"PICK {cardIndex}".echo
+  fmt"PICK {cardIndex} #score: {cardScore}".echo
 
 proc doTurn (): void =
   readState().searchDepthFirst.actions.join(";").echo
