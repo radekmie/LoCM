@@ -24,7 +24,7 @@ type
     instanceId *: int
     location *: int
     myHealthChange *: int
-    oppHealthChange *: int
+    opHealthChange *: int
 
 func `$` * (card: Card): string =
   var
@@ -50,7 +50,7 @@ func toCard * (input: string): Card =
   var card = Card()
   var cardType: int
   var keywords: string
-  if scanf(input, "$i $i $i $i $i $i $i $* $i $i $i$.", card.cardNumber, card.instanceId, card.location, cardType, card.cost, card.attack, card.defense, keywords, card.myHealthChange, card.oppHealthChange, card.cardDraw):
+  if scanf(input, "$i $i $i $i $i $i $i $* $i $i $i$.", card.cardNumber, card.instanceId, card.location, cardType, card.cost, card.attack, card.defense, keywords, card.myHealthChange, card.opHealthChange, card.cardDraw):
     if   cardType == 0: card.cardType = creature
     elif cardType == 1: card.cardType = itemGreen
     elif cardType == 2: card.cardType = itemRed
