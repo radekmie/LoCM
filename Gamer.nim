@@ -15,6 +15,18 @@ type
     nextTurnDraw *: int
     rune *: int
 
+func modifyHealth * (gamer: var Gamer, diff: int): void =
+  gamer.health += diff
+
+  if diff >= 0:
+    return
+
+  while gamer.health <= gamer.rune:
+    gamer.nextTurnDraw += 1
+    gamer.rune -= 5
+    if gamer.rune <= 0:
+      break
+
 func `$` * (gamer: Gamer): string =
   fmt"{gamer.health:02} ({gamer.rune}) HP  {gamer.currentMana:02}/{gamer.maxMana:02} MP  {gamer.decksize} D (+{gamer.nextTurnDraw})"
 
