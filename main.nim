@@ -4,6 +4,7 @@ import strutils
 
 import Card
 import Gamer
+import Search
 import State
 
 proc readDraft (): array[3, Card] =
