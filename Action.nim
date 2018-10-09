@@ -1,7 +1,7 @@
 import strformat
 
 type
-  ActionType = enum
+  ActionType * = enum
     attack,
     summon,
     use

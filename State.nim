@@ -9,8 +9,41 @@ type
     me *: Gamer
     op *: Gamer
 
-func computeActions * (state: State): seq[Action] =
-  @[]
+func computeActions * (state: State, me, op: Gamer): seq[Action] =
+  # SUMMON [id]
+  if (me.board.len < 6):
+    for card in me.hand:
+      if card.cardType != creature or card.cost > me.currentMana:
+        continue
+      result.add(Action(actionType: summon, id: card.instanceId))
+
+  # ATTACH [id1] [id2]
+  var targets: seq[int] = @[]
+  for card in op.board:
+    if card.hasGuard:
+      targets.add(card.instanceId)
+  if targets.len == 0:
+    targets.add(-1)
+    for card in op.board:
+      targets.add(card.instanceId)
+  for card in me.board:
+    if card.availableAttacks != 1:
+      continue
+    for target in targets:
+      result.add(Action(actionType: attack, id1: card.instanceId, id2: target))
+
+  # USE [id1] [id2]
+  for card in me.hand:
+    if card.cardType == creature or card.cost > me.currentMana:
+      continue
+    if card.cardType == itemGreen:
+      for creature in me.board:
+        result.add(Action(actionType: use, id1: card.instanceId, id2: creature.instanceId))
+    else:
+      for creature in op.board:
+        result.add(Action(actionType: use, id1: card.instanceId, id2: creature.instanceId))
+      if card.cardType == itemBlue:
+        result.add(Action(actionType: use, id1: card.instanceId, id2: -1))
 
 func depthFirstSearchOpt * (state: State): seq[Action] =
   @[]
