@@ -4,7 +4,7 @@ import strscans
 import Card
 
 type
-  Gamer * = object
+  Gamer * = ref object
     board *: seq[Card]
     currentMana *: int
     decksize *: int
@@ -34,7 +34,7 @@ func toGamer * (input: string): Gamer =
   var gamer = Gamer()
   if scanf(input, "$i $i $i $i", gamer.health, gamer.maxMana, gamer.decksize, gamer.rune):
     gamer.board = @[]
-    gamer.currentMana =gamer.maxMana
+    gamer.currentMana = gamer.maxMana
     gamer.hand = @[]
     gamer.nextTurnDraw = 1
   gamer

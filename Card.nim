@@ -7,7 +7,7 @@ type
     itemBlue,
     itemGreen,
     itemRed
-  Card * = object
+  Card * = ref object
     attack *: int
     availableAttacks *: int # 0 - no attack; 1 - can Attack; -1 - already attacked
     cardDraw *: int

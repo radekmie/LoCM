@@ -5,7 +5,7 @@ import Action
 import State
 
 type
-  SearchResult * = object
+  SearchResult * = ref object
     actions *: seq[Action]
     score   *: float
     state   *: State

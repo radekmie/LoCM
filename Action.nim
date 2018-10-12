@@ -5,7 +5,7 @@ type
     attack,
     summon,
     use
-  Action * = object
+  Action * = ref object
     text *: string
     case actionType *: ActionType
       of attack, use:

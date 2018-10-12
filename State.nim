@@ -5,7 +5,7 @@ import Card
 import Gamer
 
 type
-  State * = object
+  State * = ref object
     me *: Gamer
     op *: Gamer
 
