@@ -1,3 +1,4 @@
+import strutils
 import times
 
 import Action
@@ -8,6 +9,12 @@ type
     actions *: seq[Action]
     score   *: float
     state   *: State
+
+func `$` * (searchResult: SearchResult): string =
+  if searchResult.actions.len == 0:
+    "PASS"
+  else:
+    searchResult.actions.join(";")
 
 proc searchDepthFirst * (state: State): SearchResult =
   var timeLimit = 90 / 1000

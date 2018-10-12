@@ -1,6 +1,5 @@
 import strformat
 import strscans
-import strutils
 
 import Card
 import Gamer
@@ -47,7 +46,7 @@ proc doDraft (): void =
   fmt"PICK {cardIndex} #score: {cardScore}".echo
 
 proc doTurn (): void =
-  readState().searchDepthFirst.actions.join(";").echo
+  readState().searchDepthFirst.actions.echo
 
 when isMainModule:
   for turn in 1 .. 30:
