@@ -1,56 +1,59 @@
+import streams
 import strformat
 import strscans
 
 import Action
 import Card
 import Gamer
+import Input
 import Search
 import State
 
-proc readDraft (): array[3, Card] =
-  [
-    stdin.readline.toCard,
-    stdin.readline.toCard,
-    stdin.readline.toCard
-  ]
-
-proc readState (): State =
+proc readState (input: Stream): State =
   var state = State()
-  state.me = stdin.readline.toGamer
-  var line = stdin.readline
-  state.op = line.toGamer
+  state.me = input.toGamer
+  state.op = input.toGamer
+  state.op.handsize = input.getInt
 
-  var x: int
-  var cardCount: int
-  if scanf(line, "$i $i $i $i $i $i", x, x, x, x, state.op.handsize, cardCount):
-    for index in 1 .. cardCount:
-      var card = stdin.readline.toCard
-      if card.location == 0:
-        state.me.hand.add(card)
-      if card.location == 1:
-        card.availableAttacks = 1
-        state.me.board.add(card)
-      if card.location == 2:
-        state.op.board.add(card)
-    state.me.handsize = state.me.hand.len
+  # Skip opponent actions.
+  for index in 1 .. input.getInt:
+    discard input.getLine
+
+  for index in 1 .. input.getInt:
+    var card = input.toCard
+    case card.location:
+    of -1, 0:
+      state.me.hand.add(card)
+    of 1:
+      card.availableAttacks = 1
+      state.me.boards[card.lane].add(card)
+    of 2:
+      state.op.boards[card.lane].add(card)
+
+  state.me.handsize = state.me.hand.len
   state
 
-proc doDraft (): void =
-  var cards = readDraft()
+proc doDraft (input: Stream): void =
+  var state = input.readState
   var cardIndex: int
   var cardScore: float = -99999
-  for index in 0 .. 2:
-    var score = cards[index].evaluate1
+  for index, card in state.me.hand:
+    var score = card.evaluate1
     if score > cardScore:
       cardIndex = index
       cardScore = score
   fmt"PICK {cardIndex} #score: {cardScore}".echo
 
-proc doTurn (): void =
-  readState().searchDepthFirst.actions.echo
+proc doTurn (input: Stream): void =
+  input.readState.searchDepthFirst.echo
 
 when isMainModule:
+  var input = stdin.newFileStream
   for turn in 1 .. 30:
-    doDraft()
-  while true:
-    doTurn()
+    when not defined(release):
+      stderr.writeLine("TURN: ", turn)
+    input.doDraft
+  for turn in 1 .. 256:
+    when not defined(release):
+      stderr.writeLine("TURN: ", turn)
+    input.doTurn

@@ -1,11 +1,12 @@
+import streams
 import strformat
-import strscans
 
 import Card
+import Input
 
 type
   Gamer * = ref object
-    board *: seq[Card]
+    boards *: array[2, seq[Card]]
     currentMana *: int
     decksize *: int
     hand *: seq[Card]
@@ -30,11 +31,15 @@ func modifyHealth * (gamer: var Gamer, diff: int): void =
 func `$` * (gamer: Gamer): string =
   fmt"{gamer.health:02} ({gamer.rune}) HP  {gamer.currentMana:02}/{gamer.maxMana:02} MP  {gamer.decksize} D (+{gamer.nextTurnDraw})"
 
-func toGamer * (input: string): Gamer =
+proc toGamer * (input: Stream): Gamer =
   var gamer = Gamer()
-  if scanf(input, "$i $i $i $i", gamer.health, gamer.maxMana, gamer.decksize, gamer.rune):
-    gamer.board = @[]
-    gamer.currentMana = gamer.maxMana
-    gamer.hand = @[]
-    gamer.nextTurnDraw = 1
+  gamer.health = input.getInt
+  gamer.maxMana = input.getInt
+  gamer.decksize = input.getInt
+  gamer.rune = input.getInt
+  gamer.nextTurnDraw = input.getInt
+  gamer.boards[0] = @[]
+  gamer.boards[1] = @[]
+  gamer.currentMana = gamer.maxMana
+  gamer.hand = @[]
   gamer

@@ -12,12 +12,14 @@ type
 
 func `$` * (searchResult: SearchResult): string =
   if searchResult.actions.len == 0:
-    "PASS"
+    result = "PASS"
   else:
-    searchResult.actions.join(";")
+    result = searchResult.actions.join(";")
+  result.add(" # score: ")
+  result.add(searchResult.score)
 
 proc searchDepthFirst * (state: State): SearchResult =
-  var timeLimit = 90 / 1000
+  var timeLimit = 90 / 100000
   var time = cpuTime()
 
   var states: array[16, State]
@@ -28,9 +30,15 @@ proc searchDepthFirst * (state: State): SearchResult =
   states[0] = state
   legals[0] = state.computeActions(state.me, state.op)
 
-  result = SearchResult(actions: legals[0], score: -999999, state: states[0])
+  result = SearchResult(actions: @[], score: -999999, state: states[0])
 
   while true:
+    when not defined(release):
+      stderr.writeLine("")
+      stderr.writeLine("result: ", result, " statesPointer: ", statesPointer)
+      stderr.writeLine("A:      ", legalsPointers[statesPointer])
+      stderr.writeLine("B:      ", legals[statesPointer].len, " ", legals[statesPointer])
+
     if legalsPointers[statesPointer] >= legals[statesPointer].len:
       statesPointer -= 1
       if statesPointer < 0:
@@ -40,17 +48,20 @@ proc searchDepthFirst * (state: State): SearchResult =
       legalsPointers[statesPointer] += 1
       continue
 
+    var next: State
+    deepCopy(next, states[statesPointer])
+    next.applyMyAction(legals[statesPointer][legalsPointers[statesPointer]])
+
     statesPointer += 1
-    states[statesPointer] = state
-    states[statesPointer].applyMyAction(legals[statesPointer][legalsPointers[statesPointer]])
-    legals[statesPointer] = states[statesPointer].computeActions(states[statesPointer].me, states[statesPointer].op)
+    states[statesPointer] = next
+    legals[statesPointer] = next.computeActions(next.me, next.op)
     legalsPointers[statesPointer] = 0
 
     if legals[statesPointer].len == 0:
       var score = states[statesPointer].evaluateState
       if score > result.score:
         result.actions = @[]
-        for index in 0 .. statesPointer:
+        for index in 0 .. statesPointer - 1:
           result.actions.add(legals[index][legalsPointers[index]])
         result.score = score
         result.state = state

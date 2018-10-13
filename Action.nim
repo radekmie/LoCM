@@ -12,14 +12,15 @@ type
         id1 *: int
         id2 *: int
       of summon:
-        id *: int
+        id   *: int
+        lane *: 0 .. 1
 
 func `$` * (action: Action): string =
   case action.actionType:
     of attack:
       result = fmt"ATTACK {action.id1} {action.id2}"
     of summon:
-      result = fmt"SUMMON {action.id}"
+      result = fmt"SUMMON {action.id} {action.lane}"
     of use:
       result = fmt"USE {action.id1} {action.id2}"
 
