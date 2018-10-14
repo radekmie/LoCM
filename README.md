@@ -1,3 +1,4 @@
 ```sh
-nim c -r main.nim
+nim c            Player.nim
+nim c -d:release Player.nim
 ```
