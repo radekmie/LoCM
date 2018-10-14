@@ -19,6 +19,8 @@ func `$` * (searchResult: SearchResult): string =
   result.add(searchResult.score)
 
 proc searchDepthFirst * (state: State, timeLimitMs: int): SearchResult =
+  result = SearchResult(actions: @[], score: 0, state: state)
+
   var timeLimit = timeLimitMs / 100000
   var time = cpuTime()
 
@@ -29,8 +31,6 @@ proc searchDepthFirst * (state: State, timeLimitMs: int): SearchResult =
 
   states[0] = state
   legals[0] = state.computeActions(state.me, state.op)
-
-  result = SearchResult(actions: @[], score: -999999, state: states[0])
 
   while true:
     when not defined(release):
@@ -68,3 +68,6 @@ proc searchDepthFirst * (state: State, timeLimitMs: int): SearchResult =
 
         if score > 1000:
           break
+
+proc searchNoop * (state: State, timeLimitMs: int): SearchResult =
+  result = SearchResult(actions: @[], score: 0, state: state)

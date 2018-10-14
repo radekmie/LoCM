@@ -10,10 +10,12 @@ import State
 var algorithms = newTable({
   "default": searchDepthFirst,
   "dfs":     searchDepthFirst,
+  "noop":    searchNoop,
 })
 
 var evaluators = newTable({
   "default": draftEvaluateSimple,
+  "noop":    draftEvaluateNoop,
   "simple":  draftEvaluateSimple,
 })
 

@@ -25,6 +25,9 @@ func draftEvaluateWith * (state: State, evaluate: func (card: Card): float): Dra
   for card in state.me.hand:
     result.scores.add(card.evaluate)
 
+func draftEvaluateNoop * (state: State): DraftResult =
+  state.draftEvaluateWith(func (card: Card): float = 0)
+
 func draftEvaluateSimple * (state: State): DraftResult =
   state.draftEvaluateWith(func (card: Card): float =
     return
