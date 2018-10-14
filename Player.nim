@@ -15,6 +15,7 @@ var algorithms = newTable({
 
 var evaluators = newTable({
   "default": draftEvaluateSimple,
+  "icebox":  draftEvaluateIcebox,
   "noop":    draftEvaluateNoop,
   "simple":  draftEvaluateSimple,
 })
