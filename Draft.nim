@@ -25,7 +25,7 @@ func draftEvaluateWith * (state: State, evaluate: func (card: Card): float): Dra
   for card in state.me.hand:
     result.scores.add(card.evaluate)
 
-func draftEvaluate1 * (state: State): DraftResult =
+func draftEvaluateSimple * (state: State): DraftResult =
   state.draftEvaluateWith(func (card: Card): float =
     return
       (card.attack + card.defense) / (card.cost + 5) +
