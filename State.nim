@@ -149,18 +149,6 @@ func computeActions * (state: State, me, op: Gamer): seq[Action] =
 func copy * (state: State): State =
   deepCopy(result, state)
 
-func evaluateDraft * (state: State, evaluate: func (card: Card): float): string =
-  var bestIndex: int
-  var bestScore: float = -99999
-
-  for index, card in state.me.hand:
-    var score = card.evaluate
-    if score > bestScore:
-      bestIndex = index
-      bestScore = score
-
-  fmt"PICK {bestIndex} # score: {bestScore}"
-
 func evaluateState * (state: State): float =
   result = 0.0
 

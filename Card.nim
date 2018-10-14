@@ -42,16 +42,6 @@ func `$` * (card: Card): string =
 func copy * (card: Card): Card =
   shallowCopy(result, card)
 
-func evaluate1 * (card: Card): float =
-  return
-    (card.attack + card.defense) / (card.cost + 5) +
-    (if card.hasBreakthrough: 0.1 else: 0) +
-    (if card.hasCharge:       0.1 else: 0) +
-    (if card.hasDrain:        0.1 else: 0) +
-    (if card.hasGuard:        0.1 else: 0) +
-    (if card.hasLethal:       0.1 else: 0) +
-    (if card.hasWard:         0.1 else: 0)
-
 proc toCard * (input: Stream): Card =
   var card = Card()
   card.cardNumber = input.getInt
