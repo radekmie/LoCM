@@ -10,24 +10,24 @@ type
     itemGreen,
     itemRed
   Card * = ref object
-    attack *: int
+    attack           *: int
     availableAttacks *: int # 0 - no attack; 1 - can Attack; -1 - already attacked
-    cardDraw *: int
-    cardNumber *: int
-    cardType *: CardType
-    cost *: int
-    defense *: int
-    hasBreakthrough *: bool
-    hasCharge *: bool
-    hasDrain *: bool
-    hasGuard *: bool
-    hasLethal *: bool
-    hasWard *: bool
-    instanceId *: int
-    lane *: int
-    location *: -1 .. 2
-    myHealthChange *: int
-    opHealthChange *: int
+    cardDraw         *: int
+    cardNumber       *: int
+    cardType         *: CardType
+    cost             *: int
+    defense          *: int
+    hasBreakthrough  *: bool
+    hasCharge        *: bool
+    hasDrain         *: bool
+    hasGuard         *: bool
+    hasLethal        *: bool
+    hasWard          *: bool
+    instanceId       *: int
+    lane             *: int
+    location         *: -1 .. 2
+    myHealthChange   *: int
+    opHealthChange   *: int
 
 func `$` * (card: Card): string =
   var
@@ -38,6 +38,9 @@ func `$` * (card: Card): string =
     l = if card.hasLethal:       'L' else: '-'
     w = if card.hasWard:         'W' else: '-'
   fmt"{card.instanceId:2} (#{card.cardNumber:3}:{card.cardType:>9}) {card.attack:2}/{card.defense:2} [{card.cost:2}] {b}{c}{d}{g}{l}{w}"
+
+func copy * (card: Card): Card =
+  shallowCopy(result, card)
 
 func evaluate1 * (card: Card): float =
   return
@@ -53,16 +56,17 @@ proc toCard * (input: Stream): Card =
   var card = Card()
   card.cardNumber = input.getInt
   card.instanceId = input.getInt
-  card.location = input.getInt
+  card.location   = input.getInt
 
-  var cardType = input.getInt
-  if   cardType == 0: card.cardType = creature
-  elif cardType == 1: card.cardType = itemGreen
-  elif cardType == 2: card.cardType = itemRed
-  elif cardType == 3: card.cardType = itemBlue
+  case input.getInt:
+    of 0: card.cardType = creature
+    of 1: card.cardType = itemGreen
+    of 2: card.cardType = itemRed
+    of 3: card.cardType = itemBlue
+    else: discard "Shouldn't happen."
 
-  card.cost = input.getInt
-  card.attack = input.getInt
+  card.cost    = input.getInt
+  card.attack  = input.getInt
   card.defense = input.getInt
 
   var keywords = input.getStr
@@ -75,8 +79,8 @@ proc toCard * (input: Stream): Card =
 
   card.myHealthChange = input.getInt
   card.opHealthChange = input.getInt
-  card.cardDraw = input.getInt
-  card.lane = input.getInt
+  card.cardDraw       = input.getInt
+  card.lane           = input.getInt
   card
 
 when isMainModule:

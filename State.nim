@@ -1,8 +1,10 @@
-import strscans
+import streams
+import strformat
 
 import Action
 import Card
 import Gamer
+import Input
 
 type
   State * = ref object
@@ -23,8 +25,7 @@ func applyAction * (state: var State, action: Action, me, op: var Gamer): void =
           attackerIndex = index
           break
 
-    var attackerAfter: Card
-    shallowCopy(attackerAfter, attacker)
+    var attackerAfter = attacker.copy
     attackerAfter.availableAttacks = -1
 
     if action.id2 == -1:
@@ -44,8 +45,7 @@ func applyAction * (state: var State, action: Action, me, op: var Gamer): void =
             defenderIndex = index
             break
 
-      var defenderAfter: Card
-      shallowCopy(defenderAfter, defender)
+      var defenderAfter = defender.copy
 
       if defender.hasWard: defenderAfter.hasWard = attacker.attack == 0
       if attacker.hasWard: attackerAfter.hasWard = defender.attack == 0
@@ -144,16 +144,58 @@ func computeActions * (state: State, me, op: Gamer): seq[Action] =
   #     if card.cardType == itemBlue:
   #       result.add(Action(actionType: use, id1: card.instanceId, id2: -1))
 
+func copy * (state: State): State =
+  deepCopy(result, state)
+
+func evaluateDraft * (state: State, evaluate: func (card: Card): float): string =
+  var bestIndex: int
+  var bestScore: float = -99999
+
+  for index, card in state.me.hand:
+    var score = card.evaluate
+    if score > bestScore:
+      bestIndex = index
+      bestScore = score
+
+  fmt"PICK {bestIndex} # score: {bestScore}"
+
 func evaluateState * (state: State): float =
-  var score = 0.0
-  if state.op.health <= 0: score += 1000
-  score += float(state.me.health - state.op.health) * 2
-  score += float(state.me.boards[0].len - state.op.boards[0].len) * 1
-  score += float(state.me.boards[1].len - state.op.boards[1].len) * 1
-  var board = 0.0
-  for card in state.me.boards[0]: board += float(card.attack + card.defense)
-  for card in state.me.boards[1]: board += float(card.attack + card.defense)
-  for card in state.op.boards[0]: board -= float(card.attack - card.defense)
-  for card in state.op.boards[1]: board -= float(card.attack - card.defense)
-  score += board * 0.5
-  score
+  result = 0.0
+
+  # Death.
+  if state.op.health <= 0: result += 1000
+
+  # Health diff.
+  result += float(state.me.health - state.op.health) * 2
+
+  for index in state.me.boards.low .. state.me.boards.high:
+    # Card count.
+    result += float(state.me.boards[index].len - state.op.boards[index].len)
+
+    # Card strength.
+    for card in state.me.boards[index]: result += float(card.attack + card.defense) * 0.5
+    for card in state.op.boards[index]: result -= float(card.attack - card.defense) * 0.5
+
+proc readState * (input: Stream): State =
+  var state = State()
+  state.me = input.toGamer
+  state.op = input.toGamer
+  state.op.handsize = input.getInt
+
+  # Skip opponent actions.
+  for index in 1 .. input.getInt:
+    discard input.getLine
+
+  for index in 1 .. input.getInt:
+    var card = input.toCard
+    case card.location:
+      of -1, 0:
+        state.me.hand.add(card)
+      of 1:
+        card.availableAttacks = 1
+        state.me.boards[card.lane].add(card)
+      of 2:
+        state.op.boards[card.lane].add(card)
+
+  state.me.handsize = state.me.hand.len
+  state

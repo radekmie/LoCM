@@ -18,8 +18,8 @@ func `$` * (searchResult: SearchResult): string =
   result.add(" # score: ")
   result.add(searchResult.score)
 
-proc searchDepthFirst * (state: State): SearchResult =
-  var timeLimit = 90 / 100000
+proc searchDepthFirst * (state: State, timeLimitMs: int): SearchResult =
+  var timeLimit = timeLimitMs / 100000
   var time = cpuTime()
 
   var states: array[16, State]
@@ -48,8 +48,7 @@ proc searchDepthFirst * (state: State): SearchResult =
       legalsPointers[statesPointer] += 1
       continue
 
-    var next: State
-    deepCopy(next, states[statesPointer])
+    var next = states[statesPointer].copy
     next.applyMyAction(legals[statesPointer][legalsPointers[statesPointer]])
 
     statesPointer += 1

@@ -6,15 +6,15 @@ import Input
 
 type
   Gamer * = ref object
-    boards *: array[2, seq[Card]]
-    currentMana *: int
-    decksize *: int
-    hand *: seq[Card]
-    handsize *: int
-    health *: int
-    maxMana *: int
+    boards       *: array[2, seq[Card]]
+    currentMana  *: int
+    decksize     *: int
+    hand         *: seq[Card]
+    handsize     *: int
+    health       *: int
+    maxMana      *: int
     nextTurnDraw *: int
-    rune *: int
+    rune         *: int
 
 func modifyHealth * (gamer: var Gamer, diff: int): void =
   gamer.health += diff
@@ -38,8 +38,8 @@ proc toGamer * (input: Stream): Gamer =
   gamer.decksize = input.getInt
   gamer.rune = input.getInt
   gamer.nextTurnDraw = input.getInt
-  gamer.boards[0] = @[]
-  gamer.boards[1] = @[]
+  for index in gamer.boards.low .. gamer.boards.high:
+    gamer.boards[index] = @[]
   gamer.currentMana = gamer.maxMana
   gamer.hand = @[]
   gamer
