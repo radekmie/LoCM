@@ -25,7 +25,7 @@ type
     hasWard          *: bool
     instanceId       *: int
     lane             *: int
-    location         *: -1 .. 2
+    location         *: -1 .. 1
     myHealthChange   *: int
     opHealthChange   *: int
 

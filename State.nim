@@ -17,11 +17,11 @@ func applyAction * (state: var State, action: Action, me, op: var Gamer): void =
     var attacker: Card
     var attackerBoard: int
     var attackerIndex: int
-    for boardIndex, board in me.boards:
+    for lane, board in me.boards:
       for index, card in board:
         if card.instanceId == action.id1:
           attacker = card
-          attackerBoard = boardIndex
+          attackerBoard = lane
           attackerIndex = index
           break
 
@@ -37,11 +37,11 @@ func applyAction * (state: var State, action: Action, me, op: var Gamer): void =
       var defender: Card
       var defenderBoard: int
       var defenderIndex: int
-      for boardIndex, board in op.boards:
+      for lane, board in op.boards:
         for index, card in board:
-          if card.instanceId == action.id1:
+          if card.instanceId == action.id2:
             defender = card
-            defenderBoard = boardIndex
+            defenderBoard = lane
             defenderIndex = index
             break
 
@@ -105,24 +105,26 @@ func applyOpAction * (state: var State, action: Action): void =
 
 func computeActions * (state: State, me, op: Gamer): seq[Action] =
   # SUMMON [id] [lane]
-  for lane in 0 .. 1:
-    if me.boards[lane].len < 6:
+  for lane, board in me.boards:
+    if board.len < 3:
       for card in me.hand:
         if card.cardType != creature or card.cost > me.currentMana:
           continue
         result.add(Action(actionType: summon, id: card.instanceId, lane: lane))
 
   # ATTACH [id1] [id2]
-  var targets: seq[int] = @[]
-  for boardIndex, board in op.boards:
+  for lane, board in op.boards:
+    var targets: seq[int] = @[]
     for card in board:
       if card.hasGuard:
         targets.add(card.instanceId)
+
     if targets.len == 0:
       targets.add(-1)
       for card in board:
         targets.add(card.instanceId)
-    for card in me.boards[boardIndex]:
+
+    for card in me.boards[lane]:
       if card.availableAttacks != 1:
         continue
       for target in targets:
@@ -189,12 +191,12 @@ proc readState * (input: Stream): State =
   for index in 1 .. input.getInt:
     var card = input.toCard
     case card.location:
-      of -1, 0:
+      of 0:
         state.me.hand.add(card)
       of 1:
         card.availableAttacks = 1
         state.me.boards[card.lane].add(card)
-      of 2:
+      of -1:
         state.op.boards[card.lane].add(card)
 
   state.me.handsize = state.me.hand.len

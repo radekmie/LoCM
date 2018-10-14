@@ -43,10 +43,11 @@ proc searchDepthFirst * (state: State, timeLimitMs: int): SearchResult =
       statesPointer -= 1
       if statesPointer < 0:
         break
-      if statesPointer == 1 and cpuTime() - time > timeLimit:
-        break
       legalsPointers[statesPointer] += 1
       continue
+
+    if cpuTime() - time > timeLimit:
+      break
 
     var next = states[statesPointer].copy
     next.applyMyAction(legals[statesPointer][legalsPointers[statesPointer]])

@@ -9,4 +9,4 @@ when isMainModule:
   for turn in 1 .. 30:
     input.readState.evaluateDraft(evaluate1).echo
   for turn in 1 .. 256:
-    input.readState.searchDepthFirst(90).echo
+    input.readState.searchDepthFirst(190).echo
