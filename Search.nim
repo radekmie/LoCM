@@ -1,3 +1,4 @@
+import random
 import strutils
 import times
 
@@ -18,6 +19,19 @@ func `$` * (searchResult: SearchResult): string =
   result.add(" # score: ")
   result.add(searchResult.score)
 
+proc simulate * (root: State): SearchResult =
+  var state = root.copy
+  var legals = state.computeActions(state.me, state.op)
+  var actions: seq[Action] = @[]
+
+  while legals.len > 0:
+    var action = legals.rand
+    actions.add(action)
+    state.applyMyAction(action)
+    legals = state.computeActions(state.me, state.op)
+
+  SearchResult(actions: actions, score: state.evaluateState, state: state)
+
 proc searchDepthFirst * (state: State, timeLimitMs: int): SearchResult =
   result = SearchResult(actions: @[], score: 0, state: state)
 
@@ -32,7 +46,7 @@ proc searchDepthFirst * (state: State, timeLimitMs: int): SearchResult =
   states[0] = state
   legals[0] = state.computeActions(state.me, state.op)
 
-  while true:
+  while cpuTime() - time < timeLimit:
     when not defined(release):
       stderr.writeLine("")
       stderr.writeLine("result: ", result, " statesPointer: ", statesPointer)
@@ -45,9 +59,6 @@ proc searchDepthFirst * (state: State, timeLimitMs: int): SearchResult =
         break
       legalsPointers[statesPointer] += 1
       continue
-
-    if cpuTime() - time > timeLimit:
-      break
 
     var next = states[statesPointer].copy
     next.applyMyAction(legals[statesPointer][legalsPointers[statesPointer]])
@@ -68,6 +79,17 @@ proc searchDepthFirst * (state: State, timeLimitMs: int): SearchResult =
 
         if score > 1000:
           break
+
+proc searchFlatMontoCarlo * (state: State, timeLimitMs: int): SearchResult =
+  result = SearchResult(actions: @[], score: 0, state: state)
+
+  var timeLimit = timeLimitMs / 100000
+  var time = cpuTime()
+
+  while cpuTime() - time < timeLimit:
+    var simulated = state.simulate
+    if simulated.score > result.score:
+      result = simulated
 
 proc searchNoop * (state: State, timeLimitMs: int): SearchResult =
   result = SearchResult(actions: @[], score: 0, state: state)

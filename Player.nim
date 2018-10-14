@@ -8,9 +8,10 @@ import Search
 import State
 
 var algorithms = newTable({
-  "default": searchDepthFirst,
-  "dfs":     searchDepthFirst,
-  "noop":    searchNoop,
+  "default":        searchDepthFirst,
+  "dfs":            searchDepthFirst,
+  "flatMonteCarlo": searchFlatMontoCarlo,
+  "noop":           searchNoop,
 })
 
 var evaluators = newTable({
