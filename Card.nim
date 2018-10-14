@@ -11,7 +11,7 @@ type
     itemRed
   Card * = ref object
     attack           *: int
-    availableAttacks *: int # 0 - no attack; 1 - can Attack; -1 - already attacked
+    availableAttacks *: -1 .. 1 # 0 - no attack; 1 - can Attack; -1 - already attacked
     cardDraw         *: int
     cardNumber       *: int
     cardType         *: CardType

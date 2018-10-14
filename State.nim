@@ -95,7 +95,70 @@ func applyAction * (state: var State, action: Action, me, op: var Gamer): void =
     me.modifyHealth(card.myHealthChange)
     op.modifyHealth(card.opHealthChange)
   of use:
-    discard 1
+    var item: Card
+    for cardIndex, cardOnHand in me.hand:
+      if cardOnHand.instanceId == action.id1:
+        item = cardOnHand
+        me.hand.delete(cardIndex)
+        me.handsize -= 1
+        break
+
+    me.currentMana -= item.cost
+    me.nextTurnDraw += item.cardDraw
+    me.modifyHealth(item.myHealthChange)
+    op.modifyHealth(item.opHealthChange + item.defense)
+
+    if action.id2 != -1:
+      var targetOwner = if item.cardType == itemGreen: me else: op
+
+      var target: Card
+      var targetBoard: int
+      var targetIndex: int
+      for lane, board in targetOwner.boards:
+        for index, card in board:
+          if card.instanceId == action.id2:
+            target = card
+            targetBoard = lane
+            targetIndex = index
+            break
+
+      var targetAfter = target.copy
+
+      case item.cardType:
+        of creature:
+          discard "Shouldn't happen."
+        of itemBlue, itemRed:
+          targetAfter.hasCharge       = target.hasCharge       and not item.hasCharge
+          targetAfter.hasBreakthrough = target.hasBreakthrough and not item.hasBreakthrough
+          targetAfter.hasDrain        = target.hasDrain        and not item.hasDrain
+          targetAfter.hasGuard        = target.hasGuard        and not item.hasGuard
+          targetAfter.hasLethal       = target.hasLethal       and not item.hasLethal
+          targetAfter.hasWard         = target.hasWard         and not item.hasWard
+        of itemGreen:
+          targetAfter.hasCharge       = target.hasCharge       or item.hasCharge
+          targetAfter.hasBreakthrough = target.hasBreakthrough or item.hasBreakthrough
+          targetAfter.hasDrain        = target.hasDrain        or item.hasDrain
+          targetAfter.hasGuard        = target.hasGuard        or item.hasGuard
+          targetAfter.hasLethal       = target.hasLethal       or item.hasLethal
+          targetAfter.hasWard         = target.hasWard         or item.hasWard
+
+          if item.hasCharge:
+            targetAfter.availableAttacks = if targetAfter.availableAttacks == -1: -1 else: 1
+
+      targetAfter.attack = max(0, target.attack + item.attack)
+
+      if targetAfter.hasWard and item.defense < 0:
+        targetAfter.hasWard = false
+      else:
+        targetAfter.defense += item.defense
+
+      if targetAfter.defense <= 0:
+        targetAfter = nil
+
+      if targetAfter == nil:
+        targetOwner.boards[targetBoard].delete(targetIndex)
+      else:
+        targetOwner.boards[targetBoard][targetIndex] = targetAfter
 
 func applyMyAction * (state: var State, action: Action): void =
   state.applyAction(action, state.me, state.op)
@@ -131,20 +194,19 @@ func computeActions * (state: State, me, op: Gamer): seq[Action] =
         result.add(Action(actionType: attack, id1: card.instanceId, id2: target))
 
   # USE [id1] [id2]
-  # TODO: Implement use actions in applyAction.
-  # for card in me.hand:
-  #   if card.cardType == creature or card.cost > me.currentMana:
-  #     continue
-  #   if card.cardType == itemGreen:
-  #     for board in me.boards:
-  #       for creature in board:
-  #         result.add(Action(actionType: use, id1: card.instanceId, id2: creature.instanceId))
-  #   else:
-  #     for board in op.boards:
-  #       for creature in board:
-  #         result.add(Action(actionType: use, id1: card.instanceId, id2: creature.instanceId))
-  #     if card.cardType == itemBlue:
-  #       result.add(Action(actionType: use, id1: card.instanceId, id2: -1))
+  for card in me.hand:
+    if card.cardType == creature or card.cost > me.currentMana:
+      continue
+    if card.cardType == itemGreen:
+      for board in me.boards:
+        for creature in board:
+          result.add(Action(actionType: use, id1: card.instanceId, id2: creature.instanceId))
+    else:
+      if card.cardType == itemBlue:
+        result.add(Action(actionType: use, id1: card.instanceId, id2: -1))
+      for board in op.boards:
+        for creature in board:
+          result.add(Action(actionType: use, id1: card.instanceId, id2: creature.instanceId))
 
 func copy * (state: State): State =
   deepCopy(result, state)
