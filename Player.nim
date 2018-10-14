@@ -1,5 +1,6 @@
 import os
 import streams
+import strutils
 import tables
 
 import Card
@@ -24,12 +25,14 @@ var evaluators = newTable({
 
 var algorithm = algorithms["default"]
 var evaluator = evaluators["default"]
+var timeLimit = 190
 
 if paramCount() > 0: algorithm = algorithms[paramStr(1)]
 if paramCount() > 1: evaluator = evaluators[paramStr(2)]
+if paramCount() > 2: timeLimit = paramStr(3).parseInt
 
 var input = stdin.newFileStream
 for turn in 1 .. 30:
   input.readState.evaluator.echo
 for turn in 1 .. 256:
-  input.readState.algorithm(190).echo
+  input.readState.algorithm(timeLimit).echo
