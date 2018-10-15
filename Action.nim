@@ -1,5 +1,7 @@
 import strformat
 
+import Constants
+
 type
   ActionType * = enum
     attack,
@@ -13,7 +15,7 @@ type
         id2  *: int
       of summon:
         id   *: int
-        lane *: 0 .. 1
+        lane *: range[0 .. Lanes - 1]
 
 func `$` * (action: Action): string =
   result = case action.actionType:

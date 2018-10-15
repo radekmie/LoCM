@@ -3,11 +3,9 @@ import strformat
 
 import Action
 import Card
+import Constants
 import Gamer
 import Input
-
-const
-  MaxInLane = 3
 
 type
   State * = ref object

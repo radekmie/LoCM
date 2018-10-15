@@ -2,10 +2,8 @@ import streams
 import strformat
 
 import Card
+import Constants
 import Input
-
-const
-  Lanes = 2
 
 type
   Gamer * = ref object
