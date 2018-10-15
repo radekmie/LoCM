@@ -29,10 +29,9 @@ proc simulate * (root: State): SearchResult =
 
   SearchResult(actions: actions, score: state.evaluateState, state: state)
 
-proc searchDepthFirst * (state: State, timeLimitMs: int): SearchResult =
+proc searchDepthFirst * (state: State, timeLimit: float): SearchResult =
   result = SearchResult(actions: @[], score: 0, state: state)
 
-  let timeLimit = timeLimitMs / 100000
   let time = cpuTime()
 
   var states: array[16, State]
@@ -77,10 +76,9 @@ proc searchDepthFirst * (state: State, timeLimitMs: int): SearchResult =
         if score > 1000:
           break
 
-proc searchFlatMontoCarlo * (state: State, timeLimitMs: int): SearchResult =
+proc searchFlatMontoCarlo * (state: State, timeLimit: float): SearchResult =
   result = SearchResult(actions: @[], score: 0, state: state)
 
-  let timeLimit = timeLimitMs / 100000
   let time = cpuTime()
 
   while cpuTime() - time < timeLimit:
@@ -88,5 +86,5 @@ proc searchFlatMontoCarlo * (state: State, timeLimitMs: int): SearchResult =
     if simulated.score > result.score:
       result = simulated
 
-proc searchNoop * (state: State, timeLimitMs: int): SearchResult =
+proc searchNoop * (state: State, timeLimit: float): SearchResult =
   result = SearchResult(actions: @[], score: 0, state: state)

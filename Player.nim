@@ -27,11 +27,14 @@ when isMainModule:
 
     var algorithm = algorithms["default"]
     var evaluator = evaluators["default"]
-    var timeLimit = 190
+    var timeLimit = 190.float
 
     if paramCount() > 0: algorithm = algorithms[paramStr(1)]
     if paramCount() > 1: evaluator = evaluators[paramStr(2)]
-    if paramCount() > 2: timeLimit = paramStr(3).parseInt
+    if paramCount() > 2: timeLimit = paramStr(3).parseInt.float
+
+    # NOTE: cpuTime is in seconds.
+    timeLimit = timeLimit / 1000
 
     var input = stdin.newFileStream
     for turn in 1 .. 30:
