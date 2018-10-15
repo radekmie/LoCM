@@ -1,4 +1,5 @@
 import random
+import strformat
 import strutils
 import times
 
@@ -12,12 +13,8 @@ type
     state   *: State
 
 func `$` * (searchResult: SearchResult): string =
-  if searchResult.actions.len == 0:
-    result = "PASS"
-  else:
-    result = searchResult.actions.join(";")
-  result.add(" # score: ")
-  result.add(searchResult.score)
+  result = if searchResult.actions.len == 0: "PASS" else: searchResult.actions.join(";")
+  result = fmt"{result} # score: {searchResult.score}"
 
 proc simulate * (root: State): SearchResult =
   var state = root.copy
@@ -25,7 +22,7 @@ proc simulate * (root: State): SearchResult =
   var actions: seq[Action] = @[]
 
   while legals.len > 0:
-    var action = legals.rand
+    let action = legals.rand
     actions.add(action)
     state.applyMyAction(action)
     legals = state.computeActions(state.me, state.op)
@@ -35,8 +32,8 @@ proc simulate * (root: State): SearchResult =
 proc searchDepthFirst * (state: State, timeLimitMs: int): SearchResult =
   result = SearchResult(actions: @[], score: 0, state: state)
 
-  var timeLimit = timeLimitMs / 100000
-  var time = cpuTime()
+  let timeLimit = timeLimitMs / 100000
+  let time = cpuTime()
 
   var states: array[16, State]
   var statesPointer = 0
@@ -69,7 +66,7 @@ proc searchDepthFirst * (state: State, timeLimitMs: int): SearchResult =
     legalsPointers[statesPointer] = 0
 
     if legals[statesPointer].len == 0:
-      var score = states[statesPointer].evaluateState
+      let score = states[statesPointer].evaluateState
       if score > result.score:
         result.actions = @[]
         for index in 0 .. statesPointer - 1:
@@ -83,11 +80,11 @@ proc searchDepthFirst * (state: State, timeLimitMs: int): SearchResult =
 proc searchFlatMontoCarlo * (state: State, timeLimitMs: int): SearchResult =
   result = SearchResult(actions: @[], score: 0, state: state)
 
-  var timeLimit = timeLimitMs / 100000
-  var time = cpuTime()
+  let timeLimit = timeLimitMs / 100000
+  let time = cpuTime()
 
   while cpuTime() - time < timeLimit:
-    var simulated = state.simulate
+    let simulated = state.simulate
     if simulated.score > result.score:
       result = simulated
 

@@ -6,6 +6,9 @@ import Card
 import Gamer
 import Input
 
+const
+  MaxInLane = 3
+
 type
   State * = ref object
     me *: Gamer
@@ -26,7 +29,7 @@ func applyAction * (state: var State, action: Action, me, op: var Gamer): void =
           break
 
     var attackerAfter = attacker.copy
-    attackerAfter.availableAttacks = -1
+    attackerAfter.attackState = alreadyAttacked
 
     if action.id2 == -1:
       if attacker.hasDrain:
@@ -88,7 +91,7 @@ func applyAction * (state: var State, action: Action, me, op: var Gamer): void =
         me.handsize -= 1
         break
 
-    card.availableAttacks = if card.hasCharge: 1 else: 0
+    card.attackState = if card.hasCharge: canAttack else: noAttack
     me.boards[action.lane].add(card)
     me.currentMana -= card.cost
     me.nextTurnDraw += card.cardDraw
@@ -109,7 +112,7 @@ func applyAction * (state: var State, action: Action, me, op: var Gamer): void =
     op.modifyHealth(item.opHealthChange + item.defense)
 
     if action.id2 != -1:
-      var targetOwner = if item.cardType == itemGreen: me else: op
+      let targetOwner = if item.cardType == itemGreen: me else: op
 
       var target: Card
       var targetBoard: int
@@ -142,8 +145,8 @@ func applyAction * (state: var State, action: Action, me, op: var Gamer): void =
           targetAfter.hasLethal       = target.hasLethal       or item.hasLethal
           targetAfter.hasWard         = target.hasWard         or item.hasWard
 
-          if item.hasCharge:
-            targetAfter.availableAttacks = if targetAfter.availableAttacks == -1: -1 else: 1
+          if item.hasCharge and targetAfter.attackState != alreadyAttacked:
+            targetAfter.attackState = canAttack
 
       targetAfter.attack = max(0, target.attack + item.attack)
 
@@ -160,16 +163,16 @@ func applyAction * (state: var State, action: Action, me, op: var Gamer): void =
       else:
         targetOwner.boards[targetBoard][targetIndex] = targetAfter
 
-func applyMyAction * (state: var State, action: Action): void =
+func applyMyAction * (state: var State, action: Action): void {.inline.} =
   state.applyAction(action, state.me, state.op)
 
-func applyOpAction * (state: var State, action: Action): void =
+func applyOpAction * (state: var State, action: Action): void {.inline.} =
   state.applyAction(action, state.op, state.me)
 
 func computeActions * (state: State, me, op: Gamer): seq[Action] =
   # SUMMON [id] [lane]
   for lane, board in me.boards:
-    if board.len < 3:
+    if board.len < MaxInLane:
       for card in me.hand:
         if card.cardType != creature or card.cost > me.currentMana:
           continue
@@ -188,7 +191,7 @@ func computeActions * (state: State, me, op: Gamer): seq[Action] =
         targets.add(card.instanceId)
 
     for card in me.boards[lane]:
-      if card.availableAttacks != 1:
+      if card.attackState != canAttack:
         continue
       for target in targets:
         result.add(Action(actionType: attack, id1: card.instanceId, id2: target))
@@ -208,7 +211,7 @@ func computeActions * (state: State, me, op: Gamer): seq[Action] =
         for creature in board:
           result.add(Action(actionType: use, id1: card.instanceId, id2: creature.instanceId))
 
-func copy * (state: State): State =
+func copy * (state: State): State {.inline.} =
   deepCopy(result, state)
 
 func evaluateState * (state: State): float =
@@ -241,12 +244,12 @@ proc readState * (input: Stream): State =
   for index in 1 .. input.getInt:
     var card = input.toCard
     case card.location:
-      of 0:
+      of inHand:
         state.me.hand.add(card)
-      of 1:
-        card.availableAttacks = 1
+      of myBoard:
+        card.attackState = canAttack
         state.me.boards[card.lane].add(card)
-      of -1:
+      of opBoard:
         state.op.boards[card.lane].add(card)
 
   state.me.handsize = state.me.hand.len
