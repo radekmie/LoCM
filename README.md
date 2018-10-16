@@ -13,7 +13,7 @@ nim c -d:release Tester.nim
 ### CLI
 
 ```sh
-./Player [algorithm] [evaluator] [timeLimitMs]
+./Player --algorithm="" --evaluator="" --timeLimit=N
 ./Tester --referee="" --player1="" --player2="" --games=N --threads=N --replays=false
 ```
 
@@ -24,8 +24,8 @@ nim c -d:release Player.nim
 nim c -d:release Tester.nim
 ./Tester \
   --referee="java -jar LoCM.jar" \
-  --player1="./Player dfs icebox 100" \
-  --player2="./Player flatMonteCarlo closetAI 150" \
+  --player1="./Player --algorithm=dfs --evaluator=icebox timeLimit=100" \
+  --player2="./Player --algorithm=flatMonteCarlo --evaluator=closetAI timeLimit=150" \
   --games=16 \
   --threads=4
 ```

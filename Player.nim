@@ -1,4 +1,4 @@
-import os
+import parseopt
 import streams
 import strutils
 import tables
@@ -10,14 +10,14 @@ import State
 
 when isMainModule:
   proc main(): void =
-    var algorithms = newTable({
+    let algorithms = newTable({
       "default":        searchDepthFirst,
       "dfs":            searchDepthFirst,
       "flatMonteCarlo": searchFlatMontoCarlo,
       "noop":           searchNoop,
     })
 
-    var evaluators = newTable({
+    let evaluators = newTable({
       "default":  draftEvaluateSimple,
       "closetAI": draftEvaluateClosetAI,
       "icebox":   draftEvaluateIcebox,
@@ -25,16 +25,23 @@ when isMainModule:
       "simple":   draftEvaluateSimple,
     })
 
-    var algorithm = algorithms["default"]
-    var evaluator = evaluators["default"]
-    var timeLimit = 190.float
+    var algorithmInput = "default"
+    var evaluatorInput = "default"
+    var timeLimitInput = 190.float
 
-    if paramCount() > 0: algorithm = algorithms[paramStr(1)]
-    if paramCount() > 1: evaluator = evaluators[paramStr(2)]
-    if paramCount() > 2: timeLimit = paramStr(3).parseInt.float
+    for kind, key, value in getOpt():
+      case kind:
+        of cmdLongOption, cmdShortOption:
+          case key:
+            of "algorithm": algorithmInput = value
+            of "evaluator": evaluatorInput = value
+            of "timeLimit": timeLimitInput = value.parseFloat
+            else: discard
+        else: discard
 
-    # NOTE: cpuTime is in seconds.
-    timeLimit = timeLimit / 1000
+    let algorithm = algorithms[algorithmInput]
+    let evaluator = evaluators[evaluatorInput]
+    let timeLimit = timeLimitInput / 1000
 
     var input = stdin.newFileStream
     for turn in 1 .. 30:
