@@ -14,7 +14,7 @@ nim c -d:release Tester.nim
 
 ```sh
 ./Player [algorithm] [evaluator] [timeLimitMs]
-./Tester --referee="" --player1="" --player2="" --games=N --threads=N
+./Tester --referee="" --player1="" --player2="" --games=N --threads=N --replays=false
 ```
 
 ### Run
