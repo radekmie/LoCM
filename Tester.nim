@@ -9,6 +9,9 @@ import times
 
 import Input
 
+func `$` (dateTime: DateTime): string =
+  dateTime.format("yyyy-MM-dd' 'HH:mm:ss'.'fff")
+
 when isMainModule:
   proc main(): void =
     var referee: string
@@ -43,34 +46,40 @@ when isMainModule:
     fmt"{now()} Threads: {threads}".echo
 
     let command = fmt"{referee} -p1 '{player1}' -p2 '{player2}'"
+    var befores = newSeq[DateTime](threads)
 
     discard execProcesses(
       cmds = repeat[string](command, games),
       n = threads,
       options = {poStdErrToStdOut},
+      beforeRunEvent = proc (id: int) =
+        befores[id] = now(),
       afterRunEvent = proc (id: int; process: Process) =
         var output = process.outputStream
         let score1 = output.getInt
         let score2 = output.getInt
         let error = score1 < 0 or score2 < 0
 
+        let time = now() - befores[id]
+        let took = fmt"{time.seconds}.{time.milliseconds:03}s"
+
         sofar += 1
         wins1 += score1.max(0)
         wins2 += score2.max(0)
 
         if score1 < 0 or score2 < 0:
-          fmt"{now()} End of game {sofar:>3}: ERRORED {score1} {score2}".echo
+          fmt"{now()} End of game {sofar:>3} [{took}]: ERRORED {score1} {score2}".echo
         else:
           let total = wins1 + wins2
           let index = total - 1
           let proc1 = 100 * wins1 / total
           let proc2 = 100 * wins2 / total
 
-          fmt"{now()} End of game {sofar:>3}: {proc1:6.2f}% {proc2:6.2f}%".echo
+          fmt"{now()} End of game {sofar:>3} [{took}]: {proc1:6.2f}% {proc2:6.2f}%".echo
 
         if error or replays:
           let options = output.readAll.strip.replace(re"\n", " ")
-          fmt"{now()} Replay game {sofar:>3}: {command} -d '{options}' -s".echo
+          fmt"{now()} Replay game {sofar:>3} [{took}]: {command} -d '{options}' -s".echo
     )
 
   main()
