@@ -12,6 +12,9 @@ import Input
 func `$` (dateTime: DateTime): string =
   dateTime.format("yyyy-MM-dd' 'HH:mm:ss'.'fff")
 
+func `$` (duration: Duration): string =
+  fmt"{duration.seconds}.{duration.milliseconds:03}s"
+
 when isMainModule:
   proc main(): void =
     var referee: string
@@ -46,7 +49,7 @@ when isMainModule:
     fmt"{now()} Threads: {threads}".echo
 
     let command = fmt"{referee} -p1 '{player1}' -p2 '{player2}'"
-    var befores = newSeq[DateTime](threads)
+    var befores = newSeqOfCap[DateTime](games)
 
     discard execProcesses(
       cmds = repeat[string](command, games),
@@ -59,9 +62,7 @@ when isMainModule:
         let score1 = output.getInt
         let score2 = output.getInt
         let error = score1 < 0 or score2 < 0
-
-        let time = now() - befores[id]
-        let took = fmt"{time.seconds}.{time.milliseconds:03}s"
+        let took = now() - befores[id]
 
         sofar += 1
         wins1 += score1.max(0)
