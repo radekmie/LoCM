@@ -1,19 +1,29 @@
+import algorithm
 import streams
 import strutils
 
-proc getLine * (input: Stream): string {.inline.} =
-  input.readLine
+import strformat
 
-proc getStr * (input: Stream): string =
-  var data: string
+type
+  Input * = ref InputObj
+  InputObj = object of StreamObj
+    line   *: string
+    stream *: Stream
+
+func newInput * (stream: Stream): Input =
+  Input(stream: stream)
+
+proc getLine * (input: Input): string {.inline.} =
+  input.stream.readLine
+
+proc getStr * (input: Input): string {.inline.} =
   while true:
-    let peek = input.readChar
-    if peek == ' ' or peek == '\n' or peek == '\0':
-      if data == "":
-        continue
-      break
-    data.add(peek)
-  data
+    if input.line == "":
+      input.line = input.stream.readLine
 
-proc getInt * (input: Stream): int {.inline.} =
+    for part in input.line.splitWhitespace:
+      input.line.delete(0, part.len)
+      return part
+
+proc getInt * (input: Input): int {.inline.} =
   input.getStr.parseInt

@@ -1,4 +1,3 @@
-import streams
 import strformat
 
 import Action
@@ -229,7 +228,7 @@ func evaluateState * (state: State): float =
     for card in state.me.boards[index]: result += float(card.attack + card.defense) * 0.5
     for card in state.op.boards[index]: result -= float(card.attack - card.defense) * 0.5
 
-proc readState * (input: Stream): State =
+proc readState * (input: Input): State =
   var state = State()
   state.me = input.toGamer
   state.op = input.toGamer

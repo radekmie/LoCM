@@ -1,4 +1,3 @@
-import streams
 import strformat
 
 import Card
@@ -29,7 +28,7 @@ func modifyHealth * (gamer: var Gamer, diff: int): void =
 func `$` * (gamer: Gamer): string =
   fmt"{gamer.health:2} ({gamer.rune}) HP  {gamer.currentMana:2}/{gamer.maxMana:2} MP  {gamer.decksize:2} D (+{gamer.nextTurnDraw})"
 
-proc toGamer * (input: Stream): Gamer =
+proc toGamer * (input: Input): Gamer =
   var gamer = Gamer()
 
   gamer.health       = input.getInt

@@ -51,6 +51,8 @@ when isMainModule:
     let command = fmt"{referee} -p1 '{player1}' -p2 '{player2}'"
     var befores = newSeqOfCap[DateTime](games)
 
+    befores.setLen(games)
+
     discard execProcesses(
       cmds = repeat[string](command, games),
       n = threads,
@@ -59,8 +61,9 @@ when isMainModule:
         befores[id] = now(),
       afterRunEvent = proc (id: int; process: Process) =
         var output = process.outputStream
-        let score1 = output.getInt
-        let score2 = output.getInt
+        var input = output.newInput
+        let score1 = input.getInt
+        let score2 = input.getInt
         let error = score1 < 0 or score2 < 0
         let took = now() - befores[id]
 

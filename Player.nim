@@ -5,6 +5,7 @@ import tables
 
 import Card
 import Draft
+import Input
 import Search
 import State
 
@@ -43,7 +44,7 @@ when isMainModule:
     let evaluator = evaluators[evaluatorInput]
     let timeLimit = timeLimitInput / 1000
 
-    var input = stdin.newFileStream
+    var input = stdin.newFileStream.newInput
     for turn in 1 .. 30:
       input.readState.evaluator.echo
     for turn in 1 .. 256:
