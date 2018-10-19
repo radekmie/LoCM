@@ -166,17 +166,17 @@ func applyMyAction * (state: var State, action: Action): void {.inline.} =
 func applyOpAction * (state: var State, action: Action): void {.inline.} =
   state.applyAction(action, state.op, state.me)
 
-func computeActions * (state: State, me, op: Gamer): seq[Action] =
+proc computeActions * (state: State): seq[Action] =
   # SUMMON [id] [lane]
-  for lane, board in me.boards:
+  for lane, board in state.me.boards:
     if board.len < MaxInLane:
-      for card in me.hand:
-        if card.cardType != creature or card.cost > me.currentMana:
+      for card in state.me.hand:
+        if card.cardType != creature or card.cost > state.me.currentMana:
           continue
         result.add(Action(actionType: summon, id: card.instanceId, lane: lane))
 
   # ATTACH [id1] [id2]
-  for lane, board in op.boards:
+  for lane, board in state.op.boards:
     var targets: seq[int] = @[]
     for card in board:
       if card.hasGuard:
@@ -187,32 +187,32 @@ func computeActions * (state: State, me, op: Gamer): seq[Action] =
       for card in board:
         targets.add(card.instanceId)
 
-    for card in me.boards[lane]:
+    for card in state.me.boards[lane]:
       if card.attackState != canAttack:
         continue
       for target in targets:
         result.add(Action(actionType: attack, id1: card.instanceId, id2: target))
 
   # USE [id1] [id2]
-  for card in me.hand:
-    if card.cardType == creature or card.cost > me.currentMana:
+  for card in state.me.hand:
+    if card.cardType == creature or card.cost > state.me.currentMana:
       continue
     if card.cardType == itemGreen:
-      for board in me.boards:
+      for board in state.me.boards:
         for creature in board:
           result.add(Action(actionType: use, id1: card.instanceId, id2: creature.instanceId))
     else:
       if card.cardType == itemBlue:
         result.add(Action(actionType: use, id1: card.instanceId, id2: -1))
-      for board in op.boards:
+      for board in state.op.boards:
         for creature in board:
           result.add(Action(actionType: use, id1: card.instanceId, id2: creature.instanceId))
 
 func copy * (state: State): State {.inline.} =
-  deepCopy(result, state)
+  State(me: state.me.copy, op: state.op.copy)
 
 func evaluateState * (state: State): float =
-  result = 0.0
+  result = 100.0
 
   # Death.
   if state.op.health <= 0: result += 1000

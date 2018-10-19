@@ -28,18 +28,31 @@ func modifyHealth * (gamer: var Gamer, diff: int): void =
 func `$` * (gamer: Gamer): string =
   fmt"{gamer.health:2} ({gamer.rune}) HP  {gamer.currentMana:2}/{gamer.maxMana:2} MP  {gamer.decksize:2} D (+{gamer.nextTurnDraw})"
 
+func copy * (gamer: Gamer): Gamer =
+  result = Gamer(
+    currentMana:  gamer.currentMana,
+    decksize:     gamer.decksize,
+    handsize:     gamer.handsize,
+    health:       gamer.health,
+    maxMana:      gamer.maxMana,
+    nextTurnDraw: gamer.nextTurnDraw,
+    rune:         gamer.rune,
+  )
+
+  for lane, board in gamer.boards:
+    result.boards[lane].newSeq(board.len)
+    for index, card in board:
+      result.boards[lane][index] = card.copy
+
+  result.hand.newSeq(gamer.hand.len)
+  for index, card in gamer.hand:
+    result.hand[index] = card.copy
+
 proc toGamer * (input: Input): Gamer =
-  var gamer = Gamer()
-
-  gamer.health       = input.getInt
-  gamer.maxMana      = input.getInt
-  gamer.decksize     = input.getInt
-  gamer.rune         = input.getInt
-  gamer.nextTurnDraw = input.getInt
-
-  for index in gamer.boards.low .. gamer.boards.high:
-    gamer.boards[index] = @[]
-
-  gamer.currentMana = gamer.maxMana
-  gamer.hand        = @[]
-  gamer
+  result = Gamer()
+  result.health       = input.getInt
+  result.maxMana      = input.getInt
+  result.decksize     = input.getInt
+  result.rune         = input.getInt
+  result.nextTurnDraw = input.getInt
+  result.currentMana  = result.maxMana

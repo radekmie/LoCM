@@ -18,19 +18,19 @@ func `$` * (searchResult: SearchResult): string =
 
 proc simulate * (root: State): SearchResult =
   var state = root.copy
-  var legals = state.computeActions(state.me, state.op)
-  var actions: seq[Action] = @[]
+  var legals = state.computeActions
+  var actions: seq[Action]
 
   while legals.len > 0:
     let action = legals.rand
     actions.add(action)
     state.applyMyAction(action)
-    legals = state.computeActions(state.me, state.op)
+    legals = state.computeActions
 
   SearchResult(actions: actions, score: state.evaluateState, state: state)
 
 proc searchDepthFirst * (state: State, timeLimit: float): SearchResult =
-  result = SearchResult(actions: @[], score: 0, state: state)
+  result = SearchResult(state: state)
 
   let time = cpuTime()
 
@@ -40,12 +40,12 @@ proc searchDepthFirst * (state: State, timeLimit: float): SearchResult =
   var legalsPointers: array[16, int]
 
   states[0] = state
-  legals[0] = state.computeActions(state.me, state.op)
+  legals[0] = state.computeActions
 
   while cpuTime() - time < timeLimit:
     when not defined(release):
       stderr.writeLine("")
-      stderr.writeLine("result: ", result, " statesPointer: ", statesPointer)
+      stderr.writeLine("result: ", result)
       stderr.writeLine("A:      ", legalsPointers[statesPointer])
       stderr.writeLine("B:      ", legals[statesPointer].len, " ", legals[statesPointer])
 
@@ -61,15 +61,15 @@ proc searchDepthFirst * (state: State, timeLimit: float): SearchResult =
 
     statesPointer += 1
     states[statesPointer] = next
-    legals[statesPointer] = next.computeActions(next.me, next.op)
+    legals[statesPointer] = next.computeActions
     legalsPointers[statesPointer] = 0
 
     if legals[statesPointer].len == 0:
       let score = states[statesPointer].evaluateState
       if score > result.score:
-        result.actions = @[]
+        result.actions.newSeq(statesPointer)
         for index in 0 .. statesPointer - 1:
-          result.actions.add(legals[index][legalsPointers[index]])
+          result.actions[index] = legals[index][legalsPointers[index]]
         result.score = score
         result.state = state
 
@@ -77,7 +77,7 @@ proc searchDepthFirst * (state: State, timeLimit: float): SearchResult =
           break
 
 proc searchFlatMontoCarlo * (state: State, timeLimit: float): SearchResult =
-  result = SearchResult(actions: @[], score: 0, state: state)
+  result = SearchResult(state: state)
 
   let time = cpuTime()
 
@@ -87,4 +87,4 @@ proc searchFlatMontoCarlo * (state: State, timeLimit: float): SearchResult =
       result = simulated
 
 proc searchNoop * (state: State, timeLimit: float): SearchResult =
-  result = SearchResult(actions: @[], score: 0, state: state)
+  result = SearchResult(state: state)

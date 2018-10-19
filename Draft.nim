@@ -20,7 +20,7 @@ func `$` * (draftResult: DraftResult): string =
   fmt"PICK {bestIndex} # score: {bestScore}"
 
 func draftEvaluateWith * (state: State, evaluate: func (card: Card): float): DraftResult {.inline.} =
-  result = DraftResult(scores: @[], state: state)
+  result = DraftResult(state: state)
 
   for card in state.me.hand:
     result.scores.add(card.evaluate)
