@@ -38,17 +38,19 @@ when isMainModule:
             else: discard
         else: discard
 
-    fmt"{now()} Referee: {referee}".echo
-    fmt"{now()} Player1: {player1}".echo
-    fmt"{now()} Player2: {player2}".echo
-    fmt"{now()} Games:   {games}".echo
-    fmt"{now()} Replays: {replays}".echo
-    fmt"{now()} Threads: {threads}".echo
+    echo &"{now()} Referee: {referee}"
+    echo &"{now()} Player1: {player1}"
+    echo &"{now()} Player2: {player2}"
+    echo &"{now()} Games:   {games}"
+    echo &"{now()} Replays: {replays}"
+    echo &"{now()} Threads: {threads}"
 
-    let command = fmt"{referee} -p1 '{player1}' -p2 '{player2}'"
+    var commands = newSeq[string](games)
+    for index in commands.low .. commands.high:
+      commands[index] = &"""{referee} -p1 "{player1}" -p2 "{player2}" -d "draftChoicesSeed={index:03} seed={index:03} shufflePlayer0Seed={index:03} shufflePlayer1Seed={index:03}""""
 
     discard execProcesses(
-      cmds = repeat[string](command, games),
+      cmds = commands,
       n = threads,
       options = {poStdErrToStdOut},
       afterRunEvent = proc (id: int; process: Process) =
@@ -63,18 +65,16 @@ when isMainModule:
         wins2 += score2.max(0)
 
         if score1 < 0 or score2 < 0:
-          fmt"{now()} End of game {sofar:>3}: ERRORED {score1} {score2}".echo
+          echo &"{now()} End of game {sofar:>3}: ERRORED {score1} {score2}"
         else:
           let total = wins1 + wins2
           let index = total - 1
           let proc1 = 100 * wins1 / total
           let proc2 = 100 * wins2 / total
-
-          fmt"{now()} End of game {sofar:>3}: {proc1:6.2f}% {proc2:6.2f}%".echo
+          echo &"{now()} End of game {sofar:>3}: {proc1:6.2f}% {proc2:6.2f}%"
 
         if error or replays:
-          let options = output.readAll.strip.replace(re"\n", " ")
-          fmt"{now()} Replay game {sofar:>3}: {command} -d '{options}' -s".echo
+          echo &"{now()} Replay game {sofar:>3}: {commands[sofar - 1]} -s"
     )
 
   main()
