@@ -24,8 +24,8 @@ nim c -d:release Player.nim
 nim c -d:release Tester.nim
 ./Tester \
   --referee="java -jar LoCM.jar" \
-  --player1="./Player --algorithm=dfs --evaluator=icebox timeLimit=100" \
-  --player2="./Player --algorithm=flatMonteCarlo --evaluator=closetAI timeLimit=150" \
+  --player1="./Player --algorithm=dfs --evaluator=icebox --timeLimit=100" \
+  --player2="./Player --algorithm=flatMonteCarlo --evaluator=closetAI --timeLimit=150" \
   --games=16 \
   --threads=4
 ```
