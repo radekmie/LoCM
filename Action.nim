@@ -19,12 +19,12 @@ type
 
 func `$` * (action: Action): string =
   result = case action.actionType:
-    of attack: fmt"ATTACK {action.id1} {action.id2}"
-    of summon: fmt"SUMMON {action.id} {action.lane}"
-    of use:    fmt"USE {action.id1} {action.id2}"
+    of attack: &"ATTACK {action.id1} {action.id2}"
+    of summon: &"SUMMON {action.id} {action.lane}"
+    of use:    &"USE {action.id1} {action.id2}"
 
   if action.text != "":
-    result = fmt"{result} {action.text}"
+    result = &"{result} {action.text}"
 
 when isMainModule:
   func main(): void =

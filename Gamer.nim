@@ -26,7 +26,7 @@ func modifyHealth * (gamer: var Gamer, diff: int): void =
       break
 
 func `$` * (gamer: Gamer): string =
-  fmt"{gamer.health:2} ({gamer.rune}) HP  {gamer.currentMana:2}/{gamer.maxMana:2} MP  {gamer.decksize:2} D (+{gamer.nextTurnDraw})"
+  &"{gamer.health:2} ({gamer.rune}) HP  {gamer.currentMana:2}/{gamer.maxMana:2} MP  {gamer.decksize:2} D (+{gamer.nextTurnDraw})"
 
 func copy * (gamer: Gamer): Gamer =
   result = Gamer(

@@ -17,7 +17,7 @@ func `$` * (draftResult: DraftResult): string =
       bestIndex = index
       bestScore = score
 
-  fmt"PICK {bestIndex} # score: {bestScore}"
+  &"PICK {bestIndex} # score: {bestScore}"
 
 func draftEvaluateWith * (state: State, evaluate: func (card: Card): float): DraftResult {.inline.} =
   result = DraftResult(state: state)

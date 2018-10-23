@@ -46,8 +46,8 @@ when isMainModule:
 
     var input = stdin.newFileStream.newInput
     for turn in 1 .. 30:
-      input.readState.evaluator.echo
+      echo input.readState.evaluator
     for turn in 1 .. 256:
-      input.readState.algorithm(timeLimit).echo
+      echo input.readState.algorithm(timeLimit)
 
   main()

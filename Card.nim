@@ -45,7 +45,7 @@ func `$` * (card: Card): string =
     g = if card.hasGuard:        'G' else: '-'
     l = if card.hasLethal:       'L' else: '-'
     w = if card.hasWard:         'W' else: '-'
-  fmt"{card.instanceId:2} (#{card.cardNumber:3}:{card.cardType:>9}) {card.attack:2}/{card.defense:2} [{card.cost:2}] {b}{c}{d}{g}{l}{w}"
+  &"{card.instanceId:2} (#{card.cardNumber:3}:{card.cardType:>9}) {card.attack:2}/{card.defense:2} [{card.cost:2}] {b}{c}{d}{g}{l}{w}"
 
 func copy * (card: Card): Card {.inline.} =
   shallowCopy(result, card)

@@ -14,7 +14,7 @@ type
 
 func `$` * (searchResult: SearchResult): string =
   result = if searchResult.actions.len == 0: "PASS" else: searchResult.actions.join(";")
-  result = fmt"{result} # score: {searchResult.score}"
+  result = &"{result} # score: {searchResult.score}"
 
 proc simulate * (root: State): SearchResult =
   var state = root.copy
