@@ -1,8 +1,5 @@
-import strformat
-
-import Card
-import Constants
-import Input
+import std / strformat
+import Card, Constants, Input
 
 type
   Gamer * = ref object
@@ -48,7 +45,7 @@ func copy * (gamer: Gamer): Gamer =
   for index, card in gamer.hand:
     result.hand[index] = card.copy
 
-proc toGamer * (input: Input): Gamer =
+proc readGamer * (input: Input): Gamer =
   result = Gamer()
   result.health       = input.getInt
   result.maxMana      = input.getInt

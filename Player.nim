@@ -1,53 +1,40 @@
-import parseopt
-import streams
-import strutils
-import tables
+import std / [parseopt, streams, strutils, tables]
+import Engine / [Config, Draft, Input, Search, State]
+import Research / [
+  DraftEvaluations / AllDraftEvaluations,
+  PlayerAlgorithms / AllPlayerAlgorithms,
+  StateEvaluations / AllStateEvaluations,
+]
 
-import Card
-import Draft
-import Input
-import Search
-import State
+proc readConfig (): Config =
+  result = Config(
+    evaluateDraft: draftEvaluations["default"],
+    evaluateState: stateEvaluations["default"],
+    playAlgorithm: playerAlgorithms["default"],
+    seed: 0,
+    time: 190.0
+  )
+
+  for kind, key, value in getOpt():
+    case kind:
+      of cmdLongOption, cmdShortOption:
+        case key:
+          of "draft":  result.evaluateDraft = draftEvaluations[value]
+          of "player": result.playAlgorithm = playerAlgorithms[value]
+          of "state":  result.evaluateState = stateEvaluations[value]
+          of "seed":   result.seed = value.parseInt
+          of "time":   result.time = value.parseFloat
+          else: discard
+      else: discard
 
 when isMainModule:
   proc main(): void =
-    let algorithms = newTable({
-      "default":        searchDepthFirst,
-      "dfs":            searchDepthFirst,
-      "flatMonteCarlo": searchFlatMontoCarlo,
-      "noop":           searchNoop,
-    })
-
-    let evaluators = newTable({
-      "default":  draftEvaluateSimple,
-      "closetAI": draftEvaluateClosetAI,
-      "icebox":   draftEvaluateIcebox,
-      "noop":     draftEvaluateNoop,
-      "simple":   draftEvaluateSimple,
-    })
-
-    var algorithmInput = "default"
-    var evaluatorInput = "default"
-    var timeLimitInput = 190.float
-
-    for kind, key, value in getOpt():
-      case kind:
-        of cmdLongOption, cmdShortOption:
-          case key:
-            of "algorithm": algorithmInput = value
-            of "evaluator": evaluatorInput = value
-            of "timeLimit": timeLimitInput = value.parseFloat
-            else: discard
-        else: discard
-
-    let algorithm = algorithms[algorithmInput]
-    let evaluator = evaluators[evaluatorInput]
-    let timeLimit = timeLimitInput / 1000
+    let config = readConfig()
+    let eval = config.eval
+    let play = config.play
 
     var input = stdin.newFileStream.newInput
-    for turn in 1 .. 30:
-      echo input.readState.evaluator
-    for turn in 1 .. 256:
-      echo input.readState.algorithm(timeLimit)
+    for turn in 1 .. 30: echo input.readState.eval
+    for turn in 1 .. 99: echo input.readState.play
 
   main()

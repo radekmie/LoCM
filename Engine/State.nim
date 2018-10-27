@@ -1,10 +1,5 @@
-import strformat
-
-import Action
-import Card
-import Constants
-import Gamer
-import Input
+import std / strformat
+import Action, Card, Constants, Gamer, Input
 
 type
   State * = ref object
@@ -211,27 +206,10 @@ proc computeActions * (state: State): seq[Action] =
 func copy * (state: State): State {.inline.} =
   State(me: state.me.copy, op: state.op.copy)
 
-func evaluateState * (state: State): float =
-  result = 100.0
-
-  # Death.
-  if state.op.health <= 0: result += 1000
-
-  # Health diff.
-  result += float(state.me.health - state.op.health) * 2
-
-  for index in state.me.boards.low .. state.me.boards.high:
-    # Card count.
-    result += float(state.me.boards[index].len - state.op.boards[index].len)
-
-    # Card strength.
-    for card in state.me.boards[index]: result += float(card.attack + card.defense) * 0.5
-    for card in state.op.boards[index]: result -= float(card.attack - card.defense) * 0.5
-
 proc readState * (input: Input): State =
   var state = State()
-  state.me = input.toGamer
-  state.op = input.toGamer
+  state.me = input.readGamer
+  state.op = input.readGamer
   state.op.handsize = input.getInt
 
   # Skip opponent actions.
@@ -239,7 +217,7 @@ proc readState * (input: Input): State =
     discard input.getLine
 
   for index in 1 .. input.getInt:
-    var card = input.toCard
+    var card = input.readCard
     case card.location:
       of inHand:
         state.me.hand.add(card)

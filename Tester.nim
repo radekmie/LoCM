@@ -1,13 +1,14 @@
-import osproc
-import parseopt
-import re
-import sequtils
-import streams
-import strformat
-import strutils
-import times
-
-import Input
+import std / [
+  osproc,
+  parseopt,
+  re,
+  sequtils,
+  streams,
+  strformat,
+  strutils,
+  times,
+]
+import Engine / Input
 
 func `$` (dateTime: DateTime): string =
   dateTime.format("yyyy-MM-dd' 'HH:mm:ss'.'fff")
@@ -47,7 +48,7 @@ when isMainModule:
 
     var commands = newSeq[string](games)
     for index in commands.low .. commands.high:
-      commands[index] = &"""{referee} -p1 "{player1}" -p2 "{player2}" -d "draftChoicesSeed={index:03} seed={index:03} shufflePlayer0Seed={index:03} shufflePlayer1Seed={index:03}""""
+      commands[index] = &"""{referee} -p1 "{player1} --seed={index}" -p2 "{player2} --seed={index}" -d "draftChoicesSeed={index:03} seed={index:03} shufflePlayer0Seed={index:03} shufflePlayer1Seed={index:03}""""
 
     discard execProcesses(
       cmds = commands,

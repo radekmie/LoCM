@@ -1,8 +1,4 @@
-import algorithm
-import streams
-import strutils
-
-import strformat
+import std / [algorithm, streams, strformat, strutils]
 
 type
   Input * = ref InputObj
@@ -16,7 +12,7 @@ func newInput * (stream: Stream): Input =
 proc getLine * (input: Input): string {.inline.} =
   input.stream.readLine
 
-proc getStr * (input: Input): string {.inline.} =
+proc getStr * (input: Input): string =
   while true:
     if input.line == "":
       input.line = input.stream.readLine
