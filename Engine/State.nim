@@ -3,8 +3,9 @@ import Action, Card, Constants, Gamer, Input
 
 type
   State * = ref object
-    me *: Gamer
-    op *: Gamer
+    halt *: bool
+    me   *: Gamer
+    op   *: Gamer
 
 func applyAction * (state: var State, action: Action, me, op: var Gamer): void =
   case action.actionType:
@@ -74,6 +75,8 @@ func applyAction * (state: var State, action: Action, me, op: var Gamer): void =
 
       me.modifyHealth(healthGain)
       op.modifyHealth(healthTaken)
+  of pass:
+    state.halt = true
   of summon:
     var card: Card
     for cardIndex, cardOnHand in me.hand:
@@ -162,6 +165,9 @@ func applyOpAction * (state: var State, action: Action): void {.inline.} =
   state.applyAction(action, state.op, state.me)
 
 proc computeActions * (state: State): seq[Action] =
+  if state.halt:
+    return @[]
+
   # SUMMON [id] [lane]
   for lane, board in state.me.boards:
     if board.len < MaxInLane:
@@ -204,10 +210,11 @@ proc computeActions * (state: State): seq[Action] =
           result.add(Action(actionType: use, id1: card.instanceId, id2: creature.instanceId))
 
 func copy * (state: State): State {.inline.} =
-  State(me: state.me.copy, op: state.op.copy)
+  State(halt: state.halt, me: state.me.copy, op: state.op.copy)
 
 proc readState * (input: Input): State =
   var state = State()
+  state.halt = false
   state.me = input.readGamer
   state.op = input.readGamer
   state.op.handsize = input.getInt
