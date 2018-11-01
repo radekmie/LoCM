@@ -176,7 +176,7 @@ proc computeActions * (state: State): seq[Action] =
           continue
         result.add(Action(actionType: summon, id: card.instanceId, lane: lane))
 
-  # ATTACH [id1] [id2]
+  # ATTACK [id1] [id2]
   for lane, board in state.op.boards:
     var targets: seq[int] = @[]
     for card in board:
