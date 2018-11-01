@@ -14,7 +14,7 @@ nim c -d:release Tester.nim
 
 ```sh
 ./Player --draft="" --player="" --seed=N --state="" --time=N
-./Tester --referee="" --player1="" --player2="" --games=N --threads=N --replays=false
+./Tester --referee="" --plain=false --player1="" --player2="" --games=N --threads=N --replays=false
 ```
 
 ### Run

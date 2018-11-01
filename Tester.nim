@@ -21,6 +21,7 @@ when isMainModule:
 
     var replays = false
     var threads = countProcessors()
+    var plain = false
     var games = 0
     var sofar = 0
     var wins1 = 0
@@ -31,6 +32,7 @@ when isMainModule:
         of cmdLongOption, cmdShortOption:
           case key:
             of "games":   games   = value.parseInt
+            of "plain":   plain   = value.parseBool
             of "player1": player1 = value
             of "player2": player2 = value
             of "referee": referee = value
@@ -39,12 +41,13 @@ when isMainModule:
             else: discard
         else: discard
 
-    echo &"{now()} Referee: {referee}"
-    echo &"{now()} Player1: {player1}"
-    echo &"{now()} Player2: {player2}"
-    echo &"{now()} Games:   {games}"
-    echo &"{now()} Replays: {replays}"
-    echo &"{now()} Threads: {threads}"
+    if not plain:
+      echo &"{now()} Referee: {referee}"
+      echo &"{now()} Player1: {player1}"
+      echo &"{now()} Player2: {player2}"
+      echo &"{now()} Games:   {games}"
+      echo &"{now()} Replays: {replays}"
+      echo &"{now()} Threads: {threads}"
 
     var commands = newSeq[string](games)
     for index in commands.low .. commands.high:
@@ -55,15 +58,18 @@ when isMainModule:
       n = threads,
       options = {poStdErrToStdOut},
       afterRunEvent = proc (id: int; process: Process) =
-        var output = process.outputStream
-        var input = output.newInput
-        let score1 = input.getInt
-        let score2 = input.getInt
+        var output = process.outputStream.newInput
+        let score1 = output.getInt
+        let score2 = output.getInt
         let error = score1 < 0 or score2 < 0
 
         sofar += 1
         wins1 += score1.max(0)
         wins2 += score2.max(0)
+
+        # In this mode only final results are reported.
+        if plain:
+          return
 
         if score1 < 0 or score2 < 0:
           echo &"{now()} End of game {sofar:>3}: ERRORED {score1} {score2}"
@@ -77,5 +83,8 @@ when isMainModule:
         if error or replays:
           echo &"{now()} Replay game {sofar:>3}: {commands[sofar - 1]} -s"
     )
+
+    if plain:
+      echo &"{wins1} {wins2}"
 
   main()
