@@ -44,7 +44,7 @@ nim c -d:release Tester.nim
 * [ ] Bridge Burning Monte Carlo Tree Search
 * [x] DFS ([source](Research/PlayerAlgorithms/DFS.nim))
 * [x] Flat Monte Carlo ([source](Research/PlayerAlgorithms/FlatMonteCarlo.nim))
-* [ ] Greedy
+* [x] Greedy ([source](Research/PlayerAlgorithms/Greedy.nim))
 * [ ] Monte Carlo Tree Search
 * [ ] Monte Carlo Tree Search + opponent lookahead (greedy)
 * [ ] Monte Carlo Tree Search + opponent lookahead (greedy) + pruning
