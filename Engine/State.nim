@@ -168,6 +168,9 @@ proc computeActions * (state: State): seq[Action] =
   if state.halt:
     return @[]
 
+  # PASS
+  result.add(Action(actionType: pass))
+
   # SUMMON [id] [lane]
   for lane, board in state.me.boards:
     if board.len < MaxInLane:
@@ -178,7 +181,7 @@ proc computeActions * (state: State): seq[Action] =
 
   # ATTACK [id1] [id2]
   for lane, board in state.op.boards:
-    var targets: seq[int] = @[]
+    var targets: seq[int]
     for card in board:
       if card.hasGuard:
         targets.add(card.instanceId)
