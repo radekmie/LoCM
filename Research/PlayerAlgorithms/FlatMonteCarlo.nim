@@ -21,6 +21,7 @@ func playerAlgorithmFlatMonteCarlo * (config: Config): proc (state: State): Sear
     let time = cpuTime()
 
     while cpuTime() - time < config.time:
-      let simulated = simulate(config, state)
-      if simulated.score > result.score:
-        result = simulated
+      for _ in 1 .. 10:
+        let simulated = simulate(config, state)
+        if simulated.score > result.score:
+          result = simulated
