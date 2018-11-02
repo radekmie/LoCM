@@ -1,18 +1,21 @@
 import .. / .. / Engine / State
 
 func evaluateStateSimple * (state: State): float =
-  result = 100.0
+  var score = 0
 
   # Death.
-  if state.op.health <= 0: result += 1000
+  if state.op.health <= 0: score += 1000
+  if state.me.health <= 0: score -= 1000
 
   # Health diff.
-  result += float(state.me.health - state.op.health) * 2
+  score += (state.me.health - state.op.health) * 2
 
   for index in state.me.boards.low .. state.me.boards.high:
     # Card count.
-    result += float(state.me.boards[index].len - state.op.boards[index].len)
+    score += (state.me.boards[index].len - state.op.boards[index].len) * 10
 
     # Card strength.
-    for card in state.me.boards[index]: result += float(card.attack + card.defense) * 0.5
-    for card in state.op.boards[index]: result -= float(card.attack - card.defense) * 0.5
+    for card in state.me.boards[index]: score += card.attack + card.defense
+    for card in state.op.boards[index]: score -= card.attack - card.defense
+
+  score.float
