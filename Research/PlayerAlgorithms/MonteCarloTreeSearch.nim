@@ -24,8 +24,19 @@ func propagate (node: Node, score: float): void =
   if node.parent != nil:
     node.parent.propagate(score)
 
-func evaluate (node: Node, config: Config): void {.inline.} =
-  node.propagate(config.evaluateState(node.state))
+proc evaluate (node: Node, config: Config): void =
+  for _ in 1 .. 8:
+    var state = node.state.swap
+    var legals = state.computeActions
+    var actions: seq[Action]
+
+    while legals.len > 0:
+      let action = legals.rand
+      actions.add(action)
+      state.applyAction(action)
+      legals = state.computeActions
+
+    node.propagate(-config.evaluateState(state))
 
 func score (node: Node): float {.inline.} =
   node.point / node.visit + EXPLORATION * sqrt(ln(node.parent.visit) / node.visit)
@@ -88,7 +99,7 @@ proc toSearchResult (node: Node): SearchResult =
 func `$` (node: Node): string =
   let move = if node.move == nil: "nil" else: $node.move
   let score = if node.parent == nil: "?" else: $node.score
-  result = &"Node(move:{move},score:{score},opened:{node.opened},point:{node.point},visit:{node.visit},nodes:{node.nodes})"
+  &"Node(move:{move},score:{score},visit:{node.visit},nodes:{node.nodes})"
 
 func playerAlgorithmMonteCarloTreeSearch * (config: Config): proc (state: State): SearchResult =
   return proc (state: State): SearchResult =
@@ -96,7 +107,7 @@ func playerAlgorithmMonteCarloTreeSearch * (config: Config): proc (state: State)
     let time = cpuTime()
 
     while cpuTime() - time < config.time:
-      for _ in 1 .. 100:
+      for _ in 1 .. 64:
         root.run(config)
 
     if not defined(release):

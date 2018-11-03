@@ -212,6 +212,9 @@ proc computeActions * (state: State): seq[Action] =
 func copy * (state: State): State {.inline.} =
   State(halt: state.halt, me: state.me.copy, op: state.op.copy)
 
+func swap * (state: State): State {.inline.} =
+  State(halt: false, me: state.op.copy, op: state.me.copy)
+
 proc readState * (input: Input): State =
   var state = State()
   state.halt = false
@@ -232,6 +235,7 @@ proc readState * (input: Input): State =
         card.attackState = canAttack
         state.me.boards[card.lane].add(card)
       of opBoard:
+        card.attackState = canAttack
         state.op.boards[card.lane].add(card)
 
   state.me.handsize = state.me.hand.len
