@@ -12,11 +12,11 @@ proc simulate (config: Config, root: State): SearchResult =
     state.applyAction(action)
     legals = state.computeActions
 
-  SearchResult(actions: actions, score: config.evaluateState(state), state: state)
+  SearchResult(actions: actions, score: config.evaluateState(state))
 
 func playerAlgorithmFlatMonteCarlo * (config: Config): proc (state: State): SearchResult =
   return proc (state: State): SearchResult =
-    result = SearchResult(state: state, score: NegInf)
+    result = SearchResult(score: NegInf)
 
     let time = cpuTime()
 

@@ -22,4 +22,4 @@ func playerAlgorithmGreedy * (config: Config): proc (state: State): SearchResult
       state.applyAction(legals[bestIndex])
       legals = state.computeActions
 
-    SearchResult(actions: actions, score: config.evaluateState(state), state: state)
+    SearchResult(actions: actions, score: config.evaluateState(state))

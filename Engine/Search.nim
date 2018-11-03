@@ -5,7 +5,6 @@ type
   SearchResult * = ref object
     actions *: seq[Action]
     score   *: float
-    state   *: State
 
 func `$` * (searchResult: SearchResult): string =
   result = if searchResult.actions.len == 0: "PASS" else: searchResult.actions.join(";")

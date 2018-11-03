@@ -83,7 +83,7 @@ proc toSearchResult (node: Node): SearchResult =
     if next == nil:
       break
     root = next
-  SearchResult(actions: actions, score: root.score, state: root.state)
+  SearchResult(actions: actions, score: root.score)
 
 func `$` (node: Node): string =
   let move = if node.move == nil: "nil" else: $node.move

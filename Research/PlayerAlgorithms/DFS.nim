@@ -3,7 +3,7 @@ import .. / .. / Engine / [Action, Config, Search, State]
 
 func playerAlgorithmDFS * (config: Config): proc (state: State): SearchResult =
   return proc (state: State): SearchResult =
-    result = SearchResult(state: state, score: NegInf)
+    result = SearchResult(score: NegInf)
 
     let time = cpuTime()
 
@@ -44,7 +44,6 @@ func playerAlgorithmDFS * (config: Config): proc (state: State): SearchResult =
           for index in 0 .. statesPointer - 1:
             result.actions[index] = legals[index][legalsPointers[index]]
           result.score = score
-          result.state = state
 
           if score > 1000:
             break
