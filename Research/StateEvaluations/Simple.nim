@@ -16,6 +16,6 @@ func evaluateStateSimple * (state: State): float =
 
     # Card strength.
     for card in state.me.boards[index]: score += card.attack + card.defense
-    for card in state.op.boards[index]: score -= card.attack - card.defense
+    for card in state.op.boards[index]: score -= card.attack + card.defense
 
   score.float
