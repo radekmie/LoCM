@@ -11,7 +11,7 @@ func playerAlgorithmGreedy * (config: Config): proc (state: State): SearchResult
       var bestScore = 0.0
       for index in legals.low .. legals.high:
         var after = state.copy
-        after.applyMyAction(legals[index])
+        after.applyAction(legals[index])
 
         let score = config.evaluateState(after)
         if index == 0 or bestScore < score:
@@ -19,7 +19,7 @@ func playerAlgorithmGreedy * (config: Config): proc (state: State): SearchResult
           bestScore = score
 
       actions.add(legals[bestIndex])
-      state.applyMyAction(legals[bestIndex])
+      state.applyAction(legals[bestIndex])
       legals = state.computeActions
 
     SearchResult(actions: actions, score: config.evaluateState(state), state: state)

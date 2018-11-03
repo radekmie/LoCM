@@ -63,7 +63,7 @@ proc run (node: Node, config: Config): void =
 
     for action in node.state.computeActions:
       var state = node.state.copy
-      state.applyMyAction(action)
+      state.applyAction(action)
       node.nodes.add(Node(move: action, parent: node, state: state))
 
   if node.nodes.len == 0:

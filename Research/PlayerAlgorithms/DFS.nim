@@ -30,7 +30,7 @@ func playerAlgorithmDFS * (config: Config): proc (state: State): SearchResult =
         continue
 
       var next = states[statesPointer].copy
-      next.applyMyAction(legals[statesPointer][legalsPointers[statesPointer]])
+      next.applyAction(legals[statesPointer][legalsPointers[statesPointer]])
 
       statesPointer += 1
       states[statesPointer] = next

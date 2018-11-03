@@ -9,7 +9,7 @@ proc simulate (config: Config, root: State): SearchResult =
   while legals.len > 0:
     let action = legals.rand
     actions.add(action)
-    state.applyMyAction(action)
+    state.applyAction(action)
     legals = state.computeActions
 
   SearchResult(actions: actions, score: config.evaluateState(state), state: state)

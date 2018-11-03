@@ -7,162 +7,159 @@ type
     me   *: Gamer
     op   *: Gamer
 
-func applyAction * (state: var State, action: Action, me, op: var Gamer): void =
+func applyAction * (state: var State, action: Action): void =
+  var me = state.me
+  var op = state.op
+
   case action.actionType:
-  of attack:
-    var attacker: Card
-    var attackerBoard: int
-    var attackerIndex: int
-    for lane, board in me.boards:
-      for index, card in board:
-        if card.instanceId == action.id1:
-          attacker = card
-          attackerBoard = lane
-          attackerIndex = index
+    of attack:
+      var attacker: Card
+      var attackerBoard: int
+      var attackerIndex: int
+      for lane, board in me.boards:
+        for index, card in board:
+          if card.instanceId == action.id1:
+            attacker = card
+            attackerBoard = lane
+            attackerIndex = index
+            break
+
+      var attackerAfter = attacker.copy
+      attackerAfter.attackState = alreadyAttacked
+
+      if action.id2 == -1:
+        if attacker.hasDrain:
+          me.modifyHealth(attacker.attack)
+        op.modifyHealth(-attacker.attack)
+        me.boards[attackerBoard][attackerIndex] = attackerAfter
+      else:
+        var defender: Card
+        var defenderBoard: int
+        var defenderIndex: int
+        for lane, board in op.boards:
+          for index, card in board:
+            if card.instanceId == action.id2:
+              defender = card
+              defenderBoard = lane
+              defenderIndex = index
+              break
+
+        var defenderAfter = defender.copy
+
+        if defender.hasWard: defenderAfter.hasWard = attacker.attack == 0
+        if attacker.hasWard: attackerAfter.hasWard = defender.attack == 0
+
+        var damageGiven = if defender.hasWard: 0 else: attacker.attack
+        var damageTaken = if attacker.hasWard: 0 else: defender.attack
+        var healthGain  = 0
+        var healthTaken = 0
+
+        # attacking
+        if damageGiven >= defender.defense: defenderAfter = nil
+        if attacker.hasBreakthrough and defenderAfter == nil: healthTaken = defender.defense - damageGiven
+        if attacker.hasLethal and damageGiven > 0: defenderAfter = nil
+        if attacker.hasDrain and damageGiven > 0: healthGain = attacker.attack
+        if defenderAfter != nil: defenderAfter.defense -= damageGiven
+
+        # defending
+        if damageTaken >= attacker.defense: attackerAfter = nil
+        if defender.hasLethal and damageTaken > 0: attackerAfter = nil
+        if attackerAfter != nil: attackerAfter.defense -= damageTaken
+
+        if attackerAfter == nil:
+          me.boards[attackerBoard].delete(attackerIndex)
+        else:
+          me.boards[attackerBoard][attackerIndex] = attackerAfter
+
+        if defenderAfter == nil:
+          op.boards[defenderBoard].delete(defenderIndex)
+        else:
+          op.boards[defenderBoard][defenderIndex] = defenderAfter
+
+        me.modifyHealth(healthGain)
+        op.modifyHealth(healthTaken)
+    of pass:
+      state.halt = true
+    of summon:
+      var card: Card
+      for cardIndex, cardOnHand in me.hand:
+        if cardOnHand.instanceId == action.id:
+          card = cardOnHand
+          me.hand.delete(cardIndex)
+          me.handsize -= 1
           break
 
-    var attackerAfter = attacker.copy
-    attackerAfter.attackState = alreadyAttacked
+      card.attackState = if card.hasCharge: canAttack else: noAttack
+      me.boards[action.lane].add(card)
+      me.currentMana -= card.cost
+      me.nextTurnDraw += card.cardDraw
+      me.modifyHealth(card.myHealthChange)
+      op.modifyHealth(card.opHealthChange)
+    of use:
+      var item: Card
+      for cardIndex, cardOnHand in me.hand:
+        if cardOnHand.instanceId == action.id1:
+          item = cardOnHand
+          me.hand.delete(cardIndex)
+          me.handsize -= 1
+          break
 
-    if action.id2 == -1:
-      if attacker.hasDrain:
-        me.modifyHealth(attacker.attack)
-      op.modifyHealth(-attacker.attack)
-      me.boards[attackerBoard][attackerIndex] = attackerAfter
-    else:
-      var defender: Card
-      var defenderBoard: int
-      var defenderIndex: int
-      for lane, board in op.boards:
-        for index, card in board:
-          if card.instanceId == action.id2:
-            defender = card
-            defenderBoard = lane
-            defenderIndex = index
-            break
+      me.currentMana -= item.cost
+      me.nextTurnDraw += item.cardDraw
+      me.modifyHealth(item.myHealthChange)
+      op.modifyHealth(item.opHealthChange + item.defense)
 
-      var defenderAfter = defender.copy
+      if action.id2 != -1:
+        let targetOwner = if item.cardType == itemGreen: me else: op
 
-      if defender.hasWard: defenderAfter.hasWard = attacker.attack == 0
-      if attacker.hasWard: attackerAfter.hasWard = defender.attack == 0
+        var target: Card
+        var targetBoard: int
+        var targetIndex: int
+        for lane, board in targetOwner.boards:
+          for index, card in board:
+            if card.instanceId == action.id2:
+              target = card
+              targetBoard = lane
+              targetIndex = index
+              break
 
-      var damageGiven = if defender.hasWard: 0 else: attacker.attack
-      var damageTaken = if attacker.hasWard: 0 else: defender.attack
-      var healthGain  = 0
-      var healthTaken = 0
+        var targetAfter = target.copy
 
-      # attacking
-      if damageGiven >= defender.defense: defenderAfter = nil
-      if attacker.hasBreakthrough and defenderAfter == nil: healthTaken = defender.defense - damageGiven
-      if attacker.hasLethal and damageGiven > 0: defenderAfter = nil
-      if attacker.hasDrain and damageGiven > 0: healthGain = attacker.attack
-      if defenderAfter != nil: defenderAfter.defense -= damageGiven
+        case item.cardType:
+          of creature:
+            discard "Shouldn't happen."
+          of itemBlue, itemRed:
+            targetAfter.hasCharge       = target.hasCharge       and not item.hasCharge
+            targetAfter.hasBreakthrough = target.hasBreakthrough and not item.hasBreakthrough
+            targetAfter.hasDrain        = target.hasDrain        and not item.hasDrain
+            targetAfter.hasGuard        = target.hasGuard        and not item.hasGuard
+            targetAfter.hasLethal       = target.hasLethal       and not item.hasLethal
+            targetAfter.hasWard         = target.hasWard         and not item.hasWard
+          of itemGreen:
+            targetAfter.hasCharge       = target.hasCharge       or item.hasCharge
+            targetAfter.hasBreakthrough = target.hasBreakthrough or item.hasBreakthrough
+            targetAfter.hasDrain        = target.hasDrain        or item.hasDrain
+            targetAfter.hasGuard        = target.hasGuard        or item.hasGuard
+            targetAfter.hasLethal       = target.hasLethal       or item.hasLethal
+            targetAfter.hasWard         = target.hasWard         or item.hasWard
 
-      # defending
-      if damageTaken >= attacker.defense: attackerAfter = nil
-      if defender.hasLethal and damageTaken > 0: attackerAfter = nil
-      if attackerAfter != nil: attackerAfter.defense -= damageTaken
+            if item.hasCharge and targetAfter.attackState != alreadyAttacked:
+              targetAfter.attackState = canAttack
 
-      if attackerAfter == nil:
-        me.boards[attackerBoard].delete(attackerIndex)
-      else:
-        me.boards[attackerBoard][attackerIndex] = attackerAfter
+        targetAfter.attack = max(0, target.attack + item.attack)
 
-      if defenderAfter == nil:
-        op.boards[defenderBoard].delete(defenderIndex)
-      else:
-        op.boards[defenderBoard][defenderIndex] = defenderAfter
+        if targetAfter.hasWard and item.defense < 0:
+          targetAfter.hasWard = false
+        else:
+          targetAfter.defense += item.defense
 
-      me.modifyHealth(healthGain)
-      op.modifyHealth(healthTaken)
-  of pass:
-    state.halt = true
-  of summon:
-    var card: Card
-    for cardIndex, cardOnHand in me.hand:
-      if cardOnHand.instanceId == action.id:
-        card = cardOnHand
-        me.hand.delete(cardIndex)
-        me.handsize -= 1
-        break
+        if targetAfter.defense <= 0:
+          targetAfter = nil
 
-    card.attackState = if card.hasCharge: canAttack else: noAttack
-    me.boards[action.lane].add(card)
-    me.currentMana -= card.cost
-    me.nextTurnDraw += card.cardDraw
-    me.modifyHealth(card.myHealthChange)
-    op.modifyHealth(card.opHealthChange)
-  of use:
-    var item: Card
-    for cardIndex, cardOnHand in me.hand:
-      if cardOnHand.instanceId == action.id1:
-        item = cardOnHand
-        me.hand.delete(cardIndex)
-        me.handsize -= 1
-        break
-
-    me.currentMana -= item.cost
-    me.nextTurnDraw += item.cardDraw
-    me.modifyHealth(item.myHealthChange)
-    op.modifyHealth(item.opHealthChange + item.defense)
-
-    if action.id2 != -1:
-      let targetOwner = if item.cardType == itemGreen: me else: op
-
-      var target: Card
-      var targetBoard: int
-      var targetIndex: int
-      for lane, board in targetOwner.boards:
-        for index, card in board:
-          if card.instanceId == action.id2:
-            target = card
-            targetBoard = lane
-            targetIndex = index
-            break
-
-      var targetAfter = target.copy
-
-      case item.cardType:
-        of creature:
-          discard "Shouldn't happen."
-        of itemBlue, itemRed:
-          targetAfter.hasCharge       = target.hasCharge       and not item.hasCharge
-          targetAfter.hasBreakthrough = target.hasBreakthrough and not item.hasBreakthrough
-          targetAfter.hasDrain        = target.hasDrain        and not item.hasDrain
-          targetAfter.hasGuard        = target.hasGuard        and not item.hasGuard
-          targetAfter.hasLethal       = target.hasLethal       and not item.hasLethal
-          targetAfter.hasWard         = target.hasWard         and not item.hasWard
-        of itemGreen:
-          targetAfter.hasCharge       = target.hasCharge       or item.hasCharge
-          targetAfter.hasBreakthrough = target.hasBreakthrough or item.hasBreakthrough
-          targetAfter.hasDrain        = target.hasDrain        or item.hasDrain
-          targetAfter.hasGuard        = target.hasGuard        or item.hasGuard
-          targetAfter.hasLethal       = target.hasLethal       or item.hasLethal
-          targetAfter.hasWard         = target.hasWard         or item.hasWard
-
-          if item.hasCharge and targetAfter.attackState != alreadyAttacked:
-            targetAfter.attackState = canAttack
-
-      targetAfter.attack = max(0, target.attack + item.attack)
-
-      if targetAfter.hasWard and item.defense < 0:
-        targetAfter.hasWard = false
-      else:
-        targetAfter.defense += item.defense
-
-      if targetAfter.defense <= 0:
-        targetAfter = nil
-
-      if targetAfter == nil:
-        targetOwner.boards[targetBoard].delete(targetIndex)
-      else:
-        targetOwner.boards[targetBoard][targetIndex] = targetAfter
-
-func applyMyAction * (state: var State, action: Action): void {.inline.} =
-  state.applyAction(action, state.me, state.op)
-
-func applyOpAction * (state: var State, action: Action): void {.inline.} =
-  state.applyAction(action, state.op, state.me)
+        if targetAfter == nil:
+          targetOwner.boards[targetBoard].delete(targetIndex)
+        else:
+          targetOwner.boards[targetBoard][targetIndex] = targetAfter
 
 proc computeActions * (state: State): seq[Action] =
   if state.halt:
