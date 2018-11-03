@@ -28,19 +28,24 @@ func evaluate (node: Node, config: Config): void {.inline.} =
   node.propagate(config.evaluateState(node.state))
 
 func score (node: Node): float {.inline.} =
-  if node.visit < 1:
-    return 9999
+  node.point / node.visit + EXPLORATION * sqrt(ln(node.parent.visit) / node.visit)
 
-  result = node.point / node.visit
-  if node.parent != nil:
-    result += EXPLORATION * sqrt(ln(node.parent.visit) / node.visit)
-
-func pick (node: Node): Node =
+proc pick (node: Node): Node =
+  # Nothing to pick from.
   if node.nodes.len == 0:
     return nil
 
+  # Not opened first.
+  var notOpened: seq[int]
+  for index in node.nodes.low .. node.nodes.high:
+    if not node.nodes[index].opened:
+      notOpened.add(index)
+  if notOpened.len > 0:
+    return node.nodes[notOpened.rand]
+
+  # Best.
   var bestIndex = 0
-  var bestScore = 0.0
+  var bestScore = NegInf
 
   for index in node.nodes.low .. node.nodes.high:
     let score = node.nodes[index].score
@@ -50,7 +55,7 @@ func pick (node: Node): Node =
 
   node.nodes[bestIndex]
 
-func run (node: Node, config: Config): void =
+proc run (node: Node, config: Config): void =
   let wasExpanding = not node.opened
   if wasExpanding:
     node.nodes = @[]
@@ -68,7 +73,7 @@ func run (node: Node, config: Config): void =
   else:
     node.pick.run(config)
 
-func toSearchResult (node: Node): SearchResult =
+proc toSearchResult (node: Node): SearchResult =
   var actions: seq[Action]
   var root = node
   while true:
@@ -82,7 +87,8 @@ func toSearchResult (node: Node): SearchResult =
 
 func `$` (node: Node): string =
   let move = if node.move == nil: "nil" else: $node.move
-  result = &"Node(move:{move},score:{node.score},opened:{node.opened},point:{node.point},visit:{node.visit},nodes:{node.nodes})"
+  let score = if node.parent == nil: "?" else: $node.score
+  result = &"Node(move:{move},score:{score},opened:{node.opened},point:{node.point},visit:{node.visit},nodes:{node.nodes})"
 
 func playerAlgorithmMonteCarloTreeSearch * (config: Config): proc (state: State): SearchResult =
   return proc (state: State): SearchResult =
