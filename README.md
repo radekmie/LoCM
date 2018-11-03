@@ -34,22 +34,21 @@ nim c -d:release Tester.nim
 
 **[Draft evaluations](Research/DraftEvaluations):**
 
-* [x] ClosetAI ([source](Research/DraftEvaluations/ClosetAI.nim))
-* [x] Icebox ([source](Research/DraftEvaluations/Icebox.nim))
-* [x] Manual ([source](Research/DraftEvaluations/Manual.nim))
-* [x] Random ([source](Research/DraftEvaluations/Random.nim))
+* [x] ClosetAI (`--draft=ClosetAI`, [source](Research/DraftEvaluations/ClosetAI.nim))
+* [x] Icebox (`--draft=Icebox`, [source](Research/DraftEvaluations/Icebox.nim))
+* [x] Manual (`--draft=Manual`, [source](Research/DraftEvaluations/Manual.nim))
+* [x] Random (`--draft=Random`, [source](Research/DraftEvaluations/Random.nim))
 
 **[Player algorithms](Research/PlayerAlgorithms):**
 
 * [ ] Bridge Burning Monte Carlo Tree Search
-* [x] DFS ([source](Research/PlayerAlgorithms/DFS.nim))
-* [x] Flat Monte Carlo ([source](Research/PlayerAlgorithms/FMC.nim))
-* [x] Greedy ([source](Research/PlayerAlgorithms/Greedy.nim))
-* [x] Monte Carlo Tree Search ([source](Research/PlayerAlgorithms/MCTS.nim))
-* [ ] Monte Carlo Tree Search + opponent lookahead (greedy)
-* [ ] Monte Carlo Tree Search + opponent lookahead (greedy) + pruning
-* [x] Noop ([source](Research/PlayerAlgorithms/Noop.nim))
+* [x] DFS (`--player=DFS`, [source](Research/PlayerAlgorithms/DFS.nim))
+* [x] Flat Monte Carlo (`--player=FMC`, [source](Research/PlayerAlgorithms/FMC.nim))
+* [x] Greedy (`--player=Greedy`, [source](Research/PlayerAlgorithms/Greedy.nim))
+* [x] Monte Carlo Tree Search (`--player=MCTS`, [source](Research/PlayerAlgorithms/MCTS.nim))
+* [ ] Monte Carlo Tree Search + pruning
+* [x] Noop (`--player=Noop`, [source](Research/PlayerAlgorithms/Noop.nim))
 
 **[State evaluations](Research/StateEvaluations):**
 
-* [x] Simple ([source](Research/StateEvaluations/Simple.nim))
+* [x] Simple (`--state=Simple`, [source](Research/StateEvaluations/Simple.nim))
