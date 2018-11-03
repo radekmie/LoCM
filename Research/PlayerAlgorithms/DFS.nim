@@ -3,7 +3,7 @@ import .. / .. / Engine / [Action, Config, Search, State]
 
 func playerAlgorithmDFS * (config: Config): proc (state: State): SearchResult =
   return proc (state: State): SearchResult =
-    result = SearchResult(state: state)
+    result = SearchResult(state: state, score: NegInf)
 
     let time = cpuTime()
 
