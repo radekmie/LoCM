@@ -101,7 +101,7 @@ func `$` (node: Node): string =
   let score = if node.parent == nil: "?" else: $node.score
   &"Node(move:{move},score:{score},visit:{node.visit},nodes:{node.nodes})"
 
-func playerAlgorithmMonteCarloTreeSearch * (config: Config): proc (state: State): SearchResult =
+func playerAlgorithmMCTS * (config: Config): proc (state: State): SearchResult =
   return proc (state: State): SearchResult =
     var root = Node(state: state)
     let time = cpuTime()

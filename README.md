@@ -25,7 +25,7 @@ nim c -d:release Tester.nim
 ./Tester \
   --referee="java -jar LoCM.jar" \
   --player1="./Player --draft=Icebox --player=DFS --time=100" \
-  --player2="./Player --draft=ClosetAI --player=FlatMonteCarlo --time=150" \
+  --player2="./Player --draft=ClosetAI --player=FMC --time=150" \
   --games=16 \
   --threads=4
 ```
@@ -43,9 +43,9 @@ nim c -d:release Tester.nim
 
 * [ ] Bridge Burning Monte Carlo Tree Search
 * [x] DFS ([source](Research/PlayerAlgorithms/DFS.nim))
-* [x] Flat Monte Carlo ([source](Research/PlayerAlgorithms/FlatMonteCarlo.nim))
+* [x] Flat Monte Carlo ([source](Research/PlayerAlgorithms/FMC.nim))
 * [x] Greedy ([source](Research/PlayerAlgorithms/Greedy.nim))
-* [x] Monte Carlo Tree Search ([source](Research/PlayerAlgorithms/MonteCarloTreeSearch.nim))
+* [x] Monte Carlo Tree Search ([source](Research/PlayerAlgorithms/MCTS.nim))
 * [ ] Monte Carlo Tree Search + opponent lookahead (greedy)
 * [ ] Monte Carlo Tree Search + opponent lookahead (greedy) + pruning
 * [x] Noop ([source](Research/PlayerAlgorithms/Noop.nim))

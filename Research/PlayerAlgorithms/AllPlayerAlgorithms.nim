@@ -1,11 +1,11 @@
 import std / tables
-import DFS, FlatMonteCarlo, Greedy, MonteCarloTreeSearch, Noop
+import DFS, FMC, Greedy, MCTS, Noop
 
 const playerAlgorithms * = toTable({
-  "default":              playerAlgorithmDFS,
-  "DFS":                  playerAlgorithmDFS,
-  "FlatMonteCarlo":       playerAlgorithmFlatMonteCarlo,
-  "MonteCarloTreeSearch": playerAlgorithmMonteCarloTreeSearch,
-  "Greedy":               playerAlgorithmGreedy,
-  "Noop":                 playerAlgorithmNoop,
+  "default": playerAlgorithmDFS,
+  "DFS":     playerAlgorithmDFS,
+  "FMC":     playerAlgorithmFMC,
+  "Greedy":  playerAlgorithmGreedy,
+  "MCTS":    playerAlgorithmMCTS,
+  "Noop":    playerAlgorithmNoop,
 })

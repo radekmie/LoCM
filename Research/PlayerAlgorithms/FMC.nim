@@ -14,7 +14,7 @@ proc simulate (config: Config, root: State): SearchResult =
 
   SearchResult(actions: actions, score: config.evaluateState(state))
 
-func playerAlgorithmFlatMonteCarlo * (config: Config): proc (state: State): SearchResult =
+func playerAlgorithmFMC * (config: Config): proc (state: State): SearchResult =
   return proc (state: State): SearchResult =
     result = SearchResult(score: NegInf)
 
