@@ -25,6 +25,8 @@ func propagate (node: Node, score: float): void =
     node.parent.propagate(score)
 
 proc evaluate (node: Node, config: Config): void =
+  var score = config.evaluateState(node.state)
+
   for _ in 1 .. 8:
     var state = node.state.swap
     var legals = state.computeActions
@@ -35,8 +37,9 @@ proc evaluate (node: Node, config: Config): void =
       actions.add(action)
       state.applyAction(action)
       legals = state.computeActions
+      score = score.min(config.evaluateState(state.swap))
 
-    node.propagate(-config.evaluateState(state))
+  node.propagate(score)
 
 func score (node: Node): float {.inline.} =
   node.point / node.visit + EXPLORATION * sqrt(ln(node.parent.visit) / node.visit)
@@ -107,7 +110,7 @@ func playerAlgorithmMCTS * (config: Config): proc (state: State): SearchResult =
     let time = cpuTime()
 
     while cpuTime() - time < config.time:
-      for _ in 1 .. 64:
+      for _ in 1 .. 8:
         root.run(config)
 
     if not defined(release):
