@@ -46,6 +46,7 @@ nim c -d:release Tester.nim
 * [x] Flat Monte Carlo (`--player=FMC`, [source](Research/PlayerAlgorithms/FMC.nim))
 * [x] Greedy (`--player=Greedy`, [source](Research/PlayerAlgorithms/Greedy.nim))
 * [x] Monte Carlo Tree Search (`--player=MCTS`, [source](Research/PlayerAlgorithms/MCTS.nim))
+* [x] Monte Carlo Tree Search - lookahead (`--player=MCTS0`, [source](Research/PlayerAlgorithms/MCTS0.nim))
 * [ ] Monte Carlo Tree Search + pruning
 * [x] Noop (`--player=Noop`, [source](Research/PlayerAlgorithms/Noop.nim))
 
