@@ -47,7 +47,7 @@ nim c -d:release Tester.nim
 * [x] Greedy (`--player=Greedy`, [source](Research/PlayerAlgorithms/Greedy.nim))
 * [x] Monte Carlo Tree Search (`--player=MCTS`, [source](Research/PlayerAlgorithms/MCTS.nim))
 * [x] Monte Carlo Tree Search - lookahead (`--player=MCTS0`, [source](Research/PlayerAlgorithms/MCTS0.nim))
-* [ ] Monte Carlo Tree Search + pruning
+* [x] Monte Carlo Tree Search + pruning (`--player=MCTSP`, [source](Research/PlayerAlgorithms/MCTSP.nim))
 * [x] Noop (`--player=Noop`, [source](Research/PlayerAlgorithms/Noop.nim))
 
 **[State evaluations](Research/StateEvaluations):**
