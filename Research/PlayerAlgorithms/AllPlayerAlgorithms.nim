@@ -1,8 +1,9 @@
 import std / tables
-import DFS, FMC, Greedy, MCTS, MCTS0, MCTSP, Noop
+import BBMCTS, DFS, FMC, Greedy, MCTS, MCTS0, MCTSP, Noop
 
 const playerAlgorithms * = toTable({
   "default": playerAlgorithmDFS,
+  "BBMCTS":  playerAlgorithmBBMCTS,
   "DFS":     playerAlgorithmDFS,
   "FMC":     playerAlgorithmFMC,
   "Greedy":  playerAlgorithmGreedy,

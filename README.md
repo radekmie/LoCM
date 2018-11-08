@@ -41,7 +41,7 @@ nim c -d:release Tester.nim
 
 **[Player algorithms](Research/PlayerAlgorithms):**
 
-* [ ] Bridge Burning Monte Carlo Tree Search
+* [x] Bridge Burning Monte Carlo Tree Search (`--player=BBMCTS`, [source](Research/PlayerAlgorithms/BBMCTS.nim))
 * [x] DFS (`--player=DFS`, [source](Research/PlayerAlgorithms/DFS.nim))
 * [x] Flat Monte Carlo (`--player=FMC`, [source](Research/PlayerAlgorithms/FMC.nim))
 * [x] Greedy (`--player=Greedy`, [source](Research/PlayerAlgorithms/Greedy.nim))
