@@ -49,7 +49,7 @@ func copy * (card: Card): Card {.inline.} =
   deepCopy(result, card)
 
 proc readCard * (input: Input): Card =
-  let card = Card()
+  let card = Card(attackState: noAttack)
 
   card.cardNumber = input.getInt
   card.instanceId = input.getInt
