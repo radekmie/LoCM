@@ -219,6 +219,12 @@ func newState * (): State {.inline.} =
   result = State(me: newGamer(), op: newGamer())
   result.op.bonusMana = true
 
+func rechargeMana * (state: var State, turn: int): void =
+  for player in [state.me, state.op]:
+    player.bonusMana = player.bonusMana and (turn == 1 or player.currentMana > 0)
+    player.maxMana = min(turn, 12) + (if player.bonusMana: 1 else: 0)
+    player.currentMana = player.maxMana
+
 func swap * (state: State): State {.inline.} =
   State(halt: false, me: state.op.copy, op: state.me.copy)
 
