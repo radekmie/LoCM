@@ -1,18 +1,17 @@
-import std / random
 import Draft, Search, State
 
 type
   Config * = ref object
-    playAlgorithm *: proc (config: Config): proc (state: State): SearchResult
-    evaluateDraft *: proc (state: State): DraftResult
-    evaluateState *: proc (state: State): float
-    seed          *: int
-    time          *: float
+    evalDraftFn *: proc (config: Config, state: State): DraftResult
+    evalStateFn *: proc (config: Config, state: State): float
+    playFn *: proc (config: Config, state: State): SearchResult
+    time *: float
 
-func eval * (config: Config): proc (state: State): DraftResult =
-  config.evaluateDraft
+proc evalDraft * (config: Config, state: State): DraftResult =
+  config.evalDraftFn(config, state)
 
-proc play * (config: Config): proc (state: State): SearchResult =
-  config.seed.randomize
-  config.time /= 1000
-  config.playAlgorithm(config)
+proc evalState * (config: Config, state: State): float =
+  config.evalStateFn(config, state)
+
+proc play * (config: Config, state: State): SearchResult =
+  config.playFn(config, state)

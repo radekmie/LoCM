@@ -1,5 +1,5 @@
 import std / sequtils
-import .. / .. / Engine / [Card, Draft, State]
+import .. / .. / Engine / [Card, Config, Draft, State]
 
 const scores = [
   -666,   65,   50,   80,   50,   70,   71,  115,   71,   73,
@@ -20,5 +20,5 @@ const scores = [
   -100, -100, -100, -100, -100, -100, -100, -100, -100, -100,
 ].mapLiterals(float)
 
-func evaluateDraftClosetAI * (state: State): DraftResult =
+func evaluateDraftClosetAI * (config: Config, state: State): DraftResult =
   state.evaluateDraftWith(func (card: Card): float = scores[card.cardNumber])

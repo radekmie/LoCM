@@ -1,6 +1,6 @@
-import .. / .. / Engine / [Card, Draft, State]
+import .. / .. / Engine / [Card, Config, Draft, State]
 
-func evaluateDraftIcebox * (state: State): DraftResult =
+func evaluateDraftIcebox * (config: Config, state: State): DraftResult =
   state.evaluateDraftWith(func (card: Card): float =
     return
       (card.attack.float + card.defense.float) -

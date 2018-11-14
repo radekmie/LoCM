@@ -1,40 +1,12 @@
-import std / [parseopt, streams, strutils, tables]
-import Engine / [Config, Draft, Input, Search, State]
-import Research / [
-  DraftEvaluations / AllDraftEvaluations,
-  PlayerAlgorithms / AllPlayerAlgorithms,
-  StateEvaluations / AllStateEvaluations,
-]
+import Engine / [Config, Draft, Search, State]
+import Research / IOHelpers
 
-proc readConfig (): Config =
-  result = Config(
-    evaluateDraft: draftEvaluations["default"],
-    evaluateState: stateEvaluations["default"],
-    playAlgorithm: playerAlgorithms["default"],
-    seed: 0,
-    time: 190.0
-  )
+proc main (): void =
+  let config = getConfig()
+  var input = getInput()
 
-  for kind, key, value in getOpt():
-    case kind:
-      of cmdLongOption, cmdShortOption:
-        case key:
-          of "draft":  result.evaluateDraft = draftEvaluations[value]
-          of "player": result.playAlgorithm = playerAlgorithms[value]
-          of "state":  result.evaluateState = stateEvaluations[value]
-          of "seed":   result.seed = value.parseInt
-          of "time":   result.time = value.parseFloat
-          else: discard
-      else: discard
+  for turn in 1 .. 30: echo config.evalDraft(input.readState)
+  for turn in 1 .. 99: echo config.play(input.readState)
 
 when isMainModule:
-  proc main(): void =
-    let config = readConfig()
-    let eval = config.eval
-    let play = config.play
-
-    var input = stdin.newFileStream.newInput
-    for turn in 1 .. 30: echo input.readState.eval
-    for turn in 1 .. 99: echo input.readState.play
-
   main()

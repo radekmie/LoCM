@@ -1,7 +1,7 @@
 import .. / .. / Engine / [Action, Config, Search, State]
 
-func playerAlgorithmGreedy * (config: Config): proc (state: State): SearchResult =
-  return proc (root: State): SearchResult =
+proc playerAlgorithmGreedy * (config: Config, root: State): SearchResult =
+  block:
     var state = root.copy
     var legals = state.computeActions
     var actions: seq[Action]
@@ -13,7 +13,7 @@ func playerAlgorithmGreedy * (config: Config): proc (state: State): SearchResult
         var after = state.copy
         after.applyAction(legals[index])
 
-        let score = config.evaluateState(after)
+        let score = config.evalState(after)
         if index == 0 or bestScore < score:
           bestIndex = index
           bestScore = score
@@ -22,4 +22,4 @@ func playerAlgorithmGreedy * (config: Config): proc (state: State): SearchResult
       state.applyAction(legals[bestIndex])
       legals = state.computeActions
 
-    SearchResult(actions: actions, score: config.evaluateState(state))
+    SearchResult(actions: actions, score: config.evalState(state))

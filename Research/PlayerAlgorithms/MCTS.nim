@@ -2,9 +2,9 @@ import std / [random, times]
 import Shared / MCTSNode
 import .. / .. / Engine / [Action, Config, Search, State]
 
-func playerAlgorithmMCTS * (config: Config): proc (state: State): SearchResult =
+proc playerAlgorithmMCTS * (config: Config, state: State): SearchResult =
   proc evaluate (node: MCTSNode): void =
-    var score = config.evaluateState(node.state)
+    var score = config.evalState(node.state)
 
     for _ in 1 .. 8:
       var state = node.state.copy.swap
@@ -16,11 +16,11 @@ func playerAlgorithmMCTS * (config: Config): proc (state: State): SearchResult =
         actions.add(action)
         state.applyAction(action)
         legals = state.computeActions
-        score = score.min(config.evaluateState(state.swap))
+        score = score.min(config.evalState(state.swap))
 
     node.propagate(score)
 
-  return proc (state: State): SearchResult =
+  block:
     var root = MCTSNode(state: state)
     let time = cpuTime()
 

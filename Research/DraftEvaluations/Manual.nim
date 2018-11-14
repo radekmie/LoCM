@@ -1,6 +1,6 @@
-import .. / .. / Engine / [Card, Draft, State]
+import .. / .. / Engine / [Card, Config, Draft, State]
 
-func evaluateDraftManual * (state: State): DraftResult =
+func evaluateDraftManual * (config: Config, state: State): DraftResult =
   state.evaluateDraftWith(func (card: Card): float =
     return
       (card.attack + card.defense) / (card.cost + 5) +

@@ -1,6 +1,6 @@
-import .. / .. / Engine / State
+import .. / .. / Engine / [Config, State]
 
-func evaluateStateSimple * (state: State): float =
+func evaluateStateSimple * (config: Config, state: State): float =
   var score = 0
 
   # Death.

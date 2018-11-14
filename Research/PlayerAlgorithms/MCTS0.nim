@@ -2,11 +2,11 @@ import std / [random, times]
 import Shared / MCTSNode
 import .. / .. / Engine / [Action, Config, Search, State]
 
-func playerAlgorithmMCTS0 * (config: Config): proc (state: State): SearchResult =
+proc playerAlgorithmMCTS0 * (config: Config, state: State): SearchResult =
   proc evaluate (node: MCTSNode): void =
-    node.propagate(config.evaluateState(node.state))
+    node.propagate(config.evalState(node.state))
 
-  return proc (state: State): SearchResult =
+  block:
     var root = MCTSNode(state: state)
     let time = cpuTime()
 

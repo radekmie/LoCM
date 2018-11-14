@@ -12,10 +12,10 @@ proc simulate (config: Config, root: State): SearchResult =
     state.applyAction(action)
     legals = state.computeActions
 
-  SearchResult(actions: actions, score: config.evaluateState(state))
+  SearchResult(actions: actions, score: config.evalState(state))
 
-func playerAlgorithmFMC * (config: Config): proc (state: State): SearchResult =
-  return proc (state: State): SearchResult =
+proc playerAlgorithmFMC * (config: Config, state: State): SearchResult =
+  block:
     result = SearchResult(score: NegInf)
 
     let time = cpuTime()

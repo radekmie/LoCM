@@ -1,8 +1,8 @@
 import std / times
 import .. / .. / Engine / [Action, Config, Search, State]
 
-func playerAlgorithmDFS * (config: Config): proc (state: State): SearchResult =
-  return proc (state: State): SearchResult =
+proc playerAlgorithmDFS * (config: Config, state: State): SearchResult =
+  block:
     result = SearchResult(score: NegInf)
 
     let time = cpuTime()
@@ -38,7 +38,7 @@ func playerAlgorithmDFS * (config: Config): proc (state: State): SearchResult =
       legalsPointers[statesPointer] = 0
 
       if legals[statesPointer].len == 0:
-        let score = config.evaluateState(states[statesPointer])
+        let score = config.evalState(states[statesPointer])
         if score > result.score:
           result.actions.newSeq(statesPointer)
           for index in 0 .. statesPointer - 1:
