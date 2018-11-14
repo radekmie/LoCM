@@ -212,6 +212,9 @@ proc computeActions * (state: State): seq[Action] =
 func copy * (state: State): State {.inline.} =
   State(halt: state.halt, me: state.me.copy, op: state.op.copy)
 
+func isGameOver * (state: State): bool {.inline.} =
+  state.me.health <= 0 or state.op.health <= 0
+
 func newState * (): State {.inline.} =
   result = State(me: newGamer(), op: newGamer())
   result.op.bonusMana = true
