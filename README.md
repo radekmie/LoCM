@@ -3,10 +3,12 @@
 ```sh
 # Debug build
 nim c Player.nim
+nim c Runner.nim
 nim c Tester.nim
 
 # Release build
 nim c -d:release Player.nim
+nim c -d:release Runner.nim
 nim c -d:release Tester.nim
 ```
 
@@ -14,10 +16,26 @@ nim c -d:release Tester.nim
 
 ```sh
 ./Player --draft="" --player="" --seed=N --state="" --time=N
+./Runner --p1-draft="" --p1-player="" --p1-state="" --p1-time=N --p2-draft="" --p2-player="" --p2-state="" --p2-time=N --games=N --verbose=false
 ./Tester --referee="" --plain=false --player1="" --player2="" --games=N --threads=N --replays=false
 ```
 
 ### Run
+
+```sh
+nim c -d:release Runner.nim
+./Runner \
+  --p1-draft=Icebox \
+  --p1-player=DFS \
+  --p1-time=100 \
+  --p2-draft=ClosetAI \
+  --p2-player=FMC \
+  --p2-time=150 \
+  --games=16 \
+  --verbose=false
+```
+
+### Run (CG referee)
 
 ```sh
 nim c -d:release Player.nim
