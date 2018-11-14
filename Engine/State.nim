@@ -212,6 +212,10 @@ proc computeActions * (state: State): seq[Action] =
 func copy * (state: State): State {.inline.} =
   State(halt: state.halt, me: state.me.copy, op: state.op.copy)
 
+func newState * (): State {.inline.} =
+  result = State(me: newGamer(), op: newGamer())
+  result.op.bonusMana = true
+
 func swap * (state: State): State {.inline.} =
   State(halt: false, me: state.op.copy, op: state.me.copy)
 
