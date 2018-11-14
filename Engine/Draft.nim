@@ -3,22 +3,17 @@ import Card, State
 
 type
   DraftResult * = ref object
-    scores *: seq[float]
-    state  *: State
+    index *: int
+    score *: float
 
 func `$` * (draftResult: DraftResult): string =
-  var bestIndex: int
-  var bestScore: float = -99999
-
-  for index, score in draftResult.scores:
-    if score > bestScore:
-      bestIndex = index
-      bestScore = score
-
-  &"PICK {bestIndex} # score: {bestScore}"
+  &"PICK {draftResult.index} # score: {draftResult.score}"
 
 func evaluateDraftWith * (state: State, evaluate: func (card: Card): float): DraftResult {.inline.} =
-  result = DraftResult(state: state)
+  result = DraftResult(score: NegInf)
 
-  for card in state.me.hand:
-    result.scores.add(card.evaluate)
+  for index, card in state.me.hand:
+    let score = card.evaluate
+    if score > result.score:
+      result.index = index
+      result.score = score
