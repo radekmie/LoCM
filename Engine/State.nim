@@ -225,6 +225,12 @@ func rechargeMana * (state: var State, turn: int): void =
     player.maxMana = min(turn, 12) + (if player.bonusMana: 1 else: 0)
     player.currentMana = player.maxMana
 
+func rechargeCreatures * (state: var State): void =
+  for player in [state.me, state.op]:
+    for lane in player.boards:
+      for card in lane:
+        card.attackState = canAttack
+
 func swap * (state: State): State {.inline.} =
   State(halt: false, me: state.op.copy, op: state.me.copy)
 
