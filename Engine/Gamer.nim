@@ -4,6 +4,7 @@ import Card, Constants, Input
 type
   Gamer * = ref object
     boards       *: array[Lanes, seq[Card]]
+    bonusMana    *: bool
     currentMana  *: int
     decksize     *: int
     hand         *: seq[Card]
@@ -23,10 +24,12 @@ func modifyHealth * (gamer: var Gamer, diff: int): void =
       break
 
 func `$` * (gamer: Gamer): string =
-  &"{gamer.health:2} ({gamer.rune}) HP  {gamer.currentMana:2}/{gamer.maxMana:2} MP  {gamer.decksize:2} D (+{gamer.nextTurnDraw})"
+  let bonusMana = if gamer.bonusMana: '+' else: ' '
+  &"{gamer.health:2} ({gamer.rune:2}) HP  {gamer.currentMana:2}/{gamer.maxMana:2} MP{bonusMana} {gamer.decksize:2} D (+{gamer.nextTurnDraw})"
 
 func copy * (gamer: Gamer): Gamer =
   result = Gamer(
+    bonusMana:    gamer.bonusMana,
     currentMana:  gamer.currentMana,
     decksize:     gamer.decksize,
     handsize:     gamer.handsize,
