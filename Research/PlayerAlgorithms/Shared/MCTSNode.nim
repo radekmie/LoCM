@@ -1,4 +1,4 @@
-import std / [math, random, strformat]
+import std / [math, random, sequtils, strformat]
 import .. / .. / .. / Engine / [Action, Config, Search, State]
 
 type
@@ -66,6 +66,40 @@ proc run * (node: MCTSNode, evaluate: proc (node: MCTSNode): void): void =
     node.pick.evaluate
   else:
     node.pick.run(evaluate)
+
+func toDot * (node: MCTSNode, counter: var int, scope: float, root: int): string =
+  var id = counter
+  if id == 0:
+    result &= "digraph MCTS {\n"
+    result &= "  layout=twopi;\n"
+    result &= "  overlap=false;\n"
+    result &= "  ranksep=10;\n"
+    result &= "  node [style=\"filled\"];\n"
+
+  let move = if node.move == nil: "nil" else: $node.move
+  let score = if node.parent == nil: "?" else: $node.score
+  let force = if node.parent == nil: scope else: scope * node.visit / max(node.parent.nodes.mapIt(it.visit))
+  let label = &"move:{move}\\nscore:{score}\\nvisit:{node.visit}"
+  result &= &"  node{id} [fillcolor=\"{force * 0.5} 1 1\" label=\"{label}\"];\n"
+
+  for node in node.nodes:
+    counter += 1
+    result &= node.toDot(counter, force, id)
+
+  if id != root:
+    result &= &"  node{root} -> node{id};\n"
+
+  if id == 0:
+    result &= "}\n"
+
+func toDot * (node: MCTSNode): string =
+  var counter = 0
+  node.toDot(counter, 1, 0)
+
+proc toDotFile * (node: MCTSNode, path: string): void =
+  let file = open(path, fmWrite)
+  file.write(node.toDot())
+  file.close()
 
 proc toSearchResult * (node: MCTSNode): SearchResult =
   var actions: seq[Action]
