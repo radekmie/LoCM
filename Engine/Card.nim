@@ -85,10 +85,13 @@ proc readCard * (input: Input): Card =
   card.lane           = input.getInt
   card
 
+proc readCard * (input: string): Card =
+  input.newStringStream.newInput.readCard
+
 when isMainModule:
   proc main(): void =
-    let a = "1 2 3 4 5 6 7 BCDG-- 8 9 10 0".newStringStream.newInput.readCard
-    let b = "7 6 5 4 3 2 1 ----LW 0 0 11 1".newStringStream.newInput.readCard
+    let a = "1 2 3 4 5 6 7 BCDG-- 8 9 10 0".readCard
+    let b = "7 6 5 4 3 2 1 ----LW 0 0 11 1".readCard
 
     doAssert $a == " 2 (#  1: itemBlue)  6/ 7 [ 5] BCDG--"
     doAssert $b == " 6 (#  7: itemBlue)  2/ 1 [ 3] ----LW"
