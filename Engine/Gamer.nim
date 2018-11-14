@@ -48,6 +48,9 @@ func copy * (gamer: Gamer): Gamer =
   for index, card in gamer.hand:
     result.hand[index] = card.copy
 
+func newGamer * (): Gamer =
+  Gamer(health: 30, nextTurnDraw: 1, rune: 25)
+
 proc readGamer * (input: Input): Gamer =
   result = Gamer()
   result.health       = input.getInt
