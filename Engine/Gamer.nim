@@ -19,7 +19,7 @@ func modifyHealth * (gamer: var Gamer, diff: int): void =
 
   while gamer.health <= gamer.rune:
     gamer.nextTurnDraw += 1
-    gamer.rune -= 5
+    gamer.rune = max(0, gamer.rune - 5)
     if gamer.rune <= 0:
       break
 
