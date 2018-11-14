@@ -232,7 +232,7 @@ func rechargeCreatures * (state: var State): void =
         card.attackState = canAttack
 
 func swap * (state: State): State {.inline.} =
-  State(halt: false, me: state.op.copy, op: state.me.copy)
+  State(me: state.op, op: state.me)
 
 proc readState * (input: Input): State =
   var state = State()

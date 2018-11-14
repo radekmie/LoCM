@@ -10,7 +10,7 @@ func playerAlgorithmBBMCTS * (config: Config): proc (state: State): SearchResult
     var score = config.evaluateState(node.state)
 
     for _ in 1 .. 8:
-      var state = node.state.swap
+      var state = node.state.copy.swap
       var legals = state.computeActions
       var actions: seq[Action]
 
