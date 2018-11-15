@@ -78,9 +78,9 @@ func toDot * (node: MCTSNode, counter: var int, scope: float, root: int): string
 
   let move = if node.move == nil: "nil" else: $node.move
   let score = if node.parent == nil: "?" else: $node.score
-  let force = if node.parent == nil: scope else: scope * node.visit / max(node.parent.nodes.mapIt(it.visit))
+  let force = if node.parent == nil: scope else: scope * 0.9 * node.visit / max(node.parent.nodes.mapIt(it.visit))
   let label = &"move:{move}\\nscore:{score}\\nvisit:{node.visit}"
-  result &= &"  node{id} [fillcolor=\"{force * 0.5} 1 1\" label=\"{label}\"];\n"
+  result &= &"  node{id} [fillcolor=\"0.66 {force} 1\" label=\"{label}\"];\n"
 
   for node in node.nodes:
     counter += 1
