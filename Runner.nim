@@ -37,107 +37,107 @@ proc getOptions (): Options =
     if key == "games":   result.games   = value.parseInt
     if key == "verbose": result.verbose = value.parseBool
 
+proc play * (a, b: Config, cards: seq[Card], verbose: bool = false): bool =
+  var state = newState()
+  var deck1: seq[Card]
+  var deck2: seq[Card]
+  var picks: seq[int]
+
+  for turn in 1 .. 30:
+    # FIXME: Implement draft from options
+    for card in 1 .. 3:
+      var pick = cards.rand
+      while picks.contains(pick.cardNumber):
+        pick = cards.rand
+      picks.add(pick.cardNumber)
+      state.me.hand.add(pick)
+
+    let pick1 = a.evalDraft(state)
+    let pick2 = b.evalDraft(state)
+
+    deck1.add(state.me.hand[pick1.index].copy)
+    deck2.add(state.me.hand[pick2.index].copy)
+
+    state.me.decksize += 1
+    state.op.decksize += 1
+
+    if verbose:
+      echo &"{stamp()} Draft {turn}"
+      echo &"{stamp()} 1? {state.me.hand[0]}"
+      echo &"{stamp()} 2? {state.me.hand[1]}"
+      echo &"{stamp()} 3? {state.me.hand[2]}"
+      echo &"{stamp()} 1! {pick1}"
+      echo &"{stamp()} 2! {pick2}"
+
+    state.me.hand.delete(0, 2)
+
+  for i in countdown(29, 1):
+    let j = rand(i)
+    swap(deck1[i], deck1[j])
+    swap(deck2[i], deck2[j])
+
+  for id, card in deck1: card.instanceId = (30 - id) * 2 - 1
+  for id, card in deck2: card.instanceId = (30 - id) * 2
+
+  if verbose:
+    echo &"{stamp()} Cards"
+    for index in countdown(60, 1):
+      let player = (index - 1) mod 2
+      let card = (if player == 1: deck1 else: deck2)[(index - 1) div 2]
+      echo &"{stamp()} {2 - player}? {card}"
+
+  for card in 1 .. 3:
+    doDraw(state.me, deck1, 0)
+    doDraw(state.op, deck2, 0)
+  doDraw(state.op, deck2, 0)
+
+  block loop:
+    for turn in 1 .. 256:
+      state.rechargeMana(turn)
+      state.rechargeCreatures
+
+      if verbose:
+        echo &"{stamp()} Turn {turn:<12} # [{state.me}] [{state.op}]"
+
+      for action in a.play(state).actions:
+        state.applyAction(action)
+        if verbose:
+          echo &"{stamp()} 1! {action:14} # [{state.me}] [{state.op}]"
+        if state.isGameOver:
+          break loop
+
+      state = state.swap
+
+      for action in b.play(state).actions:
+        state.applyAction(action)
+        if verbose:
+          echo &"{stamp()} 2! {action:14} # [{state.op}] [{state.me}]"
+        if state.isGameOver:
+          state = state.swap
+          break loop
+
+      state = state.swap
+
+      doDraw(state.me, deck1, turn)
+      doDraw(state.op, deck2, turn)
+
+  if verbose:
+    echo &"{stamp()} End               # [{state.me}] [{state.op}]"
+
+  return state.me.health > 0
+
 proc main (): void =
   let cards = getCards()
   let (games, verbose) = getOptions()
   let player1 = getConfig("p1-")
   let player2 = getConfig("p2-")
-  var deck1: seq[Card]
-  var deck2: seq[Card]
   var wins1 = 0
   var wins2 = 0
 
   randomize()
 
   for game in 1 .. games:
-    var state = newState()
-    var picks: seq[int]
-
-    deck1.delete(0, deck1.high)
-    deck2.delete(0, deck2.high)
-
-    for turn in 1 .. 30:
-      # FIXME: Implement draft from options
-      for card in 1 .. 3:
-        var pick = cards.rand
-        while picks.contains(pick.cardNumber):
-          pick = cards.rand
-        picks.add(pick.cardNumber)
-        state.me.hand.add(pick)
-
-      let pick1 = player1.evalDraft(state)
-      let pick2 = player2.evalDraft(state)
-
-      deck1.add(state.me.hand[pick1.index].copy)
-      deck2.add(state.me.hand[pick2.index].copy)
-
-      state.me.decksize += 1
-      state.op.decksize += 1
-
-      if verbose:
-        echo &"{stamp()} Draft {turn}"
-        echo &"{stamp()} 1? {state.me.hand[0]}"
-        echo &"{stamp()} 2? {state.me.hand[1]}"
-        echo &"{stamp()} 3? {state.me.hand[2]}"
-        echo &"{stamp()} 1! {pick1}"
-        echo &"{stamp()} 2! {pick2}"
-
-      state.me.hand.delete(0, 2)
-
-    for i in countdown(29, 1):
-      let j = rand(i)
-      swap(deck1[i], deck1[j])
-      swap(deck2[i], deck2[j])
-
-    for id, card in deck1: card.instanceId = (30 - id) * 2 - 1
-    for id, card in deck2: card.instanceId = (30 - id) * 2
-
-    if verbose:
-      echo &"{stamp()} Cards"
-      for index in countdown(60, 1):
-        let player = (index - 1) mod 2
-        let card = (if player == 1: deck1 else: deck2)[(index - 1) div 2]
-        echo &"{stamp()} {2 - player}? {card}"
-
-    for card in 1 .. 3:
-      doDraw(state.me, deck1, 0)
-      doDraw(state.op, deck2, 0)
-    doDraw(state.op, deck2, 0)
-
-    block loop:
-      for turn in 1 .. 256:
-        state.rechargeMana(turn)
-        state.rechargeCreatures
-
-        if verbose:
-          echo &"{stamp()} Turn {turn:<12} # [{state.me}] [{state.op}]"
-
-        for action in player1.play(state).actions:
-          state.applyAction(action)
-          if verbose:
-            echo &"{stamp()} 1! {action:14} # [{state.me}] [{state.op}]"
-          if state.isGameOver:
-            break loop
-
-        state = state.swap
-
-        for action in player2.play(state).actions:
-          state.applyAction(action)
-          if verbose:
-            echo &"{stamp()} 2! {action:14} # [{state.op}] [{state.me}]"
-          if state.isGameOver:
-            state = state.swap
-            break loop
-
-        state = state.swap
-
-        doDraw(state.me, deck1, turn)
-        doDraw(state.op, deck2, turn)
-
-    if verbose:
-      echo &"{stamp()} End               # [{state.me}] [{state.op}]"
-
-    if state.me.health > 0:
+    if play(player1, player2, cards, verbose):
       wins1 += 1
     else:
       wins2 += 1
