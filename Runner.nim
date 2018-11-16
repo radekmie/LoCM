@@ -8,6 +8,7 @@ import Research / [
 ]
 
 type
+  Picks = array[30, array[3, Card]]
   Options = tuple[
     games:   int,
     verbose: bool
@@ -37,20 +38,14 @@ proc getOptions (): Options =
     if key == "games":   result.games   = value.parseInt
     if key == "verbose": result.verbose = value.parseBool
 
-proc play * (a, b: Config, cards: seq[Card], verbose: bool = false): bool =
+proc play * (a, b: Config, picks: Picks, verbose: bool = false): bool =
   var state = newState()
   var deck1: seq[Card]
   var deck2: seq[Card]
-  var picks: seq[int]
 
   for turn in 1 .. 30:
-    # FIXME: Implement draft from options
-    for card in 1 .. 3:
-      var pick = cards.rand
-      while picks.contains(pick.cardNumber):
-        pick = cards.rand
-      picks.add(pick.cardNumber)
-      state.me.hand.add(pick)
+    for card in picks[turn - 1]:
+      state.me.hand.add(card)
 
     let pick1 = a.evalDraft(state)
     let pick2 = b.evalDraft(state)
@@ -127,7 +122,8 @@ proc play * (a, b: Config, cards: seq[Card], verbose: bool = false): bool =
   return state.me.health > 0
 
 proc main (): void =
-  let cards = getCards()
+  var cards = getCards()
+  var picks: Picks
   let (games, verbose) = getOptions()
   let player1 = getConfig("p1-")
   let player2 = getConfig("p2-")
@@ -137,7 +133,13 @@ proc main (): void =
   randomize()
 
   for game in 1 .. games:
-    if play(player1, player2, cards, verbose):
+    # FIXME: Implement draft from options
+    cards.shuffle
+    for pick in 0 .. 29:
+      for index in 0 .. 2:
+        picks[pick][index] = cards[pick * 3 + index]
+
+    if play(player1, player2, picks, verbose):
       wins1 += 1
     else:
       wins2 += 1
