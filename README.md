@@ -2,11 +2,13 @@
 
 ```sh
 # Debug build
+nim c --threads:on Evolve.nim
 nim c Player.nim
 nim c Runner.nim
 nim c Tester.nim
 
 # Release build
+nim c -d:release --threads:on Evolve.nim
 nim c -d:release Player.nim
 nim c -d:release Runner.nim
 nim c -d:release Tester.nim
@@ -15,6 +17,7 @@ nim c -d:release Tester.nim
 ### CLI
 
 ```sh
+./Evolve
 ./Player --draft="" --player="" --seed=N --state="" --time=N
 ./Runner --p1-draft="" --p1-player="" --p1-state="" --p1-time=N --p2-draft="" --p2-player="" --p2-state="" --p2-time=N --games=N --verbose=false
 ./Tester --referee="" --plain=false --player1="" --player2="" --games=N --threads=N --replays=false
