@@ -21,4 +21,4 @@ const scores = [
 ].mapLiterals(float)
 
 func evaluateDraftClosetAI * (config: Config, state: State): DraftResult =
-  state.evaluateDraftWith(func (card: Card): float = scores[card.cardNumber])
+  state.evaluateDraftWith(func (card: Card): float = scores[card.cardNumber - 1])
