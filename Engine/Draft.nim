@@ -2,6 +2,7 @@ import std / strformat
 import Card, State
 
 type
+  Draft * = array[30, array[3, Card]]
   DraftResult * = ref object
     index *: int
     score *: float

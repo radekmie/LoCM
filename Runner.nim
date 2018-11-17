@@ -8,7 +8,6 @@ import Research / [
 ]
 
 type
-  Picks = array[30, array[3, Card]]
   Options = tuple[
     games:   int,
     verbose: bool
@@ -38,14 +37,14 @@ proc getOptions (): Options =
     if key == "games":   result.games   = value.parseInt
     if key == "verbose": result.verbose = value.parseBool
 
-proc play * (a, b: Config, picks: Picks, verbose: bool = false): bool =
+proc play * (a, b: Config, draft: Draft, verbose: bool = false): bool =
   var state = newState()
   var deck1: seq[Card]
   var deck2: seq[Card]
 
   for turn in 1 .. 30:
-    for card in picks[turn - 1]:
-      state.me.hand.add(card)
+    for card in draft[turn - 1]:
+      state.me.hand.add(card.copy)
 
     let pick1 = a.evalDraft(state)
     let pick2 = b.evalDraft(state)
@@ -64,7 +63,7 @@ proc play * (a, b: Config, picks: Picks, verbose: bool = false): bool =
       echo &"{stamp()} 1! {pick1}"
       echo &"{stamp()} 2! {pick2}"
 
-    state.me.hand.delete(0, 2)
+    state.me.hand.setLen(0)
 
   for i in countdown(29, 1):
     let j = rand(i)
@@ -123,7 +122,7 @@ proc play * (a, b: Config, picks: Picks, verbose: bool = false): bool =
 
 proc main (): void =
   var cards = getCards()
-  var picks: Picks
+  var draft: Draft
   let (games, verbose) = getOptions()
   let player1 = getConfig("p1-")
   let player2 = getConfig("p2-")
@@ -135,11 +134,11 @@ proc main (): void =
   for game in 1 .. games:
     # FIXME: Implement draft from options
     cards.shuffle
-    for pick in 0 .. 29:
-      for index in 0 .. 2:
-        picks[pick][index] = cards[pick * 3 + index]
+    for pick in 0 ..< 30:
+      for index in 0 ..< 3:
+        draft[pick][index] = cards[pick * 3 + index]
 
-    if play(player1, player2, picks, verbose):
+    if play(player1, player2, draft, verbose):
       wins1 += 1
     else:
       wins2 += 1
