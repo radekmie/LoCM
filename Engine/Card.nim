@@ -46,7 +46,26 @@ func `$` * (card: Card): string =
   &"{card.instanceId:2} (#{card.cardNumber:3}:{card.cardType:>9}) {card.attack:2}/{card.defense:2} [{card.cost:2}] {b}{c}{d}{g}{l}{w}"
 
 func copy * (card: Card): Card {.inline.} =
-  deepCopy(result, card)
+  Card(
+    attack:          card.attack,
+    attackState:     card.attackState,
+    cardDraw:        card.cardDraw,
+    cardNumber:      card.cardNumber,
+    cardType:        card.cardType,
+    cost:            card.cost,
+    defense:         card.defense,
+    hasBreakthrough: card.hasBreakthrough,
+    hasCharge:       card.hasCharge,
+    hasDrain:        card.hasDrain,
+    hasGuard:        card.hasGuard,
+    hasLethal:       card.hasLethal,
+    hasWard:         card.hasWard,
+    instanceId:      card.instanceId,
+    lane:            card.lane,
+    location:        card.location,
+    myHealthChange:  card.myHealthChange,
+    opHealthChange:  card.opHealthChange,
+  )
 
 proc readCard * (input: Input): Card =
   let card = Card(attackState: noAttack)
