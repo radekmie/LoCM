@@ -1,12 +1,15 @@
 {.experimental: "parallel".}
 
-import std / [algorithm, random, sequtils, strformat, threadpool]
+import std / [algorithm, random, sequtils, strformat, strutils, threadpool]
 import Engine / [Card, Cards, Config, Draft, State]
 import Research / IOHelpers
 import Runner
 
 const
-  generations = 100
+  bestsGames = 25
+  bestsSize = 5
+  generations = 25
+  mergeEval = 0.1
   mutationProbability = 0.05
   populationSize = 10
   scoreGames = 25
@@ -16,7 +19,7 @@ const
 
 type
   Individual = ref object
-    eval: int
+    eval: float
     gene: array[160, float]
   Parents = tuple[best1: Individual, best2: Individual]
   Population = array[populationSize, Individual]
@@ -50,12 +53,14 @@ func cmp (x, y: Individual): int =
 proc play (x, y: Individual, draft: Draft): bool =
   play(x.toConfig, y.toConfig, draft)
 
-proc roulette (population: Population, eval: int): Individual =
+proc roulette (population: Population, eval: float): Individual =
   var score = rand(eval)
   for individual in population:
     score -= individual.eval
-    if score <= 0:
+    if score <= 0.0:
       return individual
+
+  population[population.high]
 
 proc selectParents (population: Population, draft: Draft): Parents =
   var tournamentIds: array[populationSize, int]
@@ -95,7 +100,7 @@ proc selectParents (population: Population, draft: Draft): Parents =
 
   (best1: tournament[best1], best2: tournament[best2])
 
-func sumEvals (population: Population): int =
+func sumEvals (population: Population): float =
   for individual in population:
     result += individual.eval
 
@@ -103,8 +108,12 @@ proc main (): void =
   var offspring = newPopulation()
   var population = newPopulation(true)
 
-  for generation in 1 .. generations:
-    let draft = newDraft()
+  var bests:  array[generations, array[bestsSize, Individual]]
+  var drafts: array[generations, Draft]
+
+  for generation in 0 ..< generations:
+    drafts[generation] = newDraft()
+    let draft = drafts[generation]
     for index in countup(0, populationSize div 2, 2):
       let (best1, best2) = selectParents(population, draft)
 
@@ -112,8 +121,8 @@ proc main (): void =
       var child1 = offspring[index + 0]
       var child2 = offspring[index + 1]
 
-      child1.eval = 0
-      child2.eval = 0
+      child1.eval = 0.0
+      child2.eval = 0.0
 
       for index in 0 ..< 160:
         let pick = rand(1)
@@ -138,8 +147,8 @@ proc main (): void =
           for _ in 0 ..< scoreGames:
             let winX = spawn play(a, b, draft)
             let winY = spawn play(b, a, draft)
-            a.eval += (if winX: 1 else: 0) + (if winY: 0 else: 1)
-            b.eval += (if winY: 1 else: 0) + (if winX: 0 else: 1)
+            a.eval += (if winX: 1.0 else: 0.0) + (if winY: 0.0 else: 1.0)
+            b.eval += (if winY: 1.0 else: 0.0) + (if winX: 0.0 else: 1.0)
 
     # PopulationSelectMerge()
     var populationEval = sumEvals(population)
@@ -150,7 +159,7 @@ proc main (): void =
       let x = roulette(population, populationEval)
       let y = roulette(offspring, offspringEval)
 
-      individual.eval = (x.eval + y.eval) div 2
+      individual.eval = x.eval * (1 - mergeEval) + y.eval * mergeEval
       individual.gene = x.gene
 
       for pick in draft:
@@ -160,9 +169,34 @@ proc main (): void =
     population = nextPopulation
     population.sort(cmp, Descending)
 
-    echo &"Generation {generation}"
-    echo &"  Avg fitness: {sumEvals(population) / populationSize}"
-    echo &"  Top fitness: {population[0 .. 4].mapIt(it.eval)}"
+    for index in 0 ..< bestsSize:
+      bests[generation][index] = population[index]
+
+    echo &"Generation {generation + 1:3}:"
+    echo &"  Avg eval: {sumEvals(population) / populationSize:.2f}"
+    echo &"  Top eval: " & bests[generation].mapIt(&"{it.eval:.2f}").join(" ")
+
+  # Check()
+  echo &""
+  echo &"Check"
+  let champion = population[0].toConfig
+
+  for generation, bests in bests:
+    let draft = drafts[generation]
+    var total: array[bestsSize, int]
+    for index, best in bests:
+      let opponent = best.toConfig
+      var wins = 0
+
+      parallel:
+        for _ in 0 ..< bestsGames:
+          let winX = spawn play(champion, opponent, draft)
+          let winY = spawn play(opponent, champion, draft)
+          wins += (if winX: 1 else: 0) + (if winY: 0 else: 1)
+
+      total[index] = wins
+
+    echo &"Generation {generation + 1:3}: " & total.mapIt(&"{it / (bestsGames * 2) * 100:.2f}%").join(" ")
 
 when isMainModule:
   main()
