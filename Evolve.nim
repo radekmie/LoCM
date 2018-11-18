@@ -20,7 +20,6 @@ type
     gene: array[160, float]
   Parents = tuple[best1: Individual, best2: Individual]
   Population = array[populationSize, Individual]
-  Offspring = array[populationSize * 2, Individual]
 
 func toConfig (individual: Individual): Config =
   result = newConfig(player = "Greedy")
@@ -35,21 +34,28 @@ proc newDraft (): Draft =
     for card in 0 ..< 3:
       result[pick][card] = cards[pick * 3 + card]
 
-proc newIndividual (): Individual =
+proc newIndividual (initialize: bool): Individual =
   result = Individual()
-  for index in 0 ..< 160:
-    result.gene[index] = rand(1.0)
+  if initialize:
+    for index in 0 ..< 160:
+      result.gene[index] = rand(1.0)
 
-proc newOffspring (): Offspring =
+proc newPopulation (initialize: bool = false): Population =
   for index in result.low .. result.high:
-    result[index] = Individual()
+    result[index] = newIndividual(initialize)
 
-proc newPopulation (): Population =
-  for index in result.low .. result.high:
-    result[index] = newIndividual()
+func cmp (x, y: Individual): int =
+  cmp(x.eval, y.eval)
 
 proc play (x, y: Individual, draft: Draft): bool =
   play(x.toConfig, y.toConfig, draft)
+
+proc roulette (population: Population, eval: int): Individual =
+  var score = rand(eval)
+  for individual in population:
+    score -= individual.eval
+    if score <= 0:
+      return individual
 
 proc selectParents (population: Population, draft: Draft): Parents =
   var tournamentIds: array[populationSize, int]
@@ -89,18 +95,22 @@ proc selectParents (population: Population, draft: Draft): Parents =
 
   (best1: tournament[best1], best2: tournament[best2])
 
-proc main (): void =
-  var offspring = newOffspring()
-  var population = newPopulation()
+func sumEvals (population: Population): int =
+  for individual in population:
+    result += individual.eval
 
-  for _ in 1 .. generations:
+proc main (): void =
+  var offspring = newPopulation()
+  var population = newPopulation(true)
+
+  for generation in 1 .. generations:
     let draft = newDraft()
-    for index in 0 ..< populationSize:
+    for index in countup(0, populationSize div 2, 2):
       let (best1, best2) = selectParents(population, draft)
 
       # CrossoverChildren()
-      var child1 = offspring[index * 2 + 0]
-      var child2 = offspring[index * 2 + 1]
+      var child1 = offspring[index + 0]
+      var child2 = offspring[index + 1]
 
       child1.eval = 0
       child2.eval = 0
@@ -119,10 +129,10 @@ proc main (): void =
 
     # ScoreChildrenPopulation()
     for _ in 0 ..< scoreRounds:
-      offspring.sort(func (x, y: Individual): int = cmp(x.eval, y.eval), Descending)
+      offspring.sort(cmp, Descending)
 
       parallel:
-        for index in countup(0, populationSize, 2):
+        for index in countup(0, populationSize div 2, 2):
           let a = offspring[index + 0]
           let b = offspring[index + 1]
           for _ in 0 ..< scoreGames:
@@ -132,18 +142,30 @@ proc main (): void =
             b.eval += (if winY: 1 else: 0) + (if winX: 0 else: 1)
 
     # PopulationSelectMerge()
-    for index in 0 ..< populationSize:
-      var x = population[index]
-      let y = offspring.rand
+    var populationEval = sumEvals(population)
+    var offspringEval = sumEvals(offspring)
 
-      x.eval = (x.eval + y.eval) div 2
+    var nextPopulation = newPopulation()
+    for individual in nextPopulation:
+      let x = roulette(population, populationEval)
+      let y = roulette(offspring, offspringEval)
+
+      individual.eval = (x.eval + y.eval) div 2
+      individual.gene = x.gene
 
       for pick in draft:
         for card in pick:
-          x.gene[card.cardNumber - 1] = y.gene[card.cardNumber - 1]
+          individual.gene[card.cardNumber - 1] = y.gene[card.cardNumber - 1]
 
-    population.sort(func (x, y: Individual): int = cmp(x.eval, y.eval), Descending)
-    echo population.mapIt(it.eval)
+    population = nextPopulation
+    population.sort(cmp, Descending)
+
+    populationEval = sumEvals(population)
+
+    echo &"Generation {generation}"
+    echo &"  Sum fitness: {populationEval}"
+    echo &"  Avg fitness: {populationEval / populationSize}"
+    echo &"  Best: {population[0].gene}"
 
 when isMainModule:
   main()
