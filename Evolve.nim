@@ -160,12 +160,9 @@ proc main (): void =
     population = nextPopulation
     population.sort(cmp, Descending)
 
-    populationEval = sumEvals(population)
-
     echo &"Generation {generation}"
-    echo &"  Sum fitness: {populationEval}"
-    echo &"  Avg fitness: {populationEval / populationSize}"
-    echo &"  Best: {population[0].gene}"
+    echo &"  Avg fitness: {sumEvals(population) / populationSize}"
+    echo &"  Top fitness: {population[0 .. 4].mapIt(it.eval)}"
 
 when isMainModule:
   main()
