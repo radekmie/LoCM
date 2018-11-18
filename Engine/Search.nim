@@ -1,4 +1,4 @@
-import std / [random, strformat, strutils, times]
+import std / [strformat, strutils, times]
 import Action, State
 
 type
