@@ -93,6 +93,7 @@ proc play * (a, b: Config, draft: Draft, verbose: bool = false): bool =
       if verbose:
         echo &"{stamp()} Turn {turn:<12} # [{state.me}] [{state.op}]"
 
+      doDraw(state.me, deck1, turn)
       for action in a.play(state).actions:
         state.applyAction(action)
         if verbose:
@@ -102,6 +103,7 @@ proc play * (a, b: Config, draft: Draft, verbose: bool = false): bool =
 
       state = state.swap
 
+      doDraw(state.me, deck2, turn)
       for action in b.play(state).actions:
         state.applyAction(action)
         if verbose:
@@ -111,9 +113,6 @@ proc play * (a, b: Config, draft: Draft, verbose: bool = false): bool =
           break loop
 
       state = state.swap
-
-      doDraw(state.me, deck1, turn)
-      doDraw(state.op, deck2, turn)
 
   if verbose:
     echo &"{stamp()} End               # [{state.me}] [{state.op}]"
