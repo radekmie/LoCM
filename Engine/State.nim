@@ -56,7 +56,8 @@ func applyAction * (state: var State, action: Action): void =
 
         # attacking
         if damageGiven >= defender.defense: defenderAfter = nil
-        if attacker.hasBreakthrough and defenderAfter == nil: healthTaken = defender.defense - damageGiven
+        if attacker.hasBreakthrough and defenderAfter == nil:
+          healthTaken = defender.defense - damageGiven
         if attacker.hasLethal and damageGiven > 0: defenderAfter = nil
         if attacker.hasDrain and damageGiven > 0: healthGain = attacker.attack
         if defenderAfter != nil: defenderAfter.defense -= damageGiven
@@ -129,19 +130,31 @@ func applyAction * (state: var State, action: Action): void =
           of creature:
             discard "Shouldn't happen."
           of itemBlue, itemRed:
-            targetAfter.hasCharge       = target.hasCharge       and not item.hasCharge
-            targetAfter.hasBreakthrough = target.hasBreakthrough and not item.hasBreakthrough
-            targetAfter.hasDrain        = target.hasDrain        and not item.hasDrain
-            targetAfter.hasGuard        = target.hasGuard        and not item.hasGuard
-            targetAfter.hasLethal       = target.hasLethal       and not item.hasLethal
-            targetAfter.hasWard         = target.hasWard         and not item.hasWard
+            targetAfter.hasCharge =
+              target.hasCharge and not item.hasCharge
+            targetAfter.hasBreakthrough =
+              target.hasBreakthrough and not item.hasBreakthrough
+            targetAfter.hasDrain =
+              target.hasDrain and not item.hasDrain
+            targetAfter.hasGuard =
+              target.hasGuard and not item.hasGuard
+            targetAfter.hasLethal =
+              target.hasLethal and not item.hasLethal
+            targetAfter.hasWard =
+              target.hasWard and not item.hasWard
           of itemGreen:
-            targetAfter.hasCharge       = target.hasCharge       or item.hasCharge
-            targetAfter.hasBreakthrough = target.hasBreakthrough or item.hasBreakthrough
-            targetAfter.hasDrain        = target.hasDrain        or item.hasDrain
-            targetAfter.hasGuard        = target.hasGuard        or item.hasGuard
-            targetAfter.hasLethal       = target.hasLethal       or item.hasLethal
-            targetAfter.hasWard         = target.hasWard         or item.hasWard
+            targetAfter.hasCharge =
+              target.hasCharge or item.hasCharge
+            targetAfter.hasBreakthrough =
+              target.hasBreakthrough or item.hasBreakthrough
+            targetAfter.hasDrain =
+              target.hasDrain or item.hasDrain
+            targetAfter.hasGuard =
+              target.hasGuard or item.hasGuard
+            targetAfter.hasLethal =
+              target.hasLethal or item.hasLethal
+            targetAfter.hasWard =
+              target.hasWard or item.hasWard
 
             if item.hasCharge and targetAfter.attackState != alreadyAttacked:
               targetAfter.attackState = canAttack
@@ -220,10 +233,10 @@ func newState * (): State {.inline.} =
   result.op.bonusMana = true
 
 func rechargeMana * (state: var State, turn: int): void =
-  for player in [state.me, state.op]:
-    player.bonusMana = player.bonusMana and (turn == 1 or player.currentMana > 0)
-    player.maxMana = min(turn, 12) + (if player.bonusMana: 1 else: 0)
-    player.currentMana = player.maxMana
+  var player = state.me
+  player.bonusMana = player.bonusMana and (turn == 1 or player.currentMana > 0)
+  player.maxMana = min(turn, 12) + (if player.bonusMana: 1 else: 0)
+  player.currentMana = player.maxMana
 
 func rechargeCreatures * (state: var State): void =
   for player in [state.me, state.op]:

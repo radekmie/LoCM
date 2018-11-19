@@ -36,14 +36,15 @@ type
     opHealthChange  *: int
 
 func `$` * (card: Card): string =
-  let
-    b = if card.hasBreakthrough: 'B' else: '-'
-    c = if card.hasCharge:       'C' else: '-'
-    d = if card.hasDrain:        'D' else: '-'
-    g = if card.hasGuard:        'G' else: '-'
-    l = if card.hasLethal:       'L' else: '-'
-    w = if card.hasWard:         'W' else: '-'
-  &"{card.instanceId:2} (#{card.cardNumber:3}:{card.cardType:>9}) {card.attack:2}/{card.defense:2} [{card.cost:2}] {b}{c}{d}{g}{l}{w}"
+  let b = if card.hasBreakthrough: 'B' else: '-'
+  let c = if card.hasCharge:       'C' else: '-'
+  let d = if card.hasDrain:        'D' else: '-'
+  let g = if card.hasGuard:        'G' else: '-'
+  let l = if card.hasLethal:       'L' else: '-'
+  let w = if card.hasWard:         'W' else: '-'
+  result &= &"{card.instanceId:2} (#{card.cardNumber:3}:{card.cardType:>9}) "
+  result &= &"{card.attack:2}/{card.defense:2} [{card.cost:2}] "
+  result &= &"{b}{c}{d}{g}{l}{w}"
 
 func copy * (card: Card): Card {.inline.} =
   Card(

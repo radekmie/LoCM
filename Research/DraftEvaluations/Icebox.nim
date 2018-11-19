@@ -1,16 +1,27 @@
+import std / math
 import .. / .. / Engine / [Card, Config, Draft, State]
 
 func evaluateDraftIcebox * (config: Config, state: State): DraftResult =
   state.evaluateDraftWith(func (card: Card): float =
-    return
-      (card.attack.float + card.defense.float) -
-      (6.392651 * 0.001 * card.cost.float * card.cost.float + 1.463006 * card.cost.float + 1.435985) + 5.219 -
-      (-5.985350469 * 0.01 * (card.myHealthChange.float - card.opHealthChange.float) * (card.myHealthChange.float - card.opHealthChange.float) - 3.880957 * 0.1 * (card.myHealthChange.float - card.opHealthChange.float) + 1.63766 * 0.1) -
-      (5.516179907 * card.cardDraw.float * card.cardDraw.float - 0.239521 * card.cardDraw.float + 7.751401869 * 0.01) +
-      (if card.hasBreakthrough: 0.0 else: 0) +
-      (if card.hasCharge:       0.26015517 else: 0) +
-      (if card.hasDrain:        0.15241379 else: 0) +
-      (if card.hasGuard:        0.04418965 else: 0) +
-      (if card.hasLethal:       0.15313793 else: 0) +
-      (if card.hasWard:         0.16238793 else: 0)
+    let healthDiff = card.myHealthChange - card.opHealthChange
+
+    result += card.attack.float
+    result += card.defense.float
+    result -= 6.392651 * 0.001 * pow(card.cost.float, 2)
+    result -= 1.463006 * card.cost.float
+    result -= 1.435985
+    result += 5.219
+    result += 5.985350469 * 0.01 * pow(healthDiff.float, 2)
+    result += 3.880957 * 0.1 * (card.myHealthChange - card.opHealthChange).float
+    result -= 1.63766 * 0.1
+    result -= 5.516179907 * pow(card.cardDraw.float, 2)
+    result += 0.239521 * card.cardDraw.float
+    result -= 7.751401869 * 0.01
+
+    if card.hasBreakthrough: result += 0.0
+    if card.hasCharge:       result += 0.26015517
+    if card.hasDrain:        result += 0.15241379
+    if card.hasGuard:        result += 0.04418965
+    if card.hasLethal:       result += 0.15313793
+    if card.hasWard:         result += 0.16238793
   )

@@ -1,4 +1,4 @@
-import std / times
+import std / [strformat, times]
 import .. / .. / Engine / [Action, Config, Search, State]
 
 proc playerAlgorithmDFS * (config: Config, state: State): SearchResult =
@@ -17,10 +17,10 @@ proc playerAlgorithmDFS * (config: Config, state: State): SearchResult =
 
     while cpuTime() - time < config.time:
       when not defined(release):
-        stderr.writeLine("")
-        stderr.writeLine("result: ", result)
-        stderr.writeLine("A:      ", legalsPointers[statesPointer])
-        stderr.writeLine("B:      ", legals[statesPointer].len, " ", legals[statesPointer])
+        echo &""
+        echo &"result: {result}"
+        echo &"A:      {legalsPointers[statesPointer]}"
+        echo &"B:      {legals[statesPointer].len} {legals[statesPointer]}"
 
       if legalsPointers[statesPointer] >= legals[statesPointer].len:
         statesPointer -= 1
@@ -41,7 +41,7 @@ proc playerAlgorithmDFS * (config: Config, state: State): SearchResult =
         let score = config.evalState(states[statesPointer])
         if score > result.score:
           result.actions.newSeq(statesPointer)
-          for index in 0 .. statesPointer - 1:
+          for index in 0 ..< statesPointer:
             result.actions[index] = legals[index][legalsPointers[index]]
           result.score = score
 

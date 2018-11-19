@@ -7,5 +7,6 @@ type
     score   *: float
 
 func `$` * (searchResult: SearchResult): string =
-  result = if searchResult.actions.len == 0: "PASS" else: searchResult.actions.join(";")
+  let actions = searchResult.actions
+  result = if actions.len == 0: "PASS" else: actions.join(";")
   result = &"{result} # score: {searchResult.score}"

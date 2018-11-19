@@ -25,7 +25,10 @@ func modifyHealth * (gamer: var Gamer, diff: int): void =
 
 func `$` * (gamer: Gamer): string =
   let bonusMana = if gamer.bonusMana: '+' else: ' '
-  &"HP{gamer.health:2}({gamer.rune:2}) MP{gamer.currentMana:2}/{gamer.maxMana:2}{bonusMana} D{gamer.decksize:2} H{gamer.handsize:2}+{gamer.nextTurnDraw}"
+  result &= &"HP{gamer.health:2}({gamer.rune:2}) "
+  result &= &"MP{gamer.currentMana:2}/{gamer.maxMana:2}{bonusMana} "
+  result &= &"D{gamer.decksize:2} "
+  result &= &"H{gamer.handsize:2}+{gamer.nextTurnDraw}"
 
 func copy * (gamer: Gamer): Gamer =
   result = Gamer(

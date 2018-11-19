@@ -10,7 +10,10 @@ type
 func `$` * (draftResult: DraftResult): string =
   &"PICK {draftResult.index} # score: {draftResult.score}"
 
-func evaluateDraftWith * (state: State, evaluate: func (card: Card): float): DraftResult {.inline.} =
+func evaluateDraftWith * (
+  state: State,
+  evaluate: func (card: Card): float
+): DraftResult {.inline.} =
   result = DraftResult(score: NegInf)
 
   for index, card in state.me.hand:

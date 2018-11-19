@@ -20,5 +20,7 @@ const scores = [
   -100, -100, -100, -100, -100, -100, -100, -100, -100, -100,
 ].mapLiterals(float)
 
+func lookup (card: Card): float = scores[card.cardNumber - 1]
+
 func evaluateDraftClosetAI * (config: Config, state: State): DraftResult =
-  state.evaluateDraftWith(func (card: Card): float = scores[card.cardNumber - 1])
+  state.evaluateDraftWith(lookup)

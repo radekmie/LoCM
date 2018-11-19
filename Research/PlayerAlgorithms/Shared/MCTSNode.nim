@@ -67,34 +67,44 @@ proc run * (node: MCTSNode, evaluate: proc (node: MCTSNode): void): void =
   else:
     node.pick.run(evaluate)
 
-func toDot * (node: MCTSNode, counter: var int, scope: float, root: int): string =
-  var id = counter
-  if id == 0:
+func toDot * (node: MCTSNode, id: var int, scope: float, root: int): string =
+  var nodeId = id
+  if nodeId == 0:
     result &= "digraph MCTS {\n"
     result &= "  layout=twopi;\n"
     result &= "  overlap=false;\n"
     result &= "  ranksep=10;\n"
     result &= "  node [style=\"filled\"];\n"
 
-  let move = if node.move == nil: "nil" else: $node.move
-  let score = if node.parent == nil: "?" else: $node.score
-  let force = if node.parent == nil: scope else: scope * 0.9 * node.visit / max(node.parent.nodes.mapIt(it.visit))
+  var move: string
+  var part: float
+  var score: string
+
+  if node.parent == nil:
+    move = "nil"
+    part = scope
+    score = "?"
+  else:
+    move = $node.move
+    part = scope * 0.9 * node.visit / max(node.parent.nodes.mapIt(it.visit))
+    score = $node.score
+
   let label = &"move:{move}\\nscore:{score}\\nvisit:{node.visit}"
-  result &= &"  node{id} [fillcolor=\"0.66 {force} 1\" label=\"{label}\"];\n"
+  result &= &"  node{nodeId} [fillcolor=\"0.66 {part} 1\" label=\"{label}\"];\n"
 
-  for node in node.nodes:
-    counter += 1
-    result &= node.toDot(counter, force, id)
+  for child in node.nodes:
+    id += 1
+    result &= child.toDot(id, part, nodeId)
 
-  if id != root:
-    result &= &"  node{root} -> node{id};\n"
+  if nodeId != root:
+    result &= &"  node{root} -> node{nodeId};\n"
 
-  if id == 0:
+  if nodeId == 0:
     result &= "}\n"
 
 func toDot * (node: MCTSNode): string =
-  var counter = 0
-  node.toDot(counter, 1, 0)
+  var id = 0
+  node.toDot(id, 1, 0)
 
 proc toDotFile * (node: MCTSNode, path: string): void =
   let file = open(path, fmWrite)
