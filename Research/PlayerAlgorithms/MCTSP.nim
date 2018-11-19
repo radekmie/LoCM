@@ -8,14 +8,13 @@ proc playerAlgorithmMCTSP * (config: Config, state: State): SearchResult =
 
     for _ in 1 .. 8:
       var state = node.state.copy.swap
-      var legals = state.computeActions
-      var actions: seq[Action]
+      state.rechargeCreatures
+      state.op.hand.setLen(0)
 
-      while legals.len > 0:
-        let action = legals.rand
-        actions.add(action)
-        state.applyAction(action)
-        legals = state.computeActions
+      var legal = state.computeActions
+      while legal.len > 0:
+        state.applyAction(legal.rand)
+        legal = state.computeActions
         score = score.min(config.evalState(state.swap))
 
     node.propagate(score)
