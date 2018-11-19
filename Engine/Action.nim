@@ -19,6 +19,18 @@ type
         id   *: int
         lane *: range[0 .. Lanes - 1]
 
+func newActionAttack * (id1, id2: int): Action =
+  Action(actionType: attack, id1: id1, id2: id2)
+
+func newActionPass * (): Action =
+  Action(actionType: pass)
+
+func newActionSummon * (id: int, lane: range[0 .. Lanes - 1]): Action =
+  Action(actionType: summon, id: id, lane: lane)
+
+func newActionUse * (id1, id2: int): Action =
+  Action(actionType: use, id1: id1, id2: id2)
+
 func `$` * (action: Action): string =
   result = case action.actionType:
     of attack: &"ATTACK {action.id1} {action.id2}"

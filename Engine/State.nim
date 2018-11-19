@@ -166,7 +166,7 @@ proc computeActions * (state: State): seq[Action] =
     return @[]
 
   # PASS
-  result.add(Action(actionType: pass))
+  result.add(newActionPass())
 
   # SUMMON [id] [lane]
   for lane, board in state.me.boards:
@@ -174,7 +174,7 @@ proc computeActions * (state: State): seq[Action] =
       for card in state.me.hand:
         if card.cardType != creature or card.cost > state.me.currentMana:
           continue
-        result.add(Action(actionType: summon, id: card.instanceId, lane: lane))
+        result.add(newActionSummon(card.instanceId, lane))
 
   # ATTACK [id1] [id2]
   for lane, board in state.op.boards:
@@ -192,7 +192,7 @@ proc computeActions * (state: State): seq[Action] =
       if card.attackState != canAttack:
         continue
       for target in targets:
-        result.add(Action(actionType: attack, id1: card.instanceId, id2: target))
+        result.add(newActionAttack(card.instanceId, target))
 
   # USE [id1] [id2]
   for card in state.me.hand:
@@ -201,13 +201,13 @@ proc computeActions * (state: State): seq[Action] =
     if card.cardType == itemGreen:
       for board in state.me.boards:
         for creature in board:
-          result.add(Action(actionType: use, id1: card.instanceId, id2: creature.instanceId))
+          result.add(newActionUse(card.instanceId, creature.instanceId))
     else:
       if card.cardType == itemBlue:
-        result.add(Action(actionType: use, id1: card.instanceId, id2: -1))
+        result.add(newActionUse(card.instanceId, -1))
       for board in state.op.boards:
         for creature in board:
-          result.add(Action(actionType: use, id1: card.instanceId, id2: creature.instanceId))
+          result.add(newActionUse(card.instanceId, creature.instanceId))
 
 func copy * (state: State): State {.inline.} =
   State(halt: state.halt, me: state.me.copy, op: state.op.copy)
