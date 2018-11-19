@@ -2,8 +2,7 @@
 
 import std / [algorithm, random, sequtils, strformat, strutils, threadpool]
 import Engine / [Card, Cards, Config, Draft, State]
-import Research / IOHelpers
-import Runner
+import Research / [IOHelpers, Referee]
 
 const
   bestsGames = 25
@@ -21,21 +20,15 @@ type
   Individual = ref object
     eval: float
     gene: array[160, float]
-  Parents = tuple[best1: Individual, best2: Individual]
+  Parents = array[2, Individual]
   Population = array[populationSize, Individual]
 
 func toConfig (individual: Individual): Config =
+  let lookup = func (card: Card): float = individual.gene[card.cardNumber - 1]
+
   result = newConfig(player = "Greedy")
   result.evalDraftFn = func (config: Config, state: State): DraftResult =
-    state.evaluateDraftWith(func (card: Card): float = individual.gene[card.cardNumber - 1])
-
-proc newDraft (): Draft =
-  var cards = getCards()
-  cards.shuffle
-
-  for pick in 0 ..< 30:
-    for card in 0 ..< 3:
-      result[pick][card] = cards[pick * 3 + card]
+    state.evaluateDraftWith(lookup)
 
 proc newIndividual (initialize: bool): Individual =
   result = Individual()
@@ -98,7 +91,7 @@ proc selectParents (population: Population, draft: Draft): Parents =
       best2 = index
       continue
 
-  (best1: tournament[best1], best2: tournament[best2])
+  [tournament[best1], tournament[best2]]
 
 func sumEvals (population: Population): float =
   for individual in population:
@@ -115,7 +108,7 @@ proc main (): void =
     drafts[generation] = newDraft()
     let draft = drafts[generation]
     for index in countup(0, populationSize div 2, 2):
-      let (best1, best2) = selectParents(population, draft)
+      let parents = selectParents(population, draft)
 
       # CrossoverChildren()
       var child1 = offspring[index + 0]
@@ -124,27 +117,26 @@ proc main (): void =
       child1.eval = 0.0
       child2.eval = 0.0
 
-      for index in 0 ..< 160:
-        let pick = rand(1)
-        child1.gene[index] = (if pick == 0: best1 else: best2).gene[index]
-        child2.gene[index] = (if pick == 0: best2 else: best1).gene[index]
+      for gene in 0 ..< 160:
+        let pickA = rand(1)
+        let pickB = 1 - pickA
+        child1.gene[gene] = parents[pickA].gene[gene]
+        child2.gene[gene] = parents[pickB].gene[gene]
 
       # MutateChildren()
-      for index in 0 ..< 160:
-        if mutationProbability > rand(1.0):
-          child1.gene[index] = rand(1.0)
-        if mutationProbability > rand(1.0):
-          child2.gene[index] = rand(1.0)
+      for gene in 0 ..< 160:
+        if mutationProbability > rand(1.0): child1.gene[gene] = rand(1.0)
+        if mutationProbability > rand(1.0): child2.gene[gene] = rand(1.0)
 
     # ScoreChildrenPopulation()
-    for _ in 0 ..< scoreRounds:
+    for round in 1 .. scoreRounds:
       offspring.sort(cmp, Descending)
 
       parallel:
         for index in countup(0, populationSize div 2, 2):
           let a = offspring[index + 0]
           let b = offspring[index + 1]
-          for _ in 0 ..< scoreGames:
+          for game in 1 .. scoreGames:
             let winX = spawn play(a, b, draft)
             let winY = spawn play(b, a, draft)
             a.eval += (if winX: 1.0 else: 0.0) + (if winY: 0.0 else: 1.0)
@@ -181,22 +173,22 @@ proc main (): void =
   echo &"Check"
   let champion = population[0].toConfig
 
-  for generation, bests in bests:
+  for generation, individuals in bests:
     let draft = drafts[generation]
-    var total: array[bestsSize, int]
-    for index, best in bests:
+    for index, best in individuals:
       let opponent = best.toConfig
-      var wins = 0
+
+      best.eval = 0.0
 
       parallel:
         for _ in 0 ..< bestsGames:
           let winX = spawn play(champion, opponent, draft)
           let winY = spawn play(opponent, champion, draft)
-          wins += (if winX: 1 else: 0) + (if winY: 0 else: 1)
+          best.eval += (if winX: 1.0 else: 0.0) + (if winY: 0.0 else: 1.0)
 
-      total[index] = wins
-
-    echo &"Generation {generation + 1:3}: " & total.mapIt(&"{it / (bestsGames * 2) * 100:.2f}%").join(" ")
+    let games = bestsGames * 2.0
+    let scores = individuals.mapIt(&"{it.eval / games * 100:.2f}%").join(" ")
+    echo &"Generation {generation + 1:3}: {scores}"
 
 when isMainModule:
   main()
