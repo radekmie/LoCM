@@ -1,5 +1,5 @@
 import std / [parseopt, random, strformat, strutils]
-import Engine / [Cards, Draft]
+import Engine / Draft
 import Research / [IOHelpers, Referee]
 
 type
