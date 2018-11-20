@@ -7,12 +7,14 @@ import Research / [IOHelpers, Referee]
 const
   bestsGames = 25
   bestsSize = 5
+  bestsWin = 100.0 / 2 / bestsGames
   generations = 25
   mergeEval = 0.1
   mutationProbability = 0.05
   populationSize = 10
   scoreGames = 25
   scoreRounds = 2
+  scoreWin = 100.0 / 2 / scoreGames / scoreRounds
   tournamentGames = 10
   tournamentSize = 4
 
@@ -22,6 +24,10 @@ type
     gene: array[160, float]
   Parents = array[2, Individual]
   Population = array[populationSize, Individual]
+
+func toSummary (id: int, avg: float, bests: openArray[Individual]): string =
+  let scores = bests.mapIt(&"{it.eval:5.2f}").join(" ")
+  &"Generation {id + 1:3}: avg={avg:5.2f} top{bests.len}=[{scores}]"
 
 func toConfig (individual: Individual): Config =
   let lookup = func (card: Card): float = individual.gene[card.cardNumber - 1]
@@ -33,6 +39,7 @@ func toConfig (individual: Individual): Config =
 proc newIndividual (initialize: bool): Individual =
   result = Individual()
   if initialize:
+    result.eval = 50.0
     for index in 0 ..< 160:
       result.gene[index] = rand(1.0)
 
@@ -93,7 +100,7 @@ proc selectParents (population: Population, draft: Draft): Parents =
 
   [tournament[best1], tournament[best2]]
 
-func sumEvals (population: Population): float =
+func sumEvals (population: openArray[Individual]): float =
   for individual in population:
     result += individual.eval
 
@@ -107,7 +114,7 @@ proc main (): void =
   for generation in 0 ..< generations:
     drafts[generation] = newDraft()
     let draft = drafts[generation]
-    for index in countup(0, populationSize div 2, 2):
+    for index in countup(0, populationSize - 2, 2):
       let parents = selectParents(population, draft)
 
       # CrossoverChildren()
@@ -133,14 +140,14 @@ proc main (): void =
       offspring.sort(cmp, Descending)
 
       parallel:
-        for index in countup(0, populationSize div 2, 2):
+        for index in countup(0, populationSize - 2, 2):
           let a = offspring[index + 0]
           let b = offspring[index + 1]
           for game in 1 .. scoreGames:
             let winX = spawn play(a, b, draft)
             let winY = spawn play(b, a, draft)
-            a.eval += (if winX: 1.0 else: 0.0) + (if winY: 0.0 else: 1.0)
-            b.eval += (if winY: 1.0 else: 0.0) + (if winX: 0.0 else: 1.0)
+            if winX: a.eval += scoreWin else: b.eval += scoreWin
+            if winY: b.eval += scoreWin else: a.eval += scoreWin
 
     # PopulationSelectMerge()
     var populationEval = sumEvals(population)
@@ -164,13 +171,12 @@ proc main (): void =
     for index in 0 ..< bestsSize:
       bests[generation][index] = population[index]
 
-    echo &"Generation {generation + 1:3}:"
-    echo &"  Avg eval: {sumEvals(population) / populationSize:.2f}"
-    echo &"  Top eval: " & bests[generation].mapIt(&"{it.eval:.2f}").join(" ")
+    let avg = sumEvals(population) / populationSize
+    echo toSummary(generation, avg, bests[generation])
 
   # Check()
   echo &""
-  echo &"Check"
+  echo &"Champion check"
   let champion = population[0].toConfig
 
   for generation, individuals in bests:
@@ -184,11 +190,11 @@ proc main (): void =
         for _ in 0 ..< bestsGames:
           let winX = spawn play(champion, opponent, draft)
           let winY = spawn play(opponent, champion, draft)
-          best.eval += (if winX: 1.0 else: 0.0) + (if winY: 0.0 else: 1.0)
+          if     winX: best.eval += bestsWin
+          if not winY: best.eval += bestsWin
 
-    let games = bestsGames * 2.0
-    let scores = individuals.mapIt(&"{it.eval / games * 100:.2f}%").join(" ")
-    echo &"Generation {generation + 1:3}: {scores}"
+    let avg = sumEvals(individuals) / bestsSize
+    echo toSummary(generation, avg, individuals)
 
 when isMainModule:
   main()
