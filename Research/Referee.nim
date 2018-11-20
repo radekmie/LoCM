@@ -7,7 +7,7 @@ proc doDraw (gamer: var Gamer, deck: var seq[Card], turn: int): void =
   for _ in 1 .. gamer.nextTurnDraw:
     if gamer.decksize == 0 or suicide:
       gamer.modifyHealth(gamer.rune - gamer.health)
-      if not suicide:
+      if gamer.decksize == 0:
         continue
 
     if gamer.handsize == 8:
