@@ -85,7 +85,7 @@ func applyAction * (state: var State, action: Action): void =
       var card: Card
       for cardIndex, cardOnHand in me.hand:
         if cardOnHand.instanceId == action.id:
-          card = cardOnHand
+          card = cardOnHand.copy
           me.hand.delete(cardIndex)
           me.handsize -= 1
           break
@@ -179,7 +179,7 @@ func applyAction * (state: var State, action: Action): void =
 
 proc computeActions * (state: State): seq[Action] =
   if state.halt:
-    return @[]
+    return
 
   # PASS
   result.add(newActionPass())
@@ -188,9 +188,8 @@ proc computeActions * (state: State): seq[Action] =
   for lane, board in state.me.boards:
     if board.len < MaxInLane:
       for card in state.me.hand:
-        if card.cardType != creature or card.cost > state.me.currentMana:
-          continue
-        result.add(newActionSummon(card.instanceId, lane))
+        if card.cardType == creature and card.cost <= state.me.currentMana:
+          result.add(newActionSummon(card.instanceId, lane))
 
   # ATTACK [id1] [id2]
   for lane, board in state.op.boards:
@@ -205,25 +204,23 @@ proc computeActions * (state: State): seq[Action] =
         targets.add(card.instanceId)
 
     for card in state.me.boards[lane]:
-      if card.attackState != canAttack:
-        continue
-      for target in targets:
-        result.add(newActionAttack(card.instanceId, target))
+      if card.attackState == canAttack:
+        for target in targets:
+          result.add(newActionAttack(card.instanceId, target))
 
   # USE [id1] [id2]
   for card in state.me.hand:
-    if card.cardType == creature or card.cost > state.me.currentMana:
-      continue
-    if card.cardType == itemGreen:
-      for board in state.me.boards:
-        for creature in board:
-          result.add(newActionUse(card.instanceId, creature.instanceId))
-    else:
-      if card.cardType == itemBlue:
-        result.add(newActionUse(card.instanceId, -1))
-      for board in state.op.boards:
-        for creature in board:
-          result.add(newActionUse(card.instanceId, creature.instanceId))
+    if card.cardType != creature and card.cost <= state.me.currentMana:
+      if card.cardType == itemGreen:
+        for board in state.me.boards:
+          for creature in board:
+            result.add(newActionUse(card.instanceId, creature.instanceId))
+      else:
+        if card.cardType == itemBlue:
+          result.add(newActionUse(card.instanceId, -1))
+        for board in state.op.boards:
+          for creature in board:
+            result.add(newActionUse(card.instanceId, creature.instanceId))
 
 func copy * (state: State): State {.inline.} =
   State(halt: state.halt, me: state.me.copy, op: state.op.copy)
@@ -243,8 +240,9 @@ func rechargeMana * (state: var State, turn: int): void =
 
 func rechargeCreatures * (state: var State): void =
   for player in [state.me, state.op]:
-    for lane in player.boards:
-      for card in lane:
+    for lane in mitems(player.boards):
+      for card in mitems(lane):
+        card = card.copy
         card.attackState = canAttack
 
 func swap * (state: State): State {.inline.} =

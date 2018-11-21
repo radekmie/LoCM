@@ -7,11 +7,11 @@ type
     playFn *: proc (config: Config, state: State): SearchResult
     time *: float
 
-proc evalDraft * (config: Config, state: State): DraftResult =
+proc evalDraft * (config: Config, state: State): DraftResult {.inline.} =
   config.evalDraftFn(config, state)
 
-proc evalState * (config: Config, state: State): float =
+proc evalState * (config: Config, state: State): float {.inline.} =
   config.evalStateFn(config, state)
 
-proc play * (config: Config, state: State): SearchResult =
+proc play * (config: Config, state: State): SearchResult {.inline.} =
   config.playFn(config, state)

@@ -50,7 +50,7 @@ proc newPopulation (initialize: bool = false): Population =
 func cmp (x, y: Individual): int =
   cmp(x.eval, y.eval)
 
-proc play (x, y: Individual, draft: Draft): bool =
+proc play (x, y: Individual, draft: Draft): bool {.inline.} =
   play(x.toConfig, y.toConfig, draft)
 
 proc roulette (population: Population, eval: float): Individual =
@@ -105,6 +105,7 @@ func sumEvals (population: openArray[Individual]): float =
     result += individual.eval
 
 proc main (): void =
+  let cards = getCards()
   var offspring = newPopulation()
   var population = newPopulation(true)
 
@@ -112,7 +113,9 @@ proc main (): void =
   var drafts: array[generations, Draft]
 
   for generation in 0 ..< generations:
-    drafts[generation] = newDraft()
+    drafts[generation] = newDraft(cards)
+
+  for generation in 0 ..< generations:
     let draft = drafts[generation]
     for index in countup(0, populationSize - 2, 2):
       let parents = selectParents(population, draft)
@@ -172,11 +175,10 @@ proc main (): void =
       bests[generation][index] = population[index]
 
     let avg = sumEvals(population) / populationSize
-    echo toSummary(generation, avg, bests[generation])
+    echo &"{stamp()} {toSummary(generation, avg, bests[generation])}"
 
   # Check()
-  echo &""
-  echo &"Champion check"
+  echo &"{stamp()} Champion check"
   let champion = population[0].toConfig
 
   for generation, individuals in bests:
@@ -194,7 +196,7 @@ proc main (): void =
           if not winY: best.eval += bestsWin
 
     let avg = sumEvals(individuals) / bestsSize
-    echo toSummary(generation, avg, individuals)
+    echo &"{stamp()} {toSummary(generation, avg, individuals)}"
 
 when isMainModule:
   main()

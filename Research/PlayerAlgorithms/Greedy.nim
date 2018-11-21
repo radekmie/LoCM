@@ -1,25 +1,28 @@
 import .. / .. / Engine / [Action, Config, Search, State]
 
+func apply (state: State, action: Action): State {.inline.} =
+  result = state.copy
+  result.applyAction(action)
+
 proc playerAlgorithmGreedy * (config: Config, root: State): SearchResult =
   block:
+    result = SearchResult()
+
     var state = root.copy
-    var legals = state.computeActions
-    var actions: seq[Action]
+    var legal = state.computeActions
 
-    while legals.len > 0:
-      var bestIndex = legals.low
-      var bestScore = 0.0
-      for index in legals.low .. legals.high:
-        var after = state.copy
-        after.applyAction(legals[index])
+    while legal.len > 0:
+      var bestEval = NegInf
+      var bestMove: Action
 
-        let score = config.evalState(after)
-        if index == 0 or bestScore < score:
-          bestIndex = index
-          bestScore = score
+      for action in legal:
+        let eval = config.evalState(state.apply(action))
+        if eval > bestEval:
+          bestEval = eval
+          bestMove = action
 
-      actions.add(legals[bestIndex])
-      state.applyAction(legals[bestIndex])
-      legals = state.computeActions
+      result.actions.add(bestMove)
+      state.applyAction(bestMove)
+      legal = state.computeActions
 
-    SearchResult(actions: actions, score: config.evalState(state))
+    result.score = config.evalState(state)

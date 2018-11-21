@@ -18,13 +18,18 @@ proc doDraw (gamer: var Gamer, deck: var seq[Card], turn: int): void =
     gamer.decksize -= 1
   gamer.nextTurnDraw = 1
 
-proc newDraft * (): Draft =
-  var cards = getCards()
-  cards.shuffle
+proc newDraft * (cards: openArray[Card]): Draft =
+  var indexes = newSeq[int](cards.len)
+  for index in indexes.low .. indexes.high:
+    indexes[index] = index
+  indexes.shuffle
 
   for pick in 0 ..< 30:
     for card in 0 ..< 3:
-      result[pick][card] = cards[pick * 3 + card]
+      result[pick][card] = cards[indexes[pick * 3 + card]]
+
+proc newDraft * (): Draft {.inline.} =
+  newDraft(getCards())
 
 proc play * (a, b: Config, draft: Draft, verbose: bool = false): bool =
   var state = newState()

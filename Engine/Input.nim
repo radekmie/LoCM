@@ -6,7 +6,7 @@ type
     line   *: string
     stream *: Stream
 
-func newInput * (stream: Stream): Input =
+func newInput * (stream: Stream): Input {.inline.} =
   Input(stream: stream)
 
 proc getLine * (input: Input): string {.inline.} =

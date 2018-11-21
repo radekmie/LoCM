@@ -35,6 +35,7 @@ func copy * (gamer: Gamer): Gamer =
     bonusMana:    gamer.bonusMana,
     currentMana:  gamer.currentMana,
     decksize:     gamer.decksize,
+    hand:         gamer.hand,
     handsize:     gamer.handsize,
     health:       gamer.health,
     maxMana:      gamer.maxMana,
@@ -43,15 +44,9 @@ func copy * (gamer: Gamer): Gamer =
   )
 
   for lane, board in gamer.boards:
-    result.boards[lane].newSeq(board.len)
-    for index, card in board:
-      result.boards[lane][index] = card.copy
+    result.boards[lane] = board
 
-  result.hand.newSeq(gamer.hand.len)
-  for index, card in gamer.hand:
-    result.hand[index] = card.copy
-
-func newGamer * (): Gamer =
+func newGamer * (): Gamer {.inline.} =
   Gamer(health: 30, nextTurnDraw: 1, rune: 25)
 
 proc readGamer * (input: Input): Gamer =

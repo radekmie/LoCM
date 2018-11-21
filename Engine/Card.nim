@@ -46,7 +46,7 @@ func `$` * (card: Card): string =
   result &= &"{card.attack:2}/{card.defense:2} [{card.cost:2}] "
   result &= &"{b}{c}{d}{g}{l}{w}"
 
-func copy * (card: Card): Card {.inline.} =
+func copy * (card: Card): Card =
   Card(
     attack:          card.attack,
     attackState:     card.attackState,
