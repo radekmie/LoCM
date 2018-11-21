@@ -108,9 +108,11 @@ func applyAction * (state: var State, action: Action): void =
       me.currentMana -= item.cost
       me.nextTurnDraw += item.cardDraw
       me.modifyHealth(item.myHealthChange)
-      op.modifyHealth(item.opHealthChange + item.defense)
+      op.modifyHealth(item.opHealthChange)
 
-      if action.id2 != -1:
+      if action.id2 == -1:
+        op.modifyHealth(-item.defense)
+      else:
         let targetOwner = if item.cardType == itemGreen: me else: op
 
         var target: Card
@@ -142,6 +144,14 @@ func applyAction * (state: var State, action: Action): void =
               target.hasLethal and not item.hasLethal
             targetAfter.hasWard =
               target.hasWard and not item.hasWard
+
+            targetAfter.attack = max(0, target.attack - item.attack)
+
+            if item.defense > 0:
+              if targetAfter.hasWard:
+                targetAfter.hasWard = false
+              else:
+                targetAfter.defense -= item.defense
           of itemGreen:
             targetAfter.hasCharge =
               target.hasCharge or item.hasCharge
@@ -156,20 +166,13 @@ func applyAction * (state: var State, action: Action): void =
             targetAfter.hasWard =
               target.hasWard or item.hasWard
 
+            targetAfter.attack += item.attack
+            targetAfter.defense += item.defense
+
             if item.hasCharge and targetAfter.attackState != alreadyAttacked:
               targetAfter.attackState = canAttack
 
-        targetAfter.attack = max(0, target.attack + item.attack)
-
-        if targetAfter.hasWard and item.defense < 0:
-          targetAfter.hasWard = false
-        else:
-          targetAfter.defense += item.defense
-
         if targetAfter.defense <= 0:
-          targetAfter = nil
-
-        if targetAfter == nil:
           targetOwner.boards[targetBoard].delete(targetIndex)
         else:
           targetOwner.boards[targetBoard][targetIndex] = targetAfter
