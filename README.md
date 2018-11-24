@@ -70,6 +70,7 @@ nim c -d:release Tester.nim
 * [x] Monte Carlo Tree Search - lookahead (`--player=MCTS0`, [source](Research/PlayerAlgorithms/MCTS0.nim))
 * [x] Monte Carlo Tree Search + pruning (`--player=MCTSP`, [source](Research/PlayerAlgorithms/MCTSP.nim))
 * [x] Noop (`--player=Noop`, [source](Research/PlayerAlgorithms/Noop.nim))
+* [x] Random (`--player=Random`, [source](Research/PlayerAlgorithms/Random.nim))
 
 **[State evaluations](Research/StateEvaluations):**
 
