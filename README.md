@@ -58,7 +58,7 @@ nim c -d:release Tester.nim
 * [x] ClosetAI (`--draft=ClosetAI`, [source](Research/DraftEvaluations/ClosetAI.nim))
 * [x] Icebox (`--draft=Icebox`, [source](Research/DraftEvaluations/Icebox.nim))
 * [x] Manual (`--draft=Manual`, [source](Research/DraftEvaluations/Manual.nim))
-* [x] Random (`--draft=Random`, [source](Research/DraftEvaluations/Random.nim))
+* [x] Random (`--draft=Random3`, [source](Research/DraftEvaluations/Random3.nim))
 
 **[Player algorithms](Research/PlayerAlgorithms):**
 
