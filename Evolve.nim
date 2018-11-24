@@ -32,7 +32,7 @@ func toSummary (id: int, avg: float, bests: openArray[Individual]): string =
 func toConfig (individual: Individual): Config =
   let lookup = func (card: Card): float = individual.gene[card.cardNumber - 1]
 
-  result = newConfig(player = "Greedy")
+  result = newConfig(player = "Random")
   result.evalDraftFn = func (config: Config, state: State): DraftResult =
     state.evaluateDraftWith(lookup)
 
