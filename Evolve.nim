@@ -8,10 +8,11 @@ const
   bestsGames = 25
   bestsSize = 5
   bestsWin = 100.0 / 2 / bestsGames
-  generations = 25
+  generations = 1000
   mergeEval = 0.1
   mutationProbability = 0.05
-  populationSize = 10
+  populationSize = 100
+  randoms = 5
   scoreGames = 25
   scoreRounds = 2
   scoreWin = 100.0 / 2 / scoreGames / scoreRounds
@@ -104,6 +105,34 @@ func sumEvals (population: openArray[Individual]): float =
   for individual in population:
     result += individual.eval
 
+proc measure (
+  bests: array[generations, array[bestsSize, Individual]],
+  drafts: array[generations, Draft],
+  players: openArray[Individual]
+): void =
+  let winScore = bestsWin / players.len.float
+  let configs = players.mapIt(it.toConfig)
+
+  for generation, individuals in bests:
+    let draft = drafts[generation]
+    for index, best in individuals:
+      let opponent = best.toConfig
+
+      best.eval = 0.0
+
+      parallel:
+        for config in configs:
+          for _ in 0 ..< bestsGames:
+            let winX = spawn play(config, opponent, draft)
+            let winY = spawn play(opponent, config, draft)
+            if     winX: best.eval += winScore
+            if not winY: best.eval += winScore
+
+    let avg = sumEvals(individuals) / bestsSize
+    echo &"# {stamp()} {toSummary(generation, avg, individuals)}"
+    echo &"  {generation} {avg}"
+  echo &"  e"
+
 proc main (): void =
   let cards = getCards()
   var offspring = newPopulation()
@@ -175,28 +204,22 @@ proc main (): void =
       bests[generation][index] = population[index]
 
     let avg = sumEvals(population) / populationSize
-    echo &"{stamp()} {toSummary(generation, avg, bests[generation])}"
+    echo &"# {stamp()} {toSummary(generation, avg, bests[generation])}"
 
   # Check()
-  echo &"{stamp()} Champion check"
-  let champion = population[0].toConfig
+  echo &"# {stamp()} Champion check"
+  echo &"set output 'plot.gif'"
+  echo &"set terminal gif"
+  echo &"set xr [0:{generations}]"
+  echo &"set yr [0:100]"
+  echo &"set xlabel 'Generation'"
+  echo &"set ylabel '% of wins'"
 
-  for generation, individuals in bests:
-    let draft = drafts[generation]
-    for index, best in individuals:
-      let opponent = best.toConfig
-
-      best.eval = 0.0
-
-      parallel:
-        for _ in 0 ..< bestsGames:
-          let winX = spawn play(champion, opponent, draft)
-          let winY = spawn play(opponent, champion, draft)
-          if     winX: best.eval += bestsWin
-          if not winY: best.eval += bestsWin
-
-    let avg = sumEvals(individuals) / bestsSize
-    echo &"{stamp()} {toSummary(generation, avg, individuals)}"
+  echo &"plot \\"
+  echo &"  '-' using 1:2 title 'Champion' with linespoints, \\"
+  echo &"  '-' using 1:2 title 'Random {randoms}' with linespoints"
+  measure(bests, drafts, [population[0]])
+  measure(bests, drafts, newSeqWith[Individual](randoms, newIndividual(true)))
 
 when isMainModule:
   main()
