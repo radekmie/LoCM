@@ -8,6 +8,7 @@ const
   bestsGames = 25
   bestsSize = 5
   bestsWin = 100.0 / 2 / bestsGames
+  champions = 5
   generations = 1000
   mergeEval = 0.1
   mutationProbability = 0.05
@@ -28,7 +29,7 @@ type
 
 func toSummary (id: int, avg: float, bests: openArray[Individual]): string =
   let scores = bests.mapIt(&"{it.eval:5.2f}").join(" ")
-  &"Generation {id + 1:3}: avg={avg:5.2f} top{bests.len}=[{scores}]"
+  &"Generation {id + 1:4}: avg={avg:5.2f} top{bests.len}=[{scores}]"
 
 func toConfig (individual: Individual): Config =
   let lookup = func (card: Card): float = individual.gene[card.cardNumber - 1]
@@ -109,8 +110,9 @@ proc measure (
   bests: array[generations, array[bestsSize, Individual]],
   drafts: array[generations, Draft],
   players: openArray[Individual]
-): void =
+): float =
   let winScore = bestsWin / players.len.float
+  var winTotal = 0.0
   let configs = players.mapIt(it.toConfig)
 
   for generation, individuals in bests:
@@ -130,8 +132,9 @@ proc measure (
 
     let avg = sumEvals(individuals) / bestsSize
     echo &"# {stamp()} {toSummary(generation, avg, individuals)}"
-    echo &"  {generation} {avg}"
-  echo &"  e"
+    echo &"  {generation + 1:4} {avg:5.2f}"
+    winTotal += avg
+  winTotal / float(bests.len)
 
 proc main (): void =
   let cards = getCards()
@@ -207,19 +210,54 @@ proc main (): void =
     echo &"# {stamp()} {toSummary(generation, avg, bests[generation])}"
 
   # Check()
-  echo &"# {stamp()} Champion check"
-  echo &"set output 'plot.gif'"
-  echo &"set terminal gif"
-  echo &"set xr [0:{generations}]"
-  echo &"set yr [0:100]"
+  echo &"set output 'plot.svg'"
+  echo &"set terminal svg font 'monospace:Bold,16' linewidth 2 size 1000,600"
   echo &"set xlabel 'Generation'"
   echo &"set ylabel '% of wins'"
 
+  echo &"# Running average of size n"
+  echo &"n = {min(10, generations)}"
+  for k in 0 .. champions:
+    echo &"do for[i = 1 : n] {{"
+    echo &"  eval(sprintf('pre{k}%d = 0', i))"
+    echo &"}}"
+
+    echo &"shift{k} = '('"
+    echo &"do for[i = n : 2 : -1] {{"
+    echo &"  shift{k} = sprintf('%spre{k}%d = pre{k}%d, ', shift{k}, i, i - 1)"
+    echo &"}}"
+    echo &"shift{k} = shift{k} . 'pre{k}1 = x)'"
+
+    echo &"sum{k} = '(pre{k}1'"
+    echo &"do for[i = 2 : n] {{"
+    echo &"  sum{k} = sprintf('%s + pre{k}%d', sum{k}, i)"
+    echo &"}}"
+    echo &"sum{k} = sum{k} . ')'"
+
+    echo &"samples{k}(x) = $0 > (n - 1) ? n : ($0 + 1)"
+    echo &"shift{k}(x) = @shift{k}"
+    echo &"avg{k}(x) = (shift{k}(x), @sum{k} / samples{k}($0))"
+
+  var labels: array[champions + 1, string]
+  var scores: array[champions + 1, float]
+
+  for k in 0 .. champions:
+    echo &"$data{k} <<EOD"
+    if k == 0:
+      let configs = newSeqWith[Individual](randoms, newIndividual(true))
+      labels[k] = &"Randoms {randoms:5}"
+      scores[k] = measure(bests, drafts, configs)
+    else:
+      let n = k * int(generations / champions) - 1
+      labels[k] = &"Champion {n + 1:4}"
+      scores[k] = measure(bests, drafts, [bests[n][0]])
+    echo &"EOD"
+
   echo &"plot \\"
-  echo &"  '-' using 1:2 title 'Champion' with linespoints, \\"
-  echo &"  '-' using 1:2 title 'Random {randoms}' with linespoints"
-  measure(bests, drafts, [population[0]])
-  measure(bests, drafts, newSeqWith[Individual](randoms, newIndividual(true)))
+  for k in 0 .. champions:
+    let label = &"{labels[k]} {scores[k]:5.2f}"
+    let trail = if k == champions: "" else: ", \\"
+    echo &"  $data{k} using 1:(avg{k}($2)) title '{label}' with lines{trail}"
 
 when isMainModule:
   main()
