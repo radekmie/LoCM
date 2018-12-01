@@ -5,25 +5,33 @@ import Engine / [Card, Cards, Config, Draft, State]
 import Research / [IOHelpers, Referee]
 
 const
-  bestsGames = 25
+  # evolveToBests
   bestsSize = 5
-  bestsWin = 100.0 / 2 / bestsGames
-  champions = 5
   generations = 1000
   mergeEval = 0.1
   mutationProbability = 0.05
   populationSize = 100
-  randoms = 5
   scoreGames = 25
   scoreRounds = 2
-  scoreWin = 100.0 / 2 / scoreGames / scoreRounds
   tournamentGames = 10
   tournamentSize = 4
+
+  # plotChampions
+  bestsGames = 25
+  champions = 5
+  randoms = 5
+
+  # plotEvolution
+  progressDrafts = 100
+  progressEnemies = 10
+  progressGames = 10
 
 type
   Individual = ref object
     eval: float
     gene: array[160, float]
+  Bests = array[generations, array[bestsSize, Individual]]
+  Drafts = seq[Draft]
   Parents = array[2, Individual]
   Population = array[populationSize, Individual]
 
@@ -106,46 +114,9 @@ func sumEvals (population: openArray[Individual]): float =
   for individual in population:
     result += individual.eval
 
-proc measure (
-  bests: array[generations, array[bestsSize, Individual]],
-  drafts: array[generations, Draft],
-  players: openArray[Individual]
-): float =
-  let winScore = bestsWin / players.len.float
-  var winTotal = 0.0
-  let configs = players.mapIt(it.toConfig)
-
-  for generation, individuals in bests:
-    let draft = drafts[generation]
-    for index, best in individuals:
-      let opponent = best.toConfig
-
-      best.eval = 0.0
-
-      parallel:
-        for config in configs:
-          for _ in 0 ..< bestsGames:
-            let winX = spawn play(config, opponent, draft)
-            let winY = spawn play(opponent, config, draft)
-            if     winX: best.eval += winScore
-            if not winY: best.eval += winScore
-
-    let avg = sumEvals(individuals) / bestsSize
-    echo &"# {stamp()} {toSummary(generation, avg, individuals)}"
-    echo &"  {generation + 1:4} {avg:5.2f}"
-    winTotal += avg
-  winTotal / float(bests.len)
-
-proc main (): void =
-  let cards = getCards()
-  var offspring = newPopulation()
+proc evolveToBests (bests: var Bests, drafts: Drafts): void =
+  var offspring  = newPopulation()
   var population = newPopulation(true)
-
-  var bests:  array[generations, array[bestsSize, Individual]]
-  var drafts: array[generations, Draft]
-
-  for generation in 0 ..< generations:
-    drafts[generation] = newDraft(cards)
 
   for generation in 0 ..< generations:
     let draft = drafts[generation]
@@ -171,6 +142,7 @@ proc main (): void =
         if mutationProbability > rand(1.0): child2.gene[gene] = rand(1.0)
 
     # ScoreChildrenPopulation()
+    let scoreWin = 100.0 / (2 * scoreGames * scoreRounds)
     for round in 1 .. scoreRounds:
       offspring.sort(cmp, Descending)
 
@@ -209,8 +181,8 @@ proc main (): void =
     let avg = sumEvals(population) / populationSize
     echo &"# {stamp()} {toSummary(generation, avg, bests[generation])}"
 
-  # Check()
-  echo &"set output 'plot.svg'"
+proc plotChampions (bests: Bests, drafts: Drafts): void =
+  echo &"set output 'plot-champions.svg'"
   echo &"set terminal svg font 'monospace:Bold,16' linewidth 2 size 1000,600"
   echo &"set xlabel 'Generation'"
   echo &"set ylabel '% of wins'"
@@ -243,21 +215,96 @@ proc main (): void =
 
   for k in 0 .. champions:
     echo &"$data{k} <<EOD"
+
+    var players: seq[Config]
     if k == 0:
-      let configs = newSeqWith[Individual](randoms, newIndividual(true))
+      players = newSeqWith[Config](randoms, newIndividual(true).toConfig)
       labels[k] = &"Randoms {randoms:5}"
-      scores[k] = measure(bests, drafts, configs)
     else:
-      let n = k * int(generations / champions) - 1
-      labels[k] = &"Champion {n + 1:4}"
-      scores[k] = measure(bests, drafts, [bests[n][0]])
+      let generation = k * int(generations / champions) - 1
+      players.add(bests[generation][0].toConfig)
+      labels[k] = &"Champion {generation + 1:4}"
+
+    for generation, group in bests:
+      let draft = drafts[generation]
+      for index, enemy in group:
+        let opponent = enemy.toConfig
+
+        enemy.eval = 0.0
+
+        parallel:
+          for player in players:
+            for game in 1 .. bestsGames:
+              let winX = spawn play(player, opponent, draft)
+              let winY = spawn play(opponent, player, draft)
+              if     winX: enemy.eval += 1
+              if not winY: enemy.eval += 1
+
+      let all = 2 * bestsGames * bestsSize * players.len
+      let avg = 100.0 * sumEvals(group) / all.float
+      scores[k] += avg / generations.float
+
+      echo &"# {stamp()} {toSummary(generation, avg, group)}"
+      echo &"  {generation + 1:4} {avg:5.2f}"
     echo &"EOD"
 
   echo &"plot \\"
   for k in 0 .. champions:
-    let label = &"{labels[k]} {scores[k]:5.2f}"
-    let trail = if k == champions: "" else: ", \\"
-    echo &"  $data{k} using 1:(avg{k}($2)) title '{label}' with lines{trail}"
+   let label = &"{labels[k]} {scores[k]:5.2f}"
+   let trail = if k == champions: "" else: ", \\"
+   echo &"  $data{k} using 1:(avg{k}($2)) title '{label}' with lines{trail}"
+
+proc plotEvolution (bests: Bests, drafts1: Drafts, drafts2: Drafts): void =
+  var players: array[generations * bestsSize, Individual]
+  for index in players.low .. players.high:
+    players[index] = bests[(index / bestsSize).int][index mod bestsSize]
+
+  var enemies: array[progressEnemies, Config]
+  for index in enemies.low .. enemies.high:
+    enemies[index] = newIndividual(true).toConfig
+
+  echo &"set output 'plot-evolution.svg'"
+  echo &"set terminal svg font 'monospace:Bold,16' linewidth 2 size 1000,600"
+  echo &"set xlabel 'Known drafts %'"
+  echo &"set ylabel 'Fresh drafts %'"
+  echo &"$progress <<EOD"
+  for index, player in players:
+    let config = player.toConfig
+    var coords = [0.0, 0.0]
+
+    for coord, drafts in [drafts1, drafts2]:
+      player.eval = 0.0
+      for draft in drafts:
+        parallel:
+          for enemy in enemies:
+            for game in 1 .. progressGames:
+              let winX = spawn play(config, enemy, draft)
+              let winY = spawn play(enemy, config, draft)
+              if     winX: player.eval += 1
+              if not winY: player.eval += 1
+      let all = 2 * progressGames * enemies.len * drafts.len
+      coords[coord] = 100.0 * player.eval / all.float
+
+    echo &"# {stamp()} Player {index + 1:4}"
+    echo &"  {coords[0]:5.2f} {coords[1]:5.2f}"
+  echo &"EOD"
+  echo &"a = 1"
+  echo &"b = 50"
+  echo &"fit(x) = a * x + b"
+  echo &"fit fit(x) $progress via a, b"
+  echo &"plot \\"
+  echo &"  $progress notitle pointsize 0.5 pointtype 7, \\"
+  echo &"  fit(x) title sprintf('y = %fx + %f', a, b)"
+
+proc main (): void =
+  let cards = getCards()
+  let drafts1: Drafts = newSeqWith[Draft](generations, newDraft(cards))
+  let drafts2: Drafts = newSeqWith[Draft](progressDrafts, newDraft(cards))
+
+  var bests: Bests
+  evolveToBests(bests, drafts1)
+  plotChampions(bests, drafts1)
+  plotEvolution(bests, drafts1, drafts2)
 
 when isMainModule:
   main()
