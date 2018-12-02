@@ -16,6 +16,10 @@ const
   tournamentGames = 10
   tournamentSize = 4
 
+  # plotBaselines
+  baselineDrafts = 100
+  baselinesGames = 25
+
   # plotChampions
   bestsGames = 25
   champions = 5
@@ -24,9 +28,10 @@ const
   # plotEvolution
   progressDrafts = 100
   progressEnemies = 10
-  progressGames = 10
+  progressGames = 25
 
 type
+  Baseline = tuple[drafts: Drafts, evaluator: string, title: string]
   Individual = ref object
     eval: float
     gene: array[160, float]
@@ -181,6 +186,70 @@ proc evolveToBests (bests: var Bests, drafts: Drafts): void =
     let avg = sumEvals(population) / populationSize
     echo &"# {stamp()} {toSummary(generation, avg, bests[generation])}"
 
+proc plotBaselines (bests: Bests, lines: seq[Baseline]): void =
+  echo &"set output 'plot-baselines.svg'"
+  echo &"set terminal svg font 'monospace:Bold,16' linewidth 2 size 1000,600"
+  echo &"set xlabel 'Generation'"
+  echo &"set ylabel '% of wins'"
+
+  echo &"# Running average of size n"
+  echo &"n = {min(10, generations)}"
+  for k in lines.low .. lines.high:
+    echo &"do for[i = 1 : n] {{"
+    echo &"  eval(sprintf('pre{k}%d = 0', i))"
+    echo &"}}"
+
+    echo &"shift{k} = '('"
+    echo &"do for[i = n : 2 : -1] {{"
+    echo &"  shift{k} = sprintf('%spre{k}%d = pre{k}%d, ', shift{k}, i, i - 1)"
+    echo &"}}"
+    echo &"shift{k} = shift{k} . 'pre{k}1 = x)'"
+
+    echo &"sum{k} = '(pre{k}1'"
+    echo &"do for[i = 2 : n] {{"
+    echo &"  sum{k} = sprintf('%s + pre{k}%d', sum{k}, i)"
+    echo &"}}"
+    echo &"sum{k} = sum{k} . ')'"
+
+    echo &"samples{k}(x) = $0 > (n - 1) ? n : ($0 + 1)"
+    echo &"shift{k}(x) = @shift{k}"
+    echo &"avg{k}(x) = (shift{k}(x), @sum{k} / samples{k}($0))"
+
+  var scores = newSeq[float](lines.high)
+
+  for k, line in lines:
+    echo &"$baseline{k} <<EOD"
+
+    let baseline = newConfig(draft = line.evaluator, player = "Random")
+
+    let score = 100.0 / 2 / baselinesGames / line.drafts.len.float
+    for generation, group in bests:
+      for index, individual in group:
+        let player = individual.toConfig
+
+        individual.eval = 0.0
+
+        parallel:
+          for draft in line.drafts:
+            for game in 1 .. baselinesGames:
+              let winX = spawn play(player, baseline, draft)
+              let winY = spawn play(baseline, player, draft)
+              if     winX: individual.eval += score
+              if not winY: individual.eval += score
+
+      let avg = sumEvals(group) / bestsSize
+      scores[k] += avg / generations
+
+      echo &"# {stamp()} {toSummary(generation, avg, group)}"
+      echo &"  {generation + 1:4} {avg:5.2f}"
+    echo &"EOD"
+
+  echo &"plot \\"
+  for k, line in lines:
+   let label = &"{line.title} {scores[k]:5.2f}"
+   let trail = if k == lines.high: "" else: ", \\"
+   echo &"  $baseline{k} using 1:(avg{k}($2)) title '{label}' with lines{trail}"
+
 proc plotChampions (bests: Bests, drafts: Drafts): void =
   echo &"set output 'plot-champions.svg'"
   echo &"set terminal svg font 'monospace:Bold,16' linewidth 2 size 1000,600"
@@ -225,6 +294,7 @@ proc plotChampions (bests: Bests, drafts: Drafts): void =
       players.add(bests[generation][0].toConfig)
       labels[k] = &"Champion {generation + 1:4}"
 
+    let score = 100.0 / 2 / bestsGames / players.len.float
     for generation, group in bests:
       let draft = drafts[generation]
       for index, enemy in group:
@@ -237,12 +307,11 @@ proc plotChampions (bests: Bests, drafts: Drafts): void =
             for game in 1 .. bestsGames:
               let winX = spawn play(player, opponent, draft)
               let winY = spawn play(opponent, player, draft)
-              if     winX: enemy.eval += 1
-              if not winY: enemy.eval += 1
+              if     winX: enemy.eval += score
+              if not winY: enemy.eval += score
 
-      let all = 2 * bestsGames * bestsSize * players.len
-      let avg = 100.0 * sumEvals(group) / all.float
-      scores[k] += avg / generations.float
+      let avg = sumEvals(group) / bestsSize
+      scores[k] += avg / generations
 
       echo &"# {stamp()} {toSummary(generation, avg, group)}"
       echo &"  {generation + 1:4} {avg:5.2f}"
@@ -274,16 +343,17 @@ proc plotEvolution (bests: Bests, drafts1: Drafts, drafts2: Drafts): void =
 
     for coord, drafts in [drafts1, drafts2]:
       player.eval = 0.0
+
+      let score = 100.0 / 2 / progressGames / (enemies.len * drafts.len).float
       for draft in drafts:
         parallel:
           for enemy in enemies:
             for game in 1 .. progressGames:
               let winX = spawn play(config, enemy, draft)
               let winY = spawn play(enemy, config, draft)
-              if     winX: player.eval += 1
-              if not winY: player.eval += 1
-      let all = 2 * progressGames * enemies.len * drafts.len
-      coords[coord] = 100.0 * player.eval / all.float
+              if     winX: player.eval += score
+              if not winY: player.eval += score
+      coords[coord] = player.eval
 
     echo &"# {stamp()} Player {index + 1:4}"
     echo &"  {coords[0]:5.2f} {coords[1]:5.2f}"
@@ -300,11 +370,18 @@ proc main (): void =
   let cards = getCards()
   let drafts1: Drafts = newSeqWith[Draft](generations, newDraft(cards))
   let drafts2: Drafts = newSeqWith[Draft](progressDrafts, newDraft(cards))
+  let drafts3: Drafts = newSeqWith[Draft](baselineDrafts, newDraft(cards))
 
   var bests: Bests
   evolveToBests(bests, drafts1)
   plotChampions(bests, drafts1)
   plotEvolution(bests, drafts1, drafts2)
+  plotBaselines(bests, @[
+    (drafts1, "ClosetAI", "vs ClosetAI, known"),
+    (drafts3, "ClosetAI", "vs ClosetAI, fresh"),
+    (drafts1, "Icebox", "vs Icebox, known"),
+    (drafts3, "Icebox", "vs Icebox, fresh"),
+  ])
 
 when isMainModule:
   main()
