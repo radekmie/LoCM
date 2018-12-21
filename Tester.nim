@@ -1,4 +1,4 @@
-import std / [osproc, parseopt, strformat, strutils, ]
+import std / [osproc, parseopt, strformat, strutils]
 import Engine / Input
 import Research / IOHelpers
 
