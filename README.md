@@ -55,8 +55,8 @@ nim c -d:release Tester.nim
 
 **[Draft evaluations](Research/DraftEvaluations):**
 
-* [x] ClosetAI (`--draft=ClosetAI`, [source](Research/DraftEvaluations/ClosetAI.nim))
-* [x] Icebox (`--draft=Icebox`, [source](Research/DraftEvaluations/Icebox.nim))
+* [x] ClosetAI (`--draft=ClosetAI`, [source](Research/DraftEvaluations/ClosetAI.nim), [ClosetAI profile on CodinGame](https://www.codingame.com/forum/u/ClosetAI))
+* [x] Icebox (`--draft=Icebox`, [source](Research/DraftEvaluations/Icebox.nim), [Icebox profile on CodinGame](https://www.codingame.com/forum/u/icebox))
 * [x] Manual (`--draft=Manual`, [source](Research/DraftEvaluations/Manual.nim))
 * [x] Random (`--draft=Random3`, [source](Research/DraftEvaluations/Random3.nim))
 
