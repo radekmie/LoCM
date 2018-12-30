@@ -49,47 +49,44 @@ proc main (): void =
     elif key == "drafts":
       drafts = newSeqWith(value.parseInt, newDraft(cards))
 
-  var spans = newSeqWith(1 + players.len, 0)
-  var table = @[@[""]]
-  for x in players.keys:
-    table[^1].add(x)
-  table[^1].add("Average")
-
+  var plays = 0
+  var table = initTable[tuple[x: string, y: string], float]()
   for x, xs in players.pairs:
-    table.add(@[x])
-
-    var total: float
     for y, ys in players.pairs:
-      echo &"# {stamp()} {x} vs {y}"
-
-      if x == y:
-        table[^1].add("-")
-      else:
-        var score: float
+      if x != y:
+        echo &"# {stamp()} {x} vs {y}"
         let scoreWin = 100 / (2 * drafts.len * xs.len * ys.len).float
-
-        for playerA in xs:
-          for playerB in ys:
+        for playerX in xs:
+          for playerY in ys:
             parallel:
               for draft in drafts:
-                let winA = spawn play(playerA, playerB, draft)
-                let winB = spawn play(playerB, playerA, draft)
-                if     winA: score += scoreWin
-                if not winB: score += scoreWin
+                let win = spawn play(playerX, playerY, draft)
+                let who = if win: (x, y) else: (y, x)
+                table[who] = table.getOrDefault(who, 0) + scoreWin
+                plays += 1
 
-        table[^1].add(&"{score:.2f}%")
-        total += score / (players.len - 1).float
-    table[^1].add(&"{total:.2f}%")
+  echo &"# {stamp()} Plays total {plays}"
 
-  for row, cols in table:
-    for col, text in cols:
-      spans[col] = max(spans[col], text.len)
+  var spans = initOrderedTable[string, int]()
+  spans[""] = max(toSeq(players.keys).mapIt(it.len))
+  for x, xs in players.pairs:
+    spans[x] = max(6, x.len)
+  spans["Average"] = 7
 
-  for row, cols in table:
-    for col, text in cols:
-      table[row][col] = text.align(spans[col])
+  stdout.write("".align(spans[""]))
+  for x, xs in players.pairs:
+    stdout.write(&" | {x.align(spans[x])}")
+  stdout.writeLine(" | Average")
 
-  echo table.mapIt(it.mapIt(it).join(" | ")).join("\n")
+  for x, xs in players.pairs:
+    stdout.write(x.align(spans[""]))
+    var average = 0.0
+    for y, ys in players.pairs:
+      if x != y: average += table[(x, y)] / (players.len - 1).float
+      let score = if x == y: "-" else: &"{table[(x, y)]:.2f}%"
+      stdout.write(&" | {score.align(spans[y])}")
+    let averageOut = &"{average:.2f}%"
+    stdout.writeLine(&" | {averageOut.align(spans[\"Average\"])}")
 
 when isMainModule:
   main()
