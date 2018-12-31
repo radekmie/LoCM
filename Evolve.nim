@@ -497,16 +497,28 @@ proc randomTournament (bests: var Bests, drafts: Drafts): void =
     for individual in population:
       individual.eval = 0
 
-    for index in countup(0, populationSize - 2, 2):
-      let a = population[index + 0]
-      let b = population[index + 1]
-      parallel:
-        for draft in drafts:
-          for _ in 1 .. scoreGames:
-            let winX = spawn play(a, b, draft)
-            let winY = spawn play(b, a, draft)
-            if winX: a.eval += scoreWin else: b.eval += scoreWin
-            if winY: b.eval += scoreWin else: a.eval += scoreWin
+    var tournament1: seq[Individual]
+    var tournament2: seq[Individual]
+    for individual in population:
+      tournament1.add(individual)
+
+    while tournament1.len > 1:
+      for index in countup(0, tournament1.len - 2, 2):
+        let a = tournament1[index + 0]
+        let b = tournament1[index + 1]
+        parallel:
+          for draft in drafts:
+            for _ in 1 .. scoreGames:
+              let winX = spawn play(a, b, draft)
+              let winY = spawn play(b, a, draft)
+              if winX: a.eval += scoreWin else: b.eval += scoreWin
+              if winY: b.eval += scoreWin else: a.eval += scoreWin
+
+        let best = if a.eval > b.eval: a else: b
+        tournament2.add(best)
+
+      tournament1 = tournament2
+      tournament2 = @[]
 
     population.sort(cmp, Descending)
 
