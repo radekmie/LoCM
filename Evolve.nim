@@ -22,7 +22,9 @@ const
 
   # evolveToBests
   bestsSize {.intdefine.} = 5
+  mergeAllGenes {.intdefine.} = 0
   mergeEval {.intdefine.} = 10
+  mergeGene {.intdefine.} = 0
   mutationProbability {.intdefine.} = 5
   scoreRounds {.intdefine.} = 2
   tournamentGames {.intdefine.} = 10
@@ -50,6 +52,9 @@ type
   Drafts = seq[Draft]
   Parents = array[2, Individual]
   Population = array[populationSize, Individual]
+
+func lerp100 (x: float, y: float, percent: float): float =
+  (x * percent + y * (100 - percent)) / 100
 
 func toSummary (id: int, avg: float, bests: openArray[Individual]): string =
   let scores = bests.mapIt(&"{it.eval:5.2f}").join(" ")
@@ -258,13 +263,18 @@ proc evolveToBests (bests: var Bests, drafts: Drafts): void =
       let x = roulette(population, populationEval)
       let y = roulette(offspring, offspringEval)
 
-      individual.eval = x.eval * (100.0 - mergeEval) + y.eval * mergeEval
-      individual.eval = individual.eval / 100
+      individual.eval = lerp100(y.eval, x.eval, mergeEval)
       individual.gene = x.gene
 
-      for pick in draft:
-        for card in pick:
-          individual.gene[card.cardNumber - 1] = y.gene[card.cardNumber - 1]
+      var gene = individual.gene
+      when mergeAllGenes == 0:
+        for pick in draft:
+          for card in pick:
+            let id = card.cardNumber - 1
+            gene[id] = lerp100(gene[id], y.gene[id], mergeGene)
+      else:
+        for id, value in y.gene:
+          gene[id] = lerp100(gene[id], value, mergeGene)
 
     population = nextPopulation
     population.sort(cmp, Descending)
