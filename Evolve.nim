@@ -1,8 +1,16 @@
 {.experimental: "parallel".}
 
-import std / [algorithm, random, sequtils, strformat, strutils, threadpool]
 import Engine / [Card, Cards, Config, Draft, State]
 import Research / [IOHelpers, Referee]
+import std / [
+  algorithm,
+  math,
+  random,
+  sequtils,
+  strformat,
+  strutils,
+  threadpool
+]
 
 const
   # entrypoint
@@ -468,6 +476,47 @@ proc plotEvolution (bests: Bests, drafts1: Drafts, drafts2: Drafts): void =
   echo &"  $progress notitle pointsize 0.5 pointtype 7, \\"
   echo &"  fit(x) title sprintf('y = %fx + %f', a, b)"
 
+proc plotPerformance (bests: Bests, drafts: Drafts): void =
+  echo &"set output 'plot-performance.svg'"
+  echo &"set terminal svg font 'monospace:Bold,16' linewidth 2 size 1000,600"
+  echo &"set xlabel 'Plays'"
+  echo &"set ylabel '% of wins'"
+
+  let games = plays
+  let score = 100.0 / 2 / bestsGames / bests[0].len.float / drafts.len.float
+  var enemies = [
+    newConfig(player = "Random", draft = "ClosetAI"),
+    newConfig(player = "Random", draft = "Icebox"),
+    newIndividual(true).toConfig,
+    newIndividual(true).toConfig,
+    newIndividual(true).toConfig
+  ]
+
+  echo &"$data <<EOD"
+  for generation, players in bests:
+    var results = newSeq[float](enemies.len)
+    for index, enemy in enemies:
+      var result = 0.0
+      for player in players.mapIt(it.toConfig):
+        parallel:
+          for draft in drafts:
+            for game in 1 .. bestsGames:
+              let winX = spawn play(player, enemy, draft)
+              let winY = spawn play(enemy, player, draft)
+              if     winX: result += score
+              if not winY: result += score
+      results[index] = result
+
+    let cost = (games.float / bests.len.float * (1.0 + generation.float)).int
+    let avg = results.sum / results.len.float
+    let dev = results.mapIt((it - avg).pow(2.0)).sum / (results.len.float - 1.0)
+
+    echo &"# {stamp()}"
+    echo &"  {cost} {avg} {sqrt(dev)}"
+  echo &"EOD"
+
+  echo &"plot $data using 1:2:3 title '{mode}' with errorbars"
+
 proc randomExhaustive (bests: var Bests, drafts: Drafts): void =
   var population = newPopulation(true)
   let scoreWin = 100 / (4 * draftsEval * scoreGames * (populationSize - 1))
@@ -560,9 +609,11 @@ proc main (): void =
 
   when mode == "evolve-specialized":
     evolveToBests(bests, newSeqWith(generations, newDraft(cards)))
+    plotPerformance(bests, newSeqWith(100, newDraft(cards)))
 
   when mode == "evolve-standard":
     evolveNormals(bests, newSeqWith(draftsEval, newDraft(cards)))
+    plotPerformance(bests, newSeqWith(100, newDraft(cards)))
 
   when mode == "random-exhaustive":
     randomExhaustive(bests, newSeqWith(draftsEval, newDraft(cards)))
