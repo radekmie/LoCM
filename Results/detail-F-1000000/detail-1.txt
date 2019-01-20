@@ -1,0 +1,38 @@
+# 2019-01-20 09:03:58.111 ClosetAI vs Icebox
+# 2019-01-20 09:03:58.265 ClosetAI vs evolve-specialized-drafts
+# 2019-01-20 09:03:59.056 ClosetAI vs evolve-specialized-epochs
+# 2019-01-20 09:03:59.741 ClosetAI vs evolve-specialized-normal
+# 2019-01-20 09:04:00.438 ClosetAI vs evolve-standard
+# 2019-01-20 09:04:01.147 Icebox vs ClosetAI
+# 2019-01-20 09:04:01.296 Icebox vs evolve-specialized-drafts
+# 2019-01-20 09:04:02.015 Icebox vs evolve-specialized-epochs
+# 2019-01-20 09:04:02.684 Icebox vs evolve-specialized-normal
+# 2019-01-20 09:04:03.351 Icebox vs evolve-standard
+# 2019-01-20 09:04:04.030 evolve-specialized-drafts vs ClosetAI
+# 2019-01-20 09:04:04.709 evolve-specialized-drafts vs Icebox
+# 2019-01-20 09:04:05.348 evolve-specialized-drafts vs evolve-specialized-epochs
+# 2019-01-20 09:04:08.687 evolve-specialized-drafts vs evolve-specialized-normal
+# 2019-01-20 09:04:12.061 evolve-specialized-drafts vs evolve-standard
+# 2019-01-20 09:04:15.473 evolve-specialized-epochs vs ClosetAI
+# 2019-01-20 09:04:16.143 evolve-specialized-epochs vs Icebox
+# 2019-01-20 09:04:16.798 evolve-specialized-epochs vs evolve-specialized-drafts
+# 2019-01-20 09:04:20.038 evolve-specialized-epochs vs evolve-specialized-normal
+# 2019-01-20 09:04:23.352 evolve-specialized-epochs vs evolve-standard
+# 2019-01-20 09:04:26.772 evolve-specialized-normal vs ClosetAI
+# 2019-01-20 09:04:27.471 evolve-specialized-normal vs Icebox
+# 2019-01-20 09:04:28.130 evolve-specialized-normal vs evolve-specialized-drafts
+# 2019-01-20 09:04:31.437 evolve-specialized-normal vs evolve-specialized-epochs
+# 2019-01-20 09:04:34.773 evolve-specialized-normal vs evolve-standard
+# 2019-01-20 09:04:38.205 evolve-standard vs ClosetAI
+# 2019-01-20 09:04:38.925 evolve-standard vs Icebox
+# 2019-01-20 09:04:39.611 evolve-standard vs evolve-specialized-drafts
+# 2019-01-20 09:04:43.299 evolve-standard vs evolve-specialized-epochs
+# 2019-01-20 09:04:47.106 evolve-standard vs evolve-specialized-normal
+# 2019-01-20 09:04:50.983 Plays total 1000076
+                          | ClosetAI | Icebox | evolve-specialized-drafts | evolve-specialized-epochs | evolve-specialized-normal | evolve-standard | Average
+                 ClosetAI |        - | 48.47% |                    49.82% |                    47.79% |                    48.21% |          52.01% |  49.26%
+                   Icebox |   51.53% |      - |                    50.99% |                    49.41% |                    49.78% |          53.72% |  51.08%
+evolve-specialized-drafts |   50.18% | 49.01% |                         - |                    48.62% |                    49.05% |          52.42% |  49.86%
+evolve-specialized-epochs |   52.21% | 50.59% |                    51.38% |                         - |                    50.44% |          53.72% |  51.67%
+evolve-specialized-normal |   51.79% | 50.22% |                    50.95% |                    49.56% |                         - |          53.38% |  51.18%
+          evolve-standard |   47.99% | 46.28% |                    47.58% |                    46.28% |                    46.62% |               - |  46.95%

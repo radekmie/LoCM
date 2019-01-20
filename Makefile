@@ -63,6 +63,21 @@ run-25000000: Detail $(SOURCES)
 	/usr/bin/time -v ./Detail --drafts=2618 ./Results/detail-25000000/*.p | tee Results/detail-25000000/detail-2.txt
 	/usr/bin/time -v ./Detail --drafts=2618 ./Results/detail-25000000/*.p | tee Results/detail-25000000/detail-3.txt
 
+run-compare-1000000: Detail $(SOURCES)
+	mkdir -p Results/detail-1000000
+
+	nim c -d:release --threads:on -d:mode="evolve-specialized" -d:generations=50  -d:populationSize=100 -d:scoreGames=40 -d:scoreRounds=4 -d:tournamentGames=5 -d:tournamentSize=4 -d:mergeAllGenes=1 Evolve.nim
+	/usr/bin/time -v ./Evolve > Results/detail-1000000/evolve-specialized-drafts.p
+	nim c -d:release --threads:on -d:mode="evolve-specialized" -d:generations=150 -d:populationSize=100 -d:scoreGames=10 -d:scoreRounds=1 -d:tournamentGames=5 -d:tournamentSize=4 -d:mergeGene=25 Evolve.nim
+	/usr/bin/time -v ./Evolve > Results/detail-1000000/evolve-specialized-epochs.p
+	nim c -d:release --threads:on -d:mode="evolve-specialized" -d:generations=100 -d:populationSize=100 -d:scoreGames=20 -d:scoreRounds=2 -d:tournamentGames=5 -d:tournamentSize=4 Evolve.nim
+	/usr/bin/time -v ./Evolve > Results/detail-1000000/evolve-specialized-normal.p
+	nim c -d:release --threads:on -d:mode="evolve-standard" -d:draftsEval=10 -d:elites=2 -d:generations=18 -d:populationSize=12 -d:scoreGames=20 -d:tournamentSize=4 Evolve.nim
+	/usr/bin/time -v ./Evolve > Results/detail-1000000/evolve-standard.p
+	/usr/bin/time -v ./Detail --drafts=2618 ./Results/detail-1000000/*.p | tee Results/detail-1000000/detail-1.txt
+	/usr/bin/time -v ./Detail --drafts=2618 ./Results/detail-1000000/*.p | tee Results/detail-1000000/detail-2.txt
+	/usr/bin/time -v ./Detail --drafts=2618 ./Results/detail-1000000/*.p | tee Results/detail-1000000/detail-3.txt
+
 run-evolve: Evolve
 	rm -f fit.log plot.p *.svg
 	/usr/bin/time -v ./Evolve | tee plot.p
