@@ -608,12 +608,20 @@ proc main (): void =
     ])
 
   when mode == "evolve-specialized":
-    evolveToBests(bests, newSeqWith(generations, newDraft(cards)))
-    plotPerformance(bests, newSeqWith(100, newDraft(cards)))
+    let drafts1: Drafts = newSeqWith(generations, newDraft(cards))
+    let drafts2: Drafts = newSeqWith(progressDrafts, newDraft(cards))
+
+    evolveToBests(bests, drafts1)
+    plotEvolution(bests, drafts1, drafts2)
+    # plotPerformance(bests, newSeqWith(100, newDraft(cards)))
 
   when mode == "evolve-standard":
-    evolveNormals(bests, newSeqWith(draftsEval, newDraft(cards)))
-    plotPerformance(bests, newSeqWith(100, newDraft(cards)))
+    let drafts1: Drafts = newSeqWith(draftsEval, newDraft(cards))
+    let drafts2: Drafts = newSeqWith(progressDrafts, newDraft(cards))
+
+    evolveNormals(bests, drafts1)
+    plotEvolution(bests, drafts1, drafts2)
+    # plotPerformance(bests, newSeqWith(100, newDraft(cards)))
 
   when mode == "random-exhaustive":
     randomExhaustive(bests, newSeqWith(draftsEval, newDraft(cards)))

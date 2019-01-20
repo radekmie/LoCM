@@ -1,0 +1,38 @@
+# 2019-01-20 12:24:15.830 ClosetAI vs Icebox
+# 2019-01-20 12:24:15.960 ClosetAI vs evolve-specialized-all
+# 2019-01-20 12:24:16.632 ClosetAI vs evolve-specialized-lerp
+# 2019-01-20 12:24:17.297 ClosetAI vs evolve-specialized
+# 2019-01-20 12:24:17.937 ClosetAI vs evolve-standard
+# 2019-01-20 12:24:18.715 Icebox vs ClosetAI
+# 2019-01-20 12:24:18.866 Icebox vs evolve-specialized-all
+# 2019-01-20 12:24:19.534 Icebox vs evolve-specialized-lerp
+# 2019-01-20 12:24:20.176 Icebox vs evolve-specialized
+# 2019-01-20 12:24:20.807 Icebox vs evolve-standard
+# 2019-01-20 12:24:21.465 evolve-specialized-all vs ClosetAI
+# 2019-01-20 12:24:22.160 evolve-specialized-all vs Icebox
+# 2019-01-20 12:24:22.836 evolve-specialized-all vs evolve-specialized-lerp
+# 2019-01-20 12:24:26.252 evolve-specialized-all vs evolve-specialized
+# 2019-01-20 12:24:29.404 evolve-specialized-all vs evolve-standard
+# 2019-01-20 12:24:32.671 evolve-specialized-lerp vs ClosetAI
+# 2019-01-20 12:24:33.343 evolve-specialized-lerp vs Icebox
+# 2019-01-20 12:24:33.972 evolve-specialized-lerp vs evolve-specialized-all
+# 2019-01-20 12:24:37.275 evolve-specialized-lerp vs evolve-specialized
+# 2019-01-20 12:24:40.610 evolve-specialized-lerp vs evolve-standard
+# 2019-01-20 12:24:44.094 evolve-specialized vs ClosetAI
+# 2019-01-20 12:24:44.787 evolve-specialized vs Icebox
+# 2019-01-20 12:24:45.464 evolve-specialized vs evolve-specialized-all
+# 2019-01-20 12:24:48.809 evolve-specialized vs evolve-specialized-lerp
+# 2019-01-20 12:24:52.180 evolve-specialized vs evolve-standard
+# 2019-01-20 12:24:55.965 evolve-standard vs ClosetAI
+# 2019-01-20 12:24:56.769 evolve-standard vs Icebox
+# 2019-01-20 12:24:57.608 evolve-standard vs evolve-specialized-all
+# 2019-01-20 12:25:01.720 evolve-standard vs evolve-specialized-lerp
+# 2019-01-20 12:25:05.808 evolve-standard vs evolve-specialized
+# 2019-01-20 12:25:09.431 Plays total 1000076
+                        | ClosetAI | Icebox | evolve-specialized-all | evolve-specialized-lerp | evolve-specialized | evolve-standard | Average
+               ClosetAI |        - | 48.24% |                 49.56% |                  49.76% |             47.41% |          51.30% |  49.25%
+                 Icebox |   51.76% |      - |                 51.05% |                  51.45% |             49.36% |          53.03% |  51.33%
+ evolve-specialized-all |   50.44% | 48.95% |                      - |                  50.20% |             48.03% |          51.62% |  49.85%
+evolve-specialized-lerp |   50.24% | 48.55% |                 49.80% |                       - |             48.17% |          51.65% |  49.68%
+     evolve-specialized |   52.59% | 50.64% |                 51.97% |                  51.83% |                  - |          54.72% |  52.35%
+        evolve-standard |   48.70% | 46.97% |                 48.38% |                  48.35% |             45.28% |               - |  47.53%
