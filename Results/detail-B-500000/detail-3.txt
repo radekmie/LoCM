@@ -1,0 +1,66 @@
+# 2019-01-04 19:18:55.083 ClosetAI vs Icebox
+# 2019-01-04 19:18:55.215 ClosetAI vs evolve-specialized-all
+# 2019-01-04 19:18:55.948 ClosetAI vs evolve-specialized-lerp
+# 2019-01-04 19:18:56.684 ClosetAI vs evolve-specialized
+# 2019-01-04 19:18:57.399 ClosetAI vs evolve-standard
+# 2019-01-04 19:18:58.075 ClosetAI vs random-exhaustive
+# 2019-01-04 19:18:58.779 ClosetAI vs random-tournament
+# 2019-01-04 19:18:59.472 Icebox vs ClosetAI
+# 2019-01-04 19:18:59.607 Icebox vs evolve-specialized-all
+# 2019-01-04 19:19:00.306 Icebox vs evolve-specialized-lerp
+# 2019-01-04 19:19:00.988 Icebox vs evolve-specialized
+# 2019-01-04 19:19:01.666 Icebox vs evolve-standard
+# 2019-01-04 19:19:02.322 Icebox vs random-exhaustive
+# 2019-01-04 19:19:02.975 Icebox vs random-tournament
+# 2019-01-04 19:19:03.633 evolve-specialized-all vs ClosetAI
+# 2019-01-04 19:19:04.367 evolve-specialized-all vs Icebox
+# 2019-01-04 19:19:05.068 evolve-specialized-all vs evolve-specialized-lerp
+# 2019-01-04 19:19:08.797 evolve-specialized-all vs evolve-specialized
+# 2019-01-04 19:19:12.480 evolve-specialized-all vs evolve-standard
+# 2019-01-04 19:19:16.004 evolve-specialized-all vs random-exhaustive
+# 2019-01-04 19:19:19.627 evolve-specialized-all vs random-tournament
+# 2019-01-04 19:19:23.182 evolve-specialized-lerp vs ClosetAI
+# 2019-01-04 19:19:23.904 evolve-specialized-lerp vs Icebox
+# 2019-01-04 19:19:24.596 evolve-specialized-lerp vs evolve-specialized-all
+# 2019-01-04 19:19:28.331 evolve-specialized-lerp vs evolve-specialized
+# 2019-01-04 19:19:31.958 evolve-specialized-lerp vs evolve-standard
+# 2019-01-04 19:19:35.464 evolve-specialized-lerp vs random-exhaustive
+# 2019-01-04 19:19:39.098 evolve-specialized-lerp vs random-tournament
+# 2019-01-04 19:19:43.482 evolve-specialized vs ClosetAI
+# 2019-01-04 19:19:44.222 evolve-specialized vs Icebox
+# 2019-01-04 19:19:44.972 evolve-specialized vs evolve-specialized-all
+# 2019-01-04 19:19:48.732 evolve-specialized vs evolve-specialized-lerp
+# 2019-01-04 19:19:52.637 evolve-specialized vs evolve-standard
+# 2019-01-04 19:19:56.308 evolve-specialized vs random-exhaustive
+# 2019-01-04 19:20:00.020 evolve-specialized vs random-tournament
+# 2019-01-04 19:20:03.801 evolve-standard vs ClosetAI
+# 2019-01-04 19:20:04.536 evolve-standard vs Icebox
+# 2019-01-04 19:20:05.287 evolve-standard vs evolve-specialized-all
+# 2019-01-04 19:20:09.053 evolve-standard vs evolve-specialized-lerp
+# 2019-01-04 19:20:12.681 evolve-standard vs evolve-specialized
+# 2019-01-04 19:20:16.369 evolve-standard vs random-exhaustive
+# 2019-01-04 19:20:20.057 evolve-standard vs random-tournament
+# 2019-01-04 19:20:23.577 random-exhaustive vs ClosetAI
+# 2019-01-04 19:20:24.308 random-exhaustive vs Icebox
+# 2019-01-04 19:20:25.014 random-exhaustive vs evolve-specialized-all
+# 2019-01-04 19:20:28.887 random-exhaustive vs evolve-specialized-lerp
+# 2019-01-04 19:20:32.708 random-exhaustive vs evolve-specialized
+# 2019-01-04 19:20:36.483 random-exhaustive vs evolve-standard
+# 2019-01-04 19:20:40.125 random-exhaustive vs random-tournament
+# 2019-01-04 19:20:43.676 random-tournament vs ClosetAI
+# 2019-01-04 19:20:44.374 random-tournament vs Icebox
+# 2019-01-04 19:20:45.047 random-tournament vs evolve-specialized-all
+# 2019-01-04 19:20:48.725 random-tournament vs evolve-specialized-lerp
+# 2019-01-04 19:20:52.322 random-tournament vs evolve-specialized
+# 2019-01-04 19:20:56.188 random-tournament vs evolve-standard
+# 2019-01-04 19:20:59.562 random-tournament vs random-exhaustive
+# 2019-01-04 19:21:03.061 Plays total 2282896
+                        | ClosetAI | Icebox | evolve-specialized-all | evolve-specialized-lerp | evolve-specialized | evolve-standard | random-exhaustive | random-tournament | Average
+               ClosetAI |        - | 49.83% |                 53.22% |                  54.35% |             52.87% |          49.31% |            51.66% |            51.35% |  51.80%
+                 Icebox |   50.17% |      - |                 54.48% |                  55.26% |             53.54% |          50.86% |            52.32% |            52.98% |  52.80%
+ evolve-specialized-all |   46.78% | 45.52% |                      - |                  50.96% |             49.41% |          46.72% |            47.84% |            48.39% |  47.94%
+evolve-specialized-lerp |   45.65% | 44.74% |                 49.04% |                       - |             48.34% |          45.72% |            47.50% |            48.72% |  47.10%
+     evolve-specialized |   47.13% | 46.46% |                 50.59% |                  51.66% |                  - |          47.25% |            49.01% |            49.35% |  48.78%
+        evolve-standard |   50.69% | 49.14% |                 53.28% |                  54.28% |             52.75% |               - |            51.77% |            52.04% |  51.99%
+      random-exhaustive |   48.34% | 47.68% |                 52.16% |                  52.50% |             50.99% |          48.23% |                 - |            50.52% |  50.06%
+      random-tournament |   48.65% | 47.02% |                 51.61% |                  51.28% |             50.65% |          47.96% |            49.48% |                 - |  49.52%

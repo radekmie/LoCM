@@ -1,0 +1,38 @@
+# 2018-12-31 16:50:11.871 ClosetAI vs Icebox
+# 2018-12-31 16:50:12.001 ClosetAI vs evolve-specialized
+# 2018-12-31 16:50:12.650 ClosetAI vs evolve-standard
+# 2018-12-31 16:50:13.306 ClosetAI vs random-exhaustive
+# 2018-12-31 16:50:13.981 ClosetAI vs random-tournament
+# 2018-12-31 16:50:14.663 Icebox vs ClosetAI
+# 2018-12-31 16:50:14.795 Icebox vs evolve-specialized
+# 2018-12-31 16:50:15.406 Icebox vs evolve-standard
+# 2018-12-31 16:50:16.029 Icebox vs random-exhaustive
+# 2018-12-31 16:50:16.677 Icebox vs random-tournament
+# 2018-12-31 16:50:17.328 evolve-specialized vs ClosetAI
+# 2018-12-31 16:50:17.981 evolve-specialized vs Icebox
+# 2018-12-31 16:50:18.614 evolve-specialized vs evolve-standard
+# 2018-12-31 16:50:21.745 evolve-specialized vs random-exhaustive
+# 2018-12-31 16:50:24.975 evolve-specialized vs random-tournament
+# 2018-12-31 16:50:28.237 evolve-standard vs ClosetAI
+# 2018-12-31 16:50:28.888 evolve-standard vs Icebox
+# 2018-12-31 16:50:29.518 evolve-standard vs evolve-specialized
+# 2018-12-31 16:50:32.664 evolve-standard vs random-exhaustive
+# 2018-12-31 16:50:36.030 evolve-standard vs random-tournament
+# 2018-12-31 16:50:39.336 random-exhaustive vs ClosetAI
+# 2018-12-31 16:50:40.008 random-exhaustive vs Icebox
+# 2018-12-31 16:50:40.657 random-exhaustive vs evolve-specialized
+# 2018-12-31 16:50:43.901 random-exhaustive vs evolve-standard
+# 2018-12-31 16:50:47.203 random-exhaustive vs random-tournament
+# 2018-12-31 16:50:50.613 random-tournament vs ClosetAI
+# 2018-12-31 16:50:51.296 random-tournament vs Icebox
+# 2018-12-31 16:50:51.956 random-tournament vs evolve-specialized
+# 2018-12-31 16:50:55.215 random-tournament vs evolve-standard
+# 2018-12-31 16:50:58.490 random-tournament vs random-exhaustive
+# 2018-12-31 16:51:01.881 Plays total 1000076
+                   | ClosetAI | Icebox | evolve-specialized | evolve-standard | random-exhaustive | random-tournament | Average
+          ClosetAI |        - | 49.54% |             49.18% |          49.44% |            52.07% |            51.57% |  50.36%
+            Icebox |   50.46% |      - |             50.24% |          50.54% |            53.13% |            52.56% |  51.39%
+evolve-specialized |   50.82% | 49.76% |                  - |          50.82% |            53.23% |            52.66% |  51.46%
+   evolve-standard |   50.56% | 49.46% |             49.18% |               - |            52.82% |            51.83% |  50.77%
+ random-exhaustive |   47.93% | 46.87% |             46.77% |          47.18% |                 - |            49.39% |  47.63%
+ random-tournament |   48.43% | 47.44% |             47.34% |          48.17% |            50.61% |                 - |  48.40%
