@@ -1,0 +1,27 @@
+# 2019-01-22 16:19:20.801 ClosetAI vs Icebox
+# 2019-01-22 16:19:20.937 ClosetAI vs evolve-standard
+# 2019-01-22 16:19:21.666 ClosetAI vs random-exhaustive
+# 2019-01-22 16:19:22.380 ClosetAI vs random-tournament
+# 2019-01-22 16:19:23.091 Icebox vs ClosetAI
+# 2019-01-22 16:19:23.226 Icebox vs evolve-standard
+# 2019-01-22 16:19:23.913 Icebox vs random-exhaustive
+# 2019-01-22 16:19:24.590 Icebox vs random-tournament
+# 2019-01-22 16:19:25.274 evolve-standard vs ClosetAI
+# 2019-01-22 16:19:26.019 evolve-standard vs Icebox
+# 2019-01-22 16:19:26.733 evolve-standard vs random-exhaustive
+# 2019-01-22 16:19:30.339 evolve-standard vs random-tournament
+# 2019-01-22 16:19:33.983 random-exhaustive vs ClosetAI
+# 2019-01-22 16:19:34.722 random-exhaustive vs Icebox
+# 2019-01-22 16:19:35.425 random-exhaustive vs evolve-standard
+# 2019-01-22 16:19:39.230 random-exhaustive vs random-tournament
+# 2019-01-22 16:19:43.212 random-tournament vs ClosetAI
+# 2019-01-22 16:19:44.005 random-tournament vs Icebox
+# 2019-01-22 16:19:44.789 random-tournament vs evolve-standard
+# 2019-01-22 16:19:48.822 random-tournament vs random-exhaustive
+# 2019-01-22 16:19:52.779 Plays total 555016
+                  | ClosetAI | Icebox | evolve-standard | random-exhaustive | random-tournament | Average
+         ClosetAI |        - | 47.92% |          52.26% |            52.00% |            50.46% |  50.66%
+           Icebox |   52.08% |      - |          54.30% |            53.51% |            51.98% |  52.97%
+  evolve-standard |   47.74% | 45.70% |               - |            49.82% |            48.00% |  47.81%
+random-exhaustive |   48.00% | 46.49% |          50.18% |                 - |            48.92% |  48.40%
+random-tournament |   49.54% | 48.02% |          52.00% |            51.08% |                 - |  50.16%

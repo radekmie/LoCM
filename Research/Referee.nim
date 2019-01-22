@@ -28,6 +28,11 @@ proc newDraft * (cards: openArray[Card]): Draft =
     for card in 0 ..< 3:
       result[pick][card] = cards[indexes[pick * 3 + card]]
 
+  # Duplicates allowed.
+  # for pick in 0 ..< 30:
+  #   for card in 0 ..< 3:
+  #     result[pick][card] = cards.rand
+
 proc newDraft * (): Draft {.inline.} =
   newDraft(getCards())
 
