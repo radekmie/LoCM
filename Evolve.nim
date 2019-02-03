@@ -47,7 +47,7 @@ const
   randoms {.intdefine.} = 5
 
   # plotEvolution
-  progressDrafts {.intdefine.} = 100
+  progressDrafts {.intdefine.} = 250
   progressEnemies {.intdefine.} = 10
   progressGames {.intdefine.} = 25
 
@@ -612,16 +612,16 @@ proc main (): void =
     let drafts2: Drafts = newSeqWith(progressDrafts, newDraft(cards))
 
     evolveToBests(bests, drafts1)
-    plotEvolution(bests, drafts1, drafts2)
-    # plotPerformance(bests, newSeqWith(100, newDraft(cards)))
+    # plotEvolution(bests, drafts1, drafts2)
+    plotPerformance(bests, drafts2)
 
   when mode == "evolve-standard":
     let drafts1: Drafts = newSeqWith(draftsEval, newDraft(cards))
     let drafts2: Drafts = newSeqWith(progressDrafts, newDraft(cards))
 
     evolveNormals(bests, drafts1)
-    plotEvolution(bests, drafts1, drafts2)
-    # plotPerformance(bests, newSeqWith(100, newDraft(cards)))
+    # plotEvolution(bests, drafts1, drafts2)
+    plotPerformance(bests, drafts2)
 
   when mode == "random-exhaustive":
     randomExhaustive(bests, newSeqWith(draftsEval, newDraft(cards)))

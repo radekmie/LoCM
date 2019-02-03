@@ -37,6 +37,7 @@ proc main (): void =
   randomize()
 
   let cards = getCards()
+  var games = 1
   var drafts = newSeqWith(1, newDraft(cards))
   var players = toOrderedTable({
     "ClosetAI": @[newConfig(draft = "ClosetAI", player = "Random")],
@@ -45,9 +46,15 @@ proc main (): void =
 
   for kind, key, value in getOpt():
     if kind == cmdArgument:
-      players[key.extractFilename().changeFileExt("")] = readBests(key)
+      let groupName = key.extractFilename().split(".", 1)[0]
+      if not (groupName in players):
+        players[groupName] = @[]
+      for individual in readBests(key):
+        players[groupName].add(individual)
     elif key == "drafts":
       drafts = newSeqWith(value.parseInt, newDraft(cards))
+    elif key == "games":
+      games = value.parseInt
 
   var plays = 0
   var table = initTable[tuple[x: string, y: string], float]()
@@ -55,15 +62,16 @@ proc main (): void =
     for y, ys in players.pairs:
       if x != y:
         echo &"# {stamp()} {x} vs {y}"
-        let scoreWin = 100 / (2 * drafts.len * xs.len * ys.len).float
+        let scoreWin = 100 / (2 * games * drafts.len * xs.len * ys.len).float
         for playerX in xs:
           for playerY in ys:
-            parallel:
-              for draft in drafts:
-                let win = spawn play(playerX, playerY, draft)
-                let who = if win: (x, y) else: (y, x)
-                table[who] = table.getOrDefault(who, 0) + scoreWin
-                plays += 1
+            for game in 1 .. games:
+              parallel:
+                for draft in drafts:
+                  let win = spawn play(playerX, playerY, draft)
+                  let who = if win: (x, y) else: (y, x)
+                  table[who] = table.getOrDefault(who, 0) + scoreWin
+                  plays += 1
 
   echo &"# {stamp()} Plays total {plays}"
 
@@ -79,7 +87,7 @@ proc main (): void =
   stdout.writeLine(" | Average")
 
   for x, xs in players.pairs:
-    stdout.write(x.align(spans[""]))
+    stdout.write(x.alignLeft(spans[""]))
     var average = 0.0
     for y, ys in players.pairs:
       if x != y: average += table[(x, y)] / (players.len - 1).float

@@ -66,9 +66,9 @@ run-25000000: Detail $(SOURCES)
 run-compare-1000000: Detail $(SOURCES)
 	mkdir -p Results/detail-1000000
 
-	nim c -d:release --threads:on -d:mode="evolve-specialized" -d:generations=50  -d:populationSize=100 -d:scoreGames=40 -d:scoreRounds=4 -d:tournamentGames=5 -d:tournamentSize=4 -d:mergeAllGenes=1 Evolve.nim
+	nim c -d:release --threads:on -d:mode="evolve-specialized" -d:generations=50  -d:populationSize=100 -d:scoreGames=40 -d:scoreRounds=4 -d:tournamentGames=5 -d:tournamentSize=4 Evolve.nim
 	/usr/bin/time -v ./Evolve > Results/detail-1000000/evolve-specialized-drafts.p
-	nim c -d:release --threads:on -d:mode="evolve-specialized" -d:generations=150 -d:populationSize=100 -d:scoreGames=10 -d:scoreRounds=1 -d:tournamentGames=5 -d:tournamentSize=4 -d:mergeGene=25 Evolve.nim
+	nim c -d:release --threads:on -d:mode="evolve-specialized" -d:generations=150 -d:populationSize=100 -d:scoreGames=10 -d:scoreRounds=1 -d:tournamentGames=5 -d:tournamentSize=4 Evolve.nim
 	/usr/bin/time -v ./Evolve > Results/detail-1000000/evolve-specialized-epochs.p
 	nim c -d:release --threads:on -d:mode="evolve-specialized" -d:generations=100 -d:populationSize=100 -d:scoreGames=20 -d:scoreRounds=2 -d:tournamentGames=5 -d:tournamentSize=4 Evolve.nim
 	/usr/bin/time -v ./Evolve > Results/detail-1000000/evolve-specialized-normal.p
