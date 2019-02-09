@@ -1,4 +1,4 @@
-cat detail-L-1000000/detail-*.txt \
+cat detail-X-1000000/detail-*.txt \
   | grep -v '^#' \
   | awk -F '|' '
     function cmp_field(i1, v1, i2, v2) {
@@ -43,4 +43,4 @@ cat detail-L-1000000/detail-*.txt \
       }
     }
   ' \
-  | tee detail-L-1000000/detail.txt
+  | tee detail-X-1000000/detail.txt

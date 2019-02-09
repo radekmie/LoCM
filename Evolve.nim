@@ -13,6 +13,9 @@ import std / [
 ]
 
 const
+  # experimental
+  activeDrafts {.intdefine.} = 1
+
   # entrypoint
   mode {.strdefine.} = "default"
 
@@ -103,7 +106,7 @@ proc roulette (population: Population, eval: float): Individual =
 
   population[population.high]
 
-proc selectParents (population: Population, draft: Draft): Parents =
+proc selectParents (population: Population, drafts: openArray[Draft]): Parents =
   var tournamentIds: array[populationSize, int]
   for index in 0 ..< populationSize:
     tournamentIds[index] = index
@@ -116,17 +119,18 @@ proc selectParents (population: Population, draft: Draft): Parents =
   for index in 0 ..< populationSize:
     tournamentIds[index] = 0
 
-  parallel:
-    for indexA, a in tournament:
-      for indexB, b in tournament:
-        if indexA == indexB:
-          continue
+  for draft in drafts:
+    parallel:
+      for indexA, a in tournament:
+        for indexB, b in tournament:
+          if indexA == indexB:
+            continue
 
-        for _ in 1 .. tournamentGames:
-          let winX = spawn play(a, b, draft)
-          let winY = spawn play(b, a, draft)
-          if winX: tournamentIds[indexA] += 1
-          if winY: tournamentIds[indexB] += 1
+          for _ in 1 .. tournamentGames:
+            let winX = spawn play(a, b, draft)
+            let winY = spawn play(b, a, draft)
+            if winX: tournamentIds[indexA] += 1
+            if winY: tournamentIds[indexB] += 1
 
   var best1: int = if tournamentIds[0] > tournamentIds[1]: 0 else: 1
   var best2: int = 1 - best1
@@ -220,14 +224,14 @@ proc evolveNormals (bests: var Bests, drafts: Drafts): void =
     let avg = sumEvals(population) / populationSize.float
     echo &"# {stamp()} {toSummary(generation, avg, bests[generation])}"
 
-proc evolveToBests (bests: var Bests, drafts: Drafts): void =
+proc evolveToBests (bests: var Bests, draftss: array[activeDrafts, Drafts]): void =
   var offspring  = newPopulation()
   var population = newPopulation(true)
 
   for generation in 0 ..< generations:
-    let draft = drafts[generation]
+    let drafts = draftss.mapIt(it[generation])
     for index in countup(0, populationSize - 2, 2):
-      let parents = selectParents(population, draft)
+      let parents = selectParents(population, drafts)
 
       # CrossoverChildren()
       var child1 = offspring[index + 0]
@@ -255,12 +259,13 @@ proc evolveToBests (bests: var Bests, drafts: Drafts): void =
       for index in countup(0, populationSize - 2, 2):
         let a = offspring[index + 0]
         let b = offspring[index + 1]
-        parallel:
-          for game in 1 .. scoreGames:
-            let winX = spawn play(a, b, draft)
-            let winY = spawn play(b, a, draft)
-            if winX: a.eval += scoreWin else: b.eval += scoreWin
-            if winY: b.eval += scoreWin else: a.eval += scoreWin
+        for draft in drafts:
+          parallel:
+            for game in 1 .. scoreGames:
+              let winX = spawn play(a, b, draft)
+              let winY = spawn play(b, a, draft)
+              if winX: a.eval += scoreWin else: b.eval += scoreWin
+              if winY: b.eval += scoreWin else: a.eval += scoreWin
 
     # PopulationSelectMerge()
     var populationEval = sumEvals(population)
@@ -275,10 +280,11 @@ proc evolveToBests (bests: var Bests, drafts: Drafts): void =
       next.gene = x.gene
 
       when mergeAllGenes == 0:
-        for pick in draft:
-          for card in pick:
-            let id = card.cardNumber - 1
-            next.gene[id] = lerp100(next.gene[id], y.gene[id], mergeGene)
+        for draft in drafts:
+          for pick in draft:
+            for card in pick:
+              let id = card.cardNumber - 1
+              next.gene[id] = lerp100(next.gene[id], y.gene[id], mergeGene)
       else:
         for id, value in y.gene:
           next.gene[id] = lerp100(next.gene[id], value, mergeGene)
@@ -593,26 +599,33 @@ proc main (): void =
   var bests: Bests
 
   when mode == "default":
-    let drafts1: Drafts = newSeqWith(generations, newDraft(cards))
-    let drafts2: Drafts = newSeqWith(progressDrafts, newDraft(cards))
-    let drafts3: Drafts = newSeqWith(baselineDrafts, newDraft(cards))
+    var draftss: array[activeDrafts, Drafts]
+    for index in draftss.low .. draftss.high:
+      draftss[index] = newSeqWith(generations, newDraft(cards))
+    let drafts: Drafts = newSeqWith(progressDrafts, newDraft(cards))
 
-    evolveToBests(bests, drafts1)
-    plotChampions(bests, drafts1)
-    plotEvolution(bests, drafts1, drafts2)
-    plotBaselines(bests, @[
-      (drafts1, "ClosetAI", "vs ClosetAI, known"),
-      (drafts3, "ClosetAI", "vs ClosetAI, fresh"),
-      (drafts1, "Icebox", "vs Icebox, known"),
-      (drafts3, "Icebox", "vs Icebox, fresh"),
-    ])
+    evolveToBests(bests, draftss)
+    plotPerformance(bests, drafts)
+
+  when mode == "evolve-variant-2":
+    let drafts1: Drafts = newSeqWith(generations div 2, newDraft(cards))
+    let drafts2: Drafts = newSeqWith(progressDrafts, newDraft(cards))
+
+    evolveToBests(bests, [concat(drafts1, drafts1)])
+    plotPerformance(bests, drafts2)
+
+  when mode == "evolve-variant-4":
+    let drafts1: Drafts = newSeqWith(generations div 4, newDraft(cards))
+    let drafts2: Drafts = newSeqWith(progressDrafts, newDraft(cards))
+
+    evolveToBests(bests, [concat(drafts1, drafts1, drafts1, drafts1)])
+    plotPerformance(bests, drafts2)
 
   when mode == "evolve-specialized":
     let drafts1: Drafts = newSeqWith(generations, newDraft(cards))
     let drafts2: Drafts = newSeqWith(progressDrafts, newDraft(cards))
 
-    evolveToBests(bests, drafts1)
-    # plotEvolution(bests, drafts1, drafts2)
+    evolveToBests(bests, [drafts1])
     plotPerformance(bests, drafts2)
 
   when mode == "evolve-standard":
@@ -620,7 +633,6 @@ proc main (): void =
     let drafts2: Drafts = newSeqWith(progressDrafts, newDraft(cards))
 
     evolveNormals(bests, drafts1)
-    # plotEvolution(bests, drafts1, drafts2)
     plotPerformance(bests, drafts2)
 
   when mode == "random-exhaustive":

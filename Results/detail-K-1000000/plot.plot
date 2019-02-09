@@ -1,8 +1,16 @@
 set output 'plot-evolution.svg'
-set terminal svg font 'monospace:Bold,16' linewidth 2 size 1000,600
+set terminal svg font 'monospace:Bold,16' linewidth 2 size 600,400
+# set terminal svg size 600,400
+set bmargin 1.5
+set lmargin 3
+set rmargin 1
+set tmargin 1
 set xlabel 'Known drafts %'
 set ylabel 'Fresh drafts %'
 set key bottom horizontal Right
+unset xlabel
+unset ylabel
+unset key
 set style fill transparent solid 0.5 noborder
 set style circle radius 0.05
 set fit logfile '/dev/null'

@@ -44,6 +44,150 @@ run-1000000: Detail $(SOURCES)
 	/usr/bin/time -v ./Detail --drafts=2618 ./Results/detail-1000000/*.p | tee Results/detail-1000000/detail-2.txt
 	/usr/bin/time -v ./Detail --drafts=2618 ./Results/detail-1000000/*.p | tee Results/detail-1000000/detail-3.txt
 
+run-1000000-variants: Detail $(SOURCES)
+	mkdir -p Results/detail-1000000-variants
+
+	nim c -d:release --threads:on -d:mode="evolve-variant-2" -d:generations=200 -d:populationSize=100 -d:scoreGames=10 -d:scoreRounds=2 -d:tournamentGames=5 -d:tournamentSize=4 Evolve.nim
+	/usr/bin/time -v ./Evolve > Results/detail-1000000-variants/evolve-variant-2.1.p
+	nim c -d:release --threads:on -d:mode="evolve-variant-4" -d:generations=400 -d:populationSize=100 -d:scoreGames=1  -d:scoreRounds=1 -d:tournamentGames=2 -d:tournamentSize=4 Evolve.nim
+	/usr/bin/time -v ./Evolve > Results/detail-1000000-variants/evolve-variant-4.1.p
+
+	nim c -d:release --threads:on -d:mode="evolve-variant-2" -d:generations=200 -d:populationSize=100 -d:scoreGames=10 -d:scoreRounds=2 -d:tournamentGames=5 -d:tournamentSize=4 Evolve.nim
+	/usr/bin/time -v ./Evolve > Results/detail-1000000-variants/evolve-variant-2.2.p
+	nim c -d:release --threads:on -d:mode="evolve-variant-4" -d:generations=400 -d:populationSize=100 -d:scoreGames=1  -d:scoreRounds=1 -d:tournamentGames=2 -d:tournamentSize=4 Evolve.nim
+	/usr/bin/time -v ./Evolve > Results/detail-1000000-variants/evolve-variant-4.2.p
+
+	nim c -d:release --threads:on -d:mode="evolve-variant-2" -d:generations=200 -d:populationSize=100 -d:scoreGames=10 -d:scoreRounds=2 -d:tournamentGames=5 -d:tournamentSize=4 Evolve.nim
+	/usr/bin/time -v ./Evolve > Results/detail-1000000-variants/evolve-variant-2.3.p
+	nim c -d:release --threads:on -d:mode="evolve-variant-4" -d:generations=400 -d:populationSize=100 -d:scoreGames=1  -d:scoreRounds=1 -d:tournamentGames=2 -d:tournamentSize=4 Evolve.nim
+	/usr/bin/time -v ./Evolve > Results/detail-1000000-variants/evolve-variant-4.3.p
+
+	nim c -d:release --threads:on -d:mode="evolve-variant-2" -d:generations=200 -d:populationSize=100 -d:scoreGames=10 -d:scoreRounds=2 -d:tournamentGames=5 -d:tournamentSize=4 Evolve.nim
+	/usr/bin/time -v ./Evolve > Results/detail-1000000-variants/evolve-variant-2.4.p
+	nim c -d:release --threads:on -d:mode="evolve-variant-4" -d:generations=400 -d:populationSize=100 -d:scoreGames=1  -d:scoreRounds=1 -d:tournamentGames=2 -d:tournamentSize=4 Evolve.nim
+	/usr/bin/time -v ./Evolve > Results/detail-1000000-variants/evolve-variant-4.4.p
+
+	nim c -d:release --threads:on -d:mode="evolve-variant-2" -d:generations=200 -d:populationSize=100 -d:scoreGames=10 -d:scoreRounds=2 -d:tournamentGames=5 -d:tournamentSize=4 Evolve.nim
+	/usr/bin/time -v ./Evolve > Results/detail-1000000-variants/evolve-variant-2.5.p
+	nim c -d:release --threads:on -d:mode="evolve-variant-4" -d:generations=400 -d:populationSize=100 -d:scoreGames=1  -d:scoreRounds=1 -d:tournamentGames=2 -d:tournamentSize=4 Evolve.nim
+	/usr/bin/time -v ./Evolve > Results/detail-1000000-variants/evolve-variant-4.5.p
+
+	nim c -d:release --threads:on -d:mode="evolve-variant-2" -d:generations=200 -d:populationSize=100 -d:scoreGames=10 -d:scoreRounds=2 -d:tournamentGames=5 -d:tournamentSize=4 Evolve.nim
+	/usr/bin/time -v ./Evolve > Results/detail-1000000-variants/evolve-variant-2.6.p
+	nim c -d:release --threads:on -d:mode="evolve-variant-4" -d:generations=400 -d:populationSize=100 -d:scoreGames=1  -d:scoreRounds=1 -d:tournamentGames=2 -d:tournamentSize=4 Evolve.nim
+	/usr/bin/time -v ./Evolve > Results/detail-1000000-variants/evolve-variant-4.6.p
+
+	nim c -d:release --threads:on -d:mode="evolve-variant-2" -d:generations=200 -d:populationSize=100 -d:scoreGames=10 -d:scoreRounds=2 -d:tournamentGames=5 -d:tournamentSize=4 Evolve.nim
+	/usr/bin/time -v ./Evolve > Results/detail-1000000-variants/evolve-variant-2.7.p
+	nim c -d:release --threads:on -d:mode="evolve-variant-4" -d:generations=400 -d:populationSize=100 -d:scoreGames=1  -d:scoreRounds=1 -d:tournamentGames=2 -d:tournamentSize=4 Evolve.nim
+	/usr/bin/time -v ./Evolve > Results/detail-1000000-variants/evolve-variant-4.7.p
+
+	nim c -d:release --threads:on -d:mode="evolve-variant-2" -d:generations=200 -d:populationSize=100 -d:scoreGames=10 -d:scoreRounds=2 -d:tournamentGames=5 -d:tournamentSize=4 Evolve.nim
+	/usr/bin/time -v ./Evolve > Results/detail-1000000-variants/evolve-variant-2.8.p
+	nim c -d:release --threads:on -d:mode="evolve-variant-4" -d:generations=400 -d:populationSize=100 -d:scoreGames=1  -d:scoreRounds=1 -d:tournamentGames=2 -d:tournamentSize=4 Evolve.nim
+	/usr/bin/time -v ./Evolve > Results/detail-1000000-variants/evolve-variant-4.8.p
+
+	nim c -d:release --threads:on -d:mode="evolve-variant-2" -d:generations=200 -d:populationSize=100 -d:scoreGames=10 -d:scoreRounds=2 -d:tournamentGames=5 -d:tournamentSize=4 Evolve.nim
+	/usr/bin/time -v ./Evolve > Results/detail-1000000-variants/evolve-variant-2.9.p
+	nim c -d:release --threads:on -d:mode="evolve-variant-4" -d:generations=400 -d:populationSize=100 -d:scoreGames=1  -d:scoreRounds=1 -d:tournamentGames=2 -d:tournamentSize=4 Evolve.nim
+	/usr/bin/time -v ./Evolve > Results/detail-1000000-variants/evolve-variant-4.9.p
+
+	nim c -d:release --threads:on -d:mode="evolve-variant-2" -d:generations=200 -d:populationSize=100 -d:scoreGames=10 -d:scoreRounds=2 -d:tournamentGames=5 -d:tournamentSize=4 Evolve.nim
+	/usr/bin/time -v ./Evolve > Results/detail-1000000-variants/evolve-variant-2.10.p
+	nim c -d:release --threads:on -d:mode="evolve-variant-4" -d:generations=400 -d:populationSize=100 -d:scoreGames=1  -d:scoreRounds=1 -d:tournamentGames=2 -d:tournamentSize=4 Evolve.nim
+	/usr/bin/time -v ./Evolve > Results/detail-1000000-variants/evolve-variant-4.10.p
+
+run-1000000-continue: Detail $(SOURCES)
+	mkdir -p Results/detail-1000000
+
+	nim c -d:release --threads:on -d:mode="evolve-standard" -d:draftsEval=10 -d:elites=2 -d:generations=18 -d:populationSize=12 -d:scoreGames=20 -d:tournamentSize=4 Evolve.nim
+	/usr/bin/time -v ./Evolve > Results/detail-1000000/evolve-standard.6.p
+	nim c -d:release --threads:on -d:generations=50 -d:populationSize=100 -d:scoreGames=20 -d:scoreRounds=2 -d:tournamentGames=5 -d:tournamentSize=4 -d:mergeGene=25 -d:activeDrafts=2 Evolve.nim
+	/usr/bin/time -v ./Evolve > Results/detail-1000000/evolve-active-2.6.p
+	nim c -d:release --threads:on -d:generations=25 -d:populationSize=100 -d:scoreGames=20 -d:scoreRounds=2 -d:tournamentGames=5 -d:tournamentSize=4 -d:mergeGene=25 -d:activeDrafts=4 Evolve.nim
+	/usr/bin/time -v ./Evolve > Results/detail-1000000/evolve-active-4.6.p
+	nim c -d:release --threads:on -d:mode="evolve-specialized" -d:generations=50 -d:populationSize=100 -d:scoreGames=40 -d:scoreRounds=4 -d:tournamentGames=5 -d:tournamentSize=4 Evolve.nim
+	/usr/bin/time -v ./Evolve > Results/detail-1000000/evolve-specialized-drafts.6.p
+	nim c -d:release --threads:on -d:mode="evolve-specialized" -d:generations=150 -d:populationSize=100 -d:scoreGames=10 -d:scoreRounds=1 -d:tournamentGames=5 -d:tournamentSize=4 Evolve.nim
+	/usr/bin/time -v ./Evolve > Results/detail-1000000/evolve-specialized-epochs.6.p
+
+	nim c -d:release --threads:on -d:mode="evolve-specialized" -d:generations=100 -d:populationSize=100 -d:scoreGames=20 -d:scoreRounds=2 -d:tournamentGames=5 -d:tournamentSize=4 Evolve.nim
+	/usr/bin/time -v ./Evolve > Results/detail-1000000/evolve-specialized.7.p
+	nim c -d:release --threads:on -d:mode="evolve-specialized" -d:generations=100 -d:populationSize=100 -d:scoreGames=20 -d:scoreRounds=2 -d:tournamentGames=5 -d:tournamentSize=4 -d:mergeAllGenes=1 Evolve.nim
+	/usr/bin/time -v ./Evolve > Results/detail-1000000/evolve-specialized-all.7.p
+	nim c -d:release --threads:on -d:mode="evolve-specialized" -d:generations=100 -d:populationSize=100 -d:scoreGames=20 -d:scoreRounds=2 -d:tournamentGames=5 -d:tournamentSize=4 -d:mergeGene=25 Evolve.nim
+	/usr/bin/time -v ./Evolve > Results/detail-1000000/evolve-specialized-lerp.7.p
+	nim c -d:release --threads:on -d:mode="evolve-standard" -d:draftsEval=10 -d:elites=2 -d:generations=18 -d:populationSize=12 -d:scoreGames=20 -d:tournamentSize=4 Evolve.nim
+	/usr/bin/time -v ./Evolve > Results/detail-1000000/evolve-standard.7.p
+	nim c -d:release --threads:on -d:generations=50 -d:populationSize=100 -d:scoreGames=20 -d:scoreRounds=2 -d:tournamentGames=5 -d:tournamentSize=4 -d:mergeGene=25 -d:activeDrafts=2 Evolve.nim
+	/usr/bin/time -v ./Evolve > Results/detail-1000000/evolve-active-2.7.p
+	nim c -d:release --threads:on -d:generations=25 -d:populationSize=100 -d:scoreGames=20 -d:scoreRounds=2 -d:tournamentGames=5 -d:tournamentSize=4 -d:mergeGene=25 -d:activeDrafts=4 Evolve.nim
+	/usr/bin/time -v ./Evolve > Results/detail-1000000/evolve-active-4.7.p
+	nim c -d:release --threads:on -d:mode="evolve-specialized" -d:generations=50 -d:populationSize=100 -d:scoreGames=40 -d:scoreRounds=4 -d:tournamentGames=5 -d:tournamentSize=4 Evolve.nim
+	/usr/bin/time -v ./Evolve > Results/detail-1000000/evolve-specialized-drafts.7.p
+	nim c -d:release --threads:on -d:mode="evolve-specialized" -d:generations=150 -d:populationSize=100 -d:scoreGames=10 -d:scoreRounds=1 -d:tournamentGames=5 -d:tournamentSize=4 Evolve.nim
+	/usr/bin/time -v ./Evolve > Results/detail-1000000/evolve-specialized-epochs.7.p
+
+	nim c -d:release --threads:on -d:mode="evolve-specialized" -d:generations=100 -d:populationSize=100 -d:scoreGames=20 -d:scoreRounds=2 -d:tournamentGames=5 -d:tournamentSize=4 Evolve.nim
+	/usr/bin/time -v ./Evolve > Results/detail-1000000/evolve-specialized.8.p
+	nim c -d:release --threads:on -d:mode="evolve-specialized" -d:generations=100 -d:populationSize=100 -d:scoreGames=20 -d:scoreRounds=2 -d:tournamentGames=5 -d:tournamentSize=4 -d:mergeAllGenes=1 Evolve.nim
+	/usr/bin/time -v ./Evolve > Results/detail-1000000/evolve-specialized-all.8.p
+	nim c -d:release --threads:on -d:mode="evolve-specialized" -d:generations=100 -d:populationSize=100 -d:scoreGames=20 -d:scoreRounds=2 -d:tournamentGames=5 -d:tournamentSize=4 -d:mergeGene=25 Evolve.nim
+	/usr/bin/time -v ./Evolve > Results/detail-1000000/evolve-specialized-lerp.8.p
+	nim c -d:release --threads:on -d:mode="evolve-standard" -d:draftsEval=10 -d:elites=2 -d:generations=18 -d:populationSize=12 -d:scoreGames=20 -d:tournamentSize=4 Evolve.nim
+	/usr/bin/time -v ./Evolve > Results/detail-1000000/evolve-standard.8.p
+	nim c -d:release --threads:on -d:generations=50 -d:populationSize=100 -d:scoreGames=20 -d:scoreRounds=2 -d:tournamentGames=5 -d:tournamentSize=4 -d:mergeGene=25 -d:activeDrafts=2 Evolve.nim
+	/usr/bin/time -v ./Evolve > Results/detail-1000000/evolve-active-2.8.p
+	nim c -d:release --threads:on -d:generations=25 -d:populationSize=100 -d:scoreGames=20 -d:scoreRounds=2 -d:tournamentGames=5 -d:tournamentSize=4 -d:mergeGene=25 -d:activeDrafts=4 Evolve.nim
+	/usr/bin/time -v ./Evolve > Results/detail-1000000/evolve-active-4.8.p
+	nim c -d:release --threads:on -d:mode="evolve-specialized" -d:generations=50 -d:populationSize=100 -d:scoreGames=40 -d:scoreRounds=4 -d:tournamentGames=5 -d:tournamentSize=4 Evolve.nim
+	/usr/bin/time -v ./Evolve > Results/detail-1000000/evolve-specialized-drafts.8.p
+	nim c -d:release --threads:on -d:mode="evolve-specialized" -d:generations=150 -d:populationSize=100 -d:scoreGames=10 -d:scoreRounds=1 -d:tournamentGames=5 -d:tournamentSize=4 Evolve.nim
+	/usr/bin/time -v ./Evolve > Results/detail-1000000/evolve-specialized-epochs.8.p
+
+	nim c -d:release --threads:on -d:mode="evolve-specialized" -d:generations=100 -d:populationSize=100 -d:scoreGames=20 -d:scoreRounds=2 -d:tournamentGames=5 -d:tournamentSize=4 Evolve.nim
+	/usr/bin/time -v ./Evolve > Results/detail-1000000/evolve-specialized.9.p
+	nim c -d:release --threads:on -d:mode="evolve-specialized" -d:generations=100 -d:populationSize=100 -d:scoreGames=20 -d:scoreRounds=2 -d:tournamentGames=5 -d:tournamentSize=4 -d:mergeAllGenes=1 Evolve.nim
+	/usr/bin/time -v ./Evolve > Results/detail-1000000/evolve-specialized-all.9.p
+	nim c -d:release --threads:on -d:mode="evolve-specialized" -d:generations=100 -d:populationSize=100 -d:scoreGames=20 -d:scoreRounds=2 -d:tournamentGames=5 -d:tournamentSize=4 -d:mergeGene=25 Evolve.nim
+	/usr/bin/time -v ./Evolve > Results/detail-1000000/evolve-specialized-lerp.9.p
+	nim c -d:release --threads:on -d:mode="evolve-standard" -d:draftsEval=10 -d:elites=2 -d:generations=18 -d:populationSize=12 -d:scoreGames=20 -d:tournamentSize=4 Evolve.nim
+	/usr/bin/time -v ./Evolve > Results/detail-1000000/evolve-standard.9.p
+	nim c -d:release --threads:on -d:generations=50 -d:populationSize=100 -d:scoreGames=20 -d:scoreRounds=2 -d:tournamentGames=5 -d:tournamentSize=4 -d:mergeGene=25 -d:activeDrafts=2 Evolve.nim
+	/usr/bin/time -v ./Evolve > Results/detail-1000000/evolve-active-2.9.p
+	nim c -d:release --threads:on -d:generations=25 -d:populationSize=100 -d:scoreGames=20 -d:scoreRounds=2 -d:tournamentGames=5 -d:tournamentSize=4 -d:mergeGene=25 -d:activeDrafts=4 Evolve.nim
+	/usr/bin/time -v ./Evolve > Results/detail-1000000/evolve-active-4.9.p
+	nim c -d:release --threads:on -d:mode="evolve-specialized" -d:generations=50 -d:populationSize=100 -d:scoreGames=40 -d:scoreRounds=4 -d:tournamentGames=5 -d:tournamentSize=4 Evolve.nim
+	/usr/bin/time -v ./Evolve > Results/detail-1000000/evolve-specialized-drafts.9.p
+	nim c -d:release --threads:on -d:mode="evolve-specialized" -d:generations=150 -d:populationSize=100 -d:scoreGames=10 -d:scoreRounds=1 -d:tournamentGames=5 -d:tournamentSize=4 Evolve.nim
+	/usr/bin/time -v ./Evolve > Results/detail-1000000/evolve-specialized-epochs.9.p
+
+	nim c -d:release --threads:on -d:mode="evolve-specialized" -d:generations=100 -d:populationSize=100 -d:scoreGames=20 -d:scoreRounds=2 -d:tournamentGames=5 -d:tournamentSize=4 Evolve.nim
+	/usr/bin/time -v ./Evolve > Results/detail-1000000/evolve-specialized.10.p
+	nim c -d:release --threads:on -d:mode="evolve-specialized" -d:generations=100 -d:populationSize=100 -d:scoreGames=20 -d:scoreRounds=2 -d:tournamentGames=5 -d:tournamentSize=4 -d:mergeAllGenes=1 Evolve.nim
+	/usr/bin/time -v ./Evolve > Results/detail-1000000/evolve-specialized-all.10.p
+	nim c -d:release --threads:on -d:mode="evolve-specialized" -d:generations=100 -d:populationSize=100 -d:scoreGames=20 -d:scoreRounds=2 -d:tournamentGames=5 -d:tournamentSize=4 -d:mergeGene=25 Evolve.nim
+	/usr/bin/time -v ./Evolve > Results/detail-1000000/evolve-specialized-lerp.10.p
+	nim c -d:release --threads:on -d:mode="evolve-standard" -d:draftsEval=10 -d:elites=2 -d:generations=18 -d:populationSize=12 -d:scoreGames=20 -d:tournamentSize=4 Evolve.nim
+	/usr/bin/time -v ./Evolve > Results/detail-1000000/evolve-standard.10.p
+	nim c -d:release --threads:on -d:generations=50 -d:populationSize=100 -d:scoreGames=20 -d:scoreRounds=2 -d:tournamentGames=5 -d:tournamentSize=4 -d:mergeGene=25 -d:activeDrafts=2 Evolve.nim
+	/usr/bin/time -v ./Evolve > Results/detail-1000000/evolve-active-2.10.p
+	nim c -d:release --threads:on -d:generations=25 -d:populationSize=100 -d:scoreGames=20 -d:scoreRounds=2 -d:tournamentGames=5 -d:tournamentSize=4 -d:mergeGene=25 -d:activeDrafts=4 Evolve.nim
+	/usr/bin/time -v ./Evolve > Results/detail-1000000/evolve-active-4.10.p
+	nim c -d:release --threads:on -d:mode="evolve-specialized" -d:generations=50 -d:populationSize=100 -d:scoreGames=40 -d:scoreRounds=4 -d:tournamentGames=5 -d:tournamentSize=4 Evolve.nim
+	/usr/bin/time -v ./Evolve > Results/detail-1000000/evolve-specialized-drafts.10.p
+	nim c -d:release --threads:on -d:mode="evolve-specialized" -d:generations=150 -d:populationSize=100 -d:scoreGames=10 -d:scoreRounds=1 -d:tournamentGames=5 -d:tournamentSize=4 Evolve.nim
+	/usr/bin/time -v ./Evolve > Results/detail-1000000/evolve-specialized-epochs.10.p
+
+run-1000000-detail-x: Detail
+	mkdir -p Results/detail-X-1000000
+
+	/usr/bin/time -v ./Detail --drafts=500 --games=10 ./Results/detail-X-1000000/*.p | tee Results/detail-X-1000000/detail-1.txt
+	/usr/bin/time -v ./Detail --drafts=500 --games=10 ./Results/detail-X-1000000/*.p | tee Results/detail-X-1000000/detail-2.txt
+	/usr/bin/time -v ./Detail --drafts=500 --games=10 ./Results/detail-X-1000000/*.p | tee Results/detail-X-1000000/detail-3.txt
+	/usr/bin/time -v ./Detail --drafts=500 --games=10 ./Results/detail-X-1000000/*.p | tee Results/detail-X-1000000/detail-4.txt
+	/usr/bin/time -v ./Detail --drafts=500 --games=10 ./Results/detail-X-1000000/*.p | tee Results/detail-X-1000000/detail-5.txt
+
 run-25000000: Detail $(SOURCES)
 	mkdir -p Results/detail-25000000
 

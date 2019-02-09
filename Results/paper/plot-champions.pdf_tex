@@ -1,0 +1,108 @@
+%% Creator: Inkscape inkscape 0.92.4, www.inkscape.org
+%% PDF/EPS/PS + LaTeX output extension by Johan Engelen, 2010
+%% Accompanies image file 'plot-champions.pdf' (pdf, eps, ps)
+%%
+%% To include the image in your LaTeX document, write
+%%   \input{<filename>.pdf_tex}
+%%  instead of
+%%   \includegraphics{<filename>.pdf}
+%% To scale the image, write
+%%   \def\svgwidth{<desired width>}
+%%   \input{<filename>.pdf_tex}
+%%  instead of
+%%   \includegraphics[width=<desired width>]{<filename>.pdf}
+%%
+%% Images with a different path to the parent latex file can
+%% be accessed with the `import' package (which may need to be
+%% installed) using
+%%   \usepackage{import}
+%% in the preamble, and then including the image with
+%%   \import{<path to file>}{<filename>.pdf_tex}
+%% Alternatively, one can specify
+%%   \graphicspath{{<path to file>/}}
+%%
+%% For more information, please see info/svg-inkscape on CTAN:
+%%   http://tug.ctan.org/tex-archive/info/svg-inkscape
+%%
+\begingroup%
+  \makeatletter%
+  \providecommand\color[2][]{%
+    \errmessage{(Inkscape) Color is used for the text in Inkscape, but the package 'color.sty' is not loaded}%
+    \renewcommand\color[2][]{}%
+  }%
+  \providecommand\transparent[1]{%
+    \errmessage{(Inkscape) Transparency is used (non-zero) for the text in Inkscape, but the package 'transparent.sty' is not loaded}%
+    \renewcommand\transparent[1]{}%
+  }%
+  \providecommand\rotatebox[2]{#2}%
+  \newcommand*\fsize{\dimexpr\f@size pt\relax}%
+  \newcommand*\lineheight[1]{\fontsize{\fsize}{#1\fsize}\selectfont}%
+  \ifx\svgwidth\undefined%
+    \setlength{\unitlength}{750bp}%
+    \ifx\svgscale\undefined%
+      \relax%
+    \else%
+      \setlength{\unitlength}{\unitlength * \real{\svgscale}}%
+    \fi%
+  \else%
+    \setlength{\unitlength}{\svgwidth}%
+  \fi%
+  \global\let\svgwidth\undefined%
+  \global\let\svgscale\undefined%
+  \makeatother%
+  \begin{picture}(1,0.6)%
+    \lineheight{1}%
+    \setlength\tabcolsep{0pt}%
+    \put(0,0){\includegraphics[width=\unitlength,page=1]{plot-champions.pdf}}%
+    \put(0.0448,0.0596){\makebox(0,0)[rt]{\lineheight{1.25}\smash{\begin{tabular}[t]{r}\texttt{48}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=2]{plot-champions.pdf}}%
+    \put(0.0448,0.1448){\makebox(0,0)[rt]{\lineheight{1.25}\smash{\begin{tabular}[t]{r}\texttt{50}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=3]{plot-champions.pdf}}%
+    \put(0.0448,0.23){\makebox(0,0)[rt]{\lineheight{1.25}\smash{\begin{tabular}[t]{r}\texttt{52}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=4]{plot-champions.pdf}}%
+    \put(0.0448,0.3152){\makebox(0,0)[rt]{\lineheight{1.25}\smash{\begin{tabular}[t]{r}\texttt{54}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=5]{plot-champions.pdf}}%
+    \put(0.0448,0.4003){\makebox(0,0)[rt]{\lineheight{1.25}\smash{\begin{tabular}[t]{r}\texttt{56}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=6]{plot-champions.pdf}}%
+    \put(0.0448,0.4855){\makebox(0,0)[rt]{\lineheight{1.25}\smash{\begin{tabular}[t]{r}\texttt{58}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=7]{plot-champions.pdf}}%
+    \put(0.0448,0.5707){\makebox(0,0)[rt]{\lineheight{1.25}\smash{\begin{tabular}[t]{r}\texttt{60}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=8]{plot-champions.pdf}}%
+    \put(0.056,0.0356){\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}\texttt{0}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=9]{plot-champions.pdf}}%
+    \put(0.147,0.0356){\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}\texttt{100}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=10]{plot-champions.pdf}}%
+    \put(0.2381,0.0356){\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}\texttt{200}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=11]{plot-champions.pdf}}%
+    \put(0.3291,0.0356){\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}\texttt{300}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=12]{plot-champions.pdf}}%
+    \put(0.4201,0.0356){\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}\texttt{400}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=13]{plot-champions.pdf}}%
+    \put(0.5112,0.0356){\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}\texttt{500}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=14]{plot-champions.pdf}}%
+    \put(0.6022,0.0356){\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}\texttt{600}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=15]{plot-champions.pdf}}%
+    \put(0.6932,0.0356){\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}\texttt{700}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=16]{plot-champions.pdf}}%
+    \put(0.7842,0.0356){\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}\texttt{800}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=17]{plot-champions.pdf}}%
+    \put(0.8753,0.0356){\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}\texttt{900}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=18]{plot-champions.pdf}}%
+    \put(0.9663,0.0356){\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}\texttt{1000}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=19]{plot-champions.pdf}}%
+    \put(0,0.3203){\rotatebox{90}{\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}\texttt{\% of wins}\end{tabular}}}}}%
+    \put(0.5111,0){\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}\texttt{Generation}\end{tabular}}}}%
+    \put(0.8759,0.5467){\makebox(0,0)[rt]{\lineheight{1.25}\smash{\begin{tabular}[t]{r}\texttt{Champions\ \ \ \ 0 (avg.\ 49.44)}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=20]{plot-champions.pdf}}%
+    \put(0.8759,0.5227){\makebox(0,0)[rt]{\lineheight{1.25}\smash{\begin{tabular}[t]{r}\texttt{Champions\ \ 200 (avg.\ 52.81)}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=21]{plot-champions.pdf}}%
+    \put(0.8759,0.4987){\makebox(0,0)[rt]{\lineheight{1.25}\smash{\begin{tabular}[t]{r}\texttt{Champions\ \ 400 (avg.\ 53.06)}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=22]{plot-champions.pdf}}%
+    \put(0.8759,0.4747){\makebox(0,0)[rt]{\lineheight{1.25}\smash{\begin{tabular}[t]{r}\texttt{Champions\ \ 600 (avg.\ 53.47)}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=23]{plot-champions.pdf}}%
+    \put(0.8759,0.4507){\makebox(0,0)[rt]{\lineheight{1.25}\smash{\begin{tabular}[t]{r}\texttt{Champions\ \ 800 (avg.\ 52.82)}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=24]{plot-champions.pdf}}%
+    \put(0.8759,0.4267){\makebox(0,0)[rt]{\lineheight{1.25}\smash{\begin{tabular}[t]{r}\texttt{Champions\ 1000 (avg.\ 54.24)}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=25]{plot-champions.pdf}}%
+  \end{picture}%
+\endgroup%

@@ -998,12 +998,13 @@
 # 2018-11-29 22:40:50.837 Generation  998: avg=50.27 top5=[52.31 52.20 52.18 52.09 51.89]
 # 2018-11-29 22:40:51.615 Generation  999: avg=50.30 top5=[52.38 52.23 52.11 52.10 52.01]
 # 2018-11-29 22:40:52.427 Generation 1000: avg=50.39 top5=[52.40 52.21 52.09 51.94 51.94]
-set output 'plot.svg'
+set output 'plot2-100x1000.svg'
 set terminal svg font 'monospace:Bold,16' linewidth 2 size 1000,600
-set xlabel 'Generation'
-set ylabel '% of wins'
+set xlabel 'Generation' offset 0,0.5
+set ylabel '% of wins' offset 2
+set lmargin 5
 # Running average of size n
-n = 10
+n = 50
 do for[i = 1 : n] {
   eval(sprintf('pre0%d = 0', i))
 }
@@ -13113,9 +13114,9 @@ $data5 <<EOD
   1000 52.40
 EOD
 plot \
-  $data0 using 1:(avg0($2)) title 'Randoms     5 49.44' with lines, \
-  $data1 using 1:(avg1($2)) title 'Champion  200 52.81' with lines, \
-  $data2 using 1:(avg2($2)) title 'Champion  400 53.06' with lines, \
-  $data3 using 1:(avg3($2)) title 'Champion  600 53.47' with lines, \
-  $data4 using 1:(avg4($2)) title 'Champion  800 52.82' with lines, \
-  $data5 using 1:(avg5($2)) title 'Champion 1000 54.24' with lines
+  $data0 using 1:(avg0($2)) title 'Champions    0 (avg. 49.44)' with lines, \
+  $data1 using 1:(avg1($2)) title 'Champions  200 (avg. 52.81)' with lines, \
+  $data2 using 1:(avg2($2)) title 'Champions  400 (avg. 53.06)' with lines, \
+  $data3 using 1:(avg3($2)) title 'Champions  600 (avg. 53.47)' with lines, \
+  $data4 using 1:(avg4($2)) title 'Champions  800 (avg. 52.82)' with lines, \
+  $data5 using 1:(avg5($2)) title 'Champions 1000 (avg. 54.24)' with lines

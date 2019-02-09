@@ -1,0 +1,102 @@
+%% Creator: Inkscape inkscape 0.92.4, www.inkscape.org
+%% PDF/EPS/PS + LaTeX output extension by Johan Engelen, 2010
+%% Accompanies image file 'plot-performance.pdf' (pdf, eps, ps)
+%%
+%% To include the image in your LaTeX document, write
+%%   \input{<filename>.pdf_tex}
+%%  instead of
+%%   \includegraphics{<filename>.pdf}
+%% To scale the image, write
+%%   \def\svgwidth{<desired width>}
+%%   \input{<filename>.pdf_tex}
+%%  instead of
+%%   \includegraphics[width=<desired width>]{<filename>.pdf}
+%%
+%% Images with a different path to the parent latex file can
+%% be accessed with the `import' package (which may need to be
+%% installed) using
+%%   \usepackage{import}
+%% in the preamble, and then including the image with
+%%   \import{<path to file>}{<filename>.pdf_tex}
+%% Alternatively, one can specify
+%%   \graphicspath{{<path to file>/}}
+%%
+%% For more information, please see info/svg-inkscape on CTAN:
+%%   http://tug.ctan.org/tex-archive/info/svg-inkscape
+%%
+\begingroup%
+  \makeatletter%
+  \providecommand\color[2][]{%
+    \errmessage{(Inkscape) Color is used for the text in Inkscape, but the package 'color.sty' is not loaded}%
+    \renewcommand\color[2][]{}%
+  }%
+  \providecommand\transparent[1]{%
+    \errmessage{(Inkscape) Transparency is used (non-zero) for the text in Inkscape, but the package 'transparent.sty' is not loaded}%
+    \renewcommand\transparent[1]{}%
+  }%
+  \providecommand\rotatebox[2]{#2}%
+  \newcommand*\fsize{\dimexpr\f@size pt\relax}%
+  \newcommand*\lineheight[1]{\fontsize{\fsize}{#1\fsize}\selectfont}%
+  \ifx\svgwidth\undefined%
+    \setlength{\unitlength}{750bp}%
+    \ifx\svgscale\undefined%
+      \relax%
+    \else%
+      \setlength{\unitlength}{\unitlength * \real{\svgscale}}%
+    \fi%
+  \else%
+    \setlength{\unitlength}{\svgwidth}%
+  \fi%
+  \global\let\svgwidth\undefined%
+  \global\let\svgscale\undefined%
+  \makeatother%
+  \begin{picture}(1,0.6)%
+    \lineheight{1}%
+    \setlength\tabcolsep{0pt}%
+    \put(0,0){\includegraphics[width=\unitlength,page=1]{plot-performance.pdf}}%
+    \put(0.0448,0.0596){\makebox(0,0)[rt]{\lineheight{1.25}\smash{\begin{tabular}[t]{r}\texttt{52}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=2]{plot-performance.pdf}}%
+    \put(0.0448,0.1448){\makebox(0,0)[rt]{\lineheight{1.25}\smash{\begin{tabular}[t]{r}\texttt{53}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=3]{plot-performance.pdf}}%
+    \put(0.0448,0.23){\makebox(0,0)[rt]{\lineheight{1.25}\smash{\begin{tabular}[t]{r}\texttt{54}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=4]{plot-performance.pdf}}%
+    \put(0.0448,0.3152){\makebox(0,0)[rt]{\lineheight{1.25}\smash{\begin{tabular}[t]{r}\texttt{55}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=5]{plot-performance.pdf}}%
+    \put(0.0448,0.4003){\makebox(0,0)[rt]{\lineheight{1.25}\smash{\begin{tabular}[t]{r}\texttt{56}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=6]{plot-performance.pdf}}%
+    \put(0.0448,0.4855){\makebox(0,0)[rt]{\lineheight{1.25}\smash{\begin{tabular}[t]{r}\texttt{57}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=7]{plot-performance.pdf}}%
+    \put(0.0448,0.5707){\makebox(0,0)[rt]{\lineheight{1.25}\smash{\begin{tabular}[t]{r}\texttt{58}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=8]{plot-performance.pdf}}%
+    \put(0.056,0.0356){\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}\texttt{0}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=9]{plot-performance.pdf}}%
+    \put(0.2381,0.0356){\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}\texttt{2$\,\cdot\,$10\textsuperscript{5}}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=10]{plot-performance.pdf}}%
+    \put(0.4201,0.0356){\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}\texttt{4$\,\cdot\,$10\textsuperscript{5}}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=11]{plot-performance.pdf}}%
+    \put(0.6022,0.0356){\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}\texttt{6$\,\cdot\,$10\textsuperscript{5}}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=12]{plot-performance.pdf}}%
+    \put(0.7842,0.0356){\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}\texttt{8$\,\cdot\,$10\textsuperscript{5}}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=13]{plot-performance.pdf}}%
+    \put(0.9663,0.0356){\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}\texttt{10\textsuperscript{6}}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=14]{plot-performance.pdf}}%
+    \put(0,0.3203){\rotatebox{90}{\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}\texttt{\% of wins}\end{tabular}}}}}%
+    \put(0.5111,0){\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}\texttt{Computation cost (games)}\end{tabular}}}}%
+    \put(0.2631,0.1076){\makebox(0,0)[rt]{\lineheight{1.25}\smash{\begin{tabular}[t]{r}\texttt{E\textsubscript{a}}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=15]{plot-performance.pdf}}%
+    \put(0.2631,0.0836){\makebox(0,0)[rt]{\lineheight{1.25}\smash{\begin{tabular}[t]{r}\texttt{E\textsubscript{b}}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=16]{plot-performance.pdf}}%
+    \put(0.4319,0.1076){\makebox(0,0)[rt]{\lineheight{1.25}\smash{\begin{tabular}[t]{r}\texttt{E\textsubscript{all}}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=17]{plot-performance.pdf}}%
+    \put(0.4319,0.0836){\makebox(0,0)[rt]{\lineheight{1.25}\smash{\begin{tabular}[t]{r}\texttt{E\textsubscript{aw}}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=18]{plot-performance.pdf}}%
+    \put(0.6007,0.1076){\makebox(0,0)[rt]{\lineheight{1.25}\smash{\begin{tabular}[t]{r}\texttt{E\textsubscript{aw/2d}}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=19]{plot-performance.pdf}}%
+    \put(0.6007,0.0836){\makebox(0,0)[rt]{\lineheight{1.25}\smash{\begin{tabular}[t]{r}\texttt{E\textsubscript{aw/4d}}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=20]{plot-performance.pdf}}%
+    \put(0.7695,0.1076){\makebox(0,0)[rt]{\lineheight{1.25}\smash{\begin{tabular}[t]{r}\texttt{E\textsubscript{aw/2g}}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=21]{plot-performance.pdf}}%
+    \put(0.7695,0.0836){\makebox(0,0)[rt]{\lineheight{1.25}\smash{\begin{tabular}[t]{r}\texttt{E\textsubscript{aw/4g}}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=22]{plot-performance.pdf}}%
+  \end{picture}%
+\endgroup%
