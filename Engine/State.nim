@@ -225,6 +225,10 @@ proc computeActions * (state: State): seq[Action] =
 func copy * (state: State): State {.inline.} =
   State(halt: state.halt, me: state.me.copy, op: state.op.copy)
 
+func apply * (state: State, action: Action): State {.inline.} =
+  result = state.copy
+  result.applyAction(action)
+
 func isGameOver * (state: State): bool {.inline.} =
   state.me.health <= 0 or state.op.health <= 0
 
