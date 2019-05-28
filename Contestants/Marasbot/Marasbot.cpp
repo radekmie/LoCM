@@ -816,7 +816,7 @@ int playerDraw;
             }
 
 
-            cout << my_move << endl;
+            cout << (my_move == "" ? "PASS" : my_move) << endl;
         }
             
     }

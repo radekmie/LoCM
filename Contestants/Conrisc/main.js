@@ -131,7 +131,7 @@ function getActions() {
         }
     }
 
-    return actions;
+    return actions || 'PASS';
 }
 
 function getPlayableCards(usedMana) {
