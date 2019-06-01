@@ -1,4 +1,6 @@
 # AntiSquid
+# Baseline1
+# Baseline2
 # Coac
 (cd Coac && cmake . && make)
 # Conrisc
