@@ -1,3 +1,5 @@
+from contextlib import ExitStack
+from itertools import cycle, islice
 from json import loads
 from numpy import average, std
 from re import fullmatch, match
@@ -5,10 +7,7 @@ from re import fullmatch, match
 pattern = r"^(\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\d) '(.*?)' '(.*?)' ({.*}) (-?\d) (-?\d) seed=(\d+) shufflePlayer0Seed=(\d+) draftChoicesSeed=(\d+) shufflePlayer1Seed=(\d+)\s*$"
 scoring = {'-1': 'errs', '0': 'lost', '1': 'wins'}
 
-def analyze(file):
-  stats = {}
-  times = {}
-
+def analyze(file, stats, times):
   for chunk in chunks(enumerate(file), 8 * 8):
     for index, line in chunk:
       found = fullmatch(pattern, line)
@@ -59,23 +58,18 @@ def analyze(file):
       stats[pairA][scoring[score1]] += 1
       stats[pairB][scoring[score2]] += 1
 
-  return stats, times
+    yield
 
 def analyze_paths(paths):
-  stats_combined = {}
-  times_combined = {}
+  stats = {}
+  times = {}
 
   for path in paths:
     with open(path, 'r') as file:
-      stats, times = analyze(file)
-      for players, results in stats.items():
-        stats_combined[players] = stats_combine(stats_combined.get(players), results)
-      for player, time in times.items():
-        if player not in times_combined:
-          times_combined[player] = []
-        times_combined[player] += time
+      for _ in analyze(file, stats, times):
+        pass
 
-  return stats_combined, times_combined
+  return stats, times
 
 def chunks(xs, n):
   ys = []
@@ -84,6 +78,17 @@ def chunks(xs, n):
     if len(ys) == n:
       yield ys
       ys = []
+
+def interleave(*iterables):
+  num_active = len(iterables)
+  nexts = cycle(iter(it).__next__ for it in iterables)
+  while num_active:
+    try:
+      for next in nexts:
+        yield next()
+    except StopIteration:
+      num_active -= 1
+      nexts = cycle(islice(nexts, num_active))
 
 def stats_combine(statsA, statsB):
   if statsA is None:
@@ -99,14 +104,35 @@ def stats_combine(statsA, statsB):
 def stats_empty():
   return stats_combine(None, None)
 
-def stats_print(title, stats, extra = ''):
-  alls = stats['errs'] + stats['lost'] + stats['wins']
-  errs = stats['errs'] / alls * 100
-  wins = stats['wins'] / alls * 100
+def graph(paths, steps=None):
+  header = True
+  stats = {}
 
-  print(f'{title} wins={wins:5.2f}% errs={errs:5.2f}% alls={alls // 2}{extra}')
+  with ExitStack() as stack:
+    files = [stack.enter_context(open(path, 'r')) for path in paths]
+    for _ in analyze(interleave(*files), stats, {}):
+      players = {}
+      for (player1, player2), results in stats.items():
+        if player1 != player2:
+          players[player1] = stats_combine(players.get(player1), results)
+      if header:
+        header = False
+        print(';'.join(sorted(players.keys())))
+      graph_print(players)
+      if steps is not None:
+        steps -= 1
+        if steps <= 0:
+          break
 
-def main(paths):
+def graph_print(players):
+  def single(pair):
+    _, stats = pair
+    alls = stats['errs'] + stats['lost'] + stats['wins']
+    wins = stats['wins'] / alls * 100
+    return f'{wins:5.2f}'
+  print(';'.join(map(single, sorted(players.items()))))
+
+def score(paths):
   players = {}
 
   stats, times = analyze_paths(paths)
@@ -114,10 +140,19 @@ def main(paths):
   for (player1, player2), results in sorted(stats.items()):
     if player1 != player2:
       players[player1] = stats_combine(players.get(player1), results)
-      stats_print(f'{player1:>30} {player2:>30}', results)
+      score_print(f'{player1:>30} {player2:>30}', results)
 
   for player1, results in sorted(players.items(), key=lambda x: -x[1]['wins']):
-    stats_print(f'{player1:>30}', results, f' avg={average(times[player1]):6.2f}±{std(times[player1]):5.2f}ms')
+    score_print(f'{player1:>30}', results, f' avg={average(times[player1]):6.2f}±{std(times[player1]):5.2f}ms')
+
+def score_print(title, stats, extra = ''):
+  alls = stats['errs'] + stats['lost'] + stats['wins']
+  errs = stats['errs'] / alls * 100
+  wins = stats['wins'] / alls * 100
+
+  print(f'{title} wins={wins:5.2f}% errs={errs:5.2f}% alls={alls // 2}{extra}')
 
 if __name__ == '__main__':
-  main(['out-1.txt', 'out-2.txt', 'out-3.txt', 'out-4.txt'])
+  files = ['out-2.txt', 'out-3.txt', 'out-4.txt', 'out-1.txt']
+  graph(files, 1750)
+  score(files)
