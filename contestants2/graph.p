@@ -9,4 +9,4 @@ set yrange [0:100]
 set xtics 250
 set ytics 10
 
-plot for [col=1:8] 'graph.data' using 0:col with lines lw 2 title columnhead
+plot for [col=1:11] 'graph.data' using 0:col with lines lw 2 title columnhead
