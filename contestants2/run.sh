@@ -1,6 +1,6 @@
 AGENTS[0]="python3 AntiSquid/main.py"
 AGENTS[1]="./Coac/main"
-AGENTS[2]="./CoacProphet/main"
+AGENTS[2]="./ProphetCoac/main"
 AGENTS[3]="js ./Conrisc/main.js"
 AGENTS[4]="./Fabbiamo/main"
 AGENTS[5]="./Marasbot/main"

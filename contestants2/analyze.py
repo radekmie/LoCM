@@ -5,6 +5,7 @@ from json import loads
 from numpy import average, std
 from re import fullmatch, match
 
+normals = r".*[ /](.*)\/.*"
 pattern = r"^(\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\d) '(.*?)' '(.*?)' ({.*}) (-?\d) (-?\d) seed=(\d+) shufflePlayer0Seed=(\d+) draftChoicesSeed=(\d+) shufflePlayer1Seed=(\d+)\s*$"
 scoring = {'-1': 'errs', '0': 'lost', '1': 'wins'}
 
@@ -21,6 +22,9 @@ def analyze(file, stats, times):
       if seed0 != seed1 or seed0 != seed2:
         print(f'Invalid params at line {index}')
         continue
+
+      player1 = normalize(player1)
+      player2 = normalize(player2)
 
       pairA = (player1, player2)
       pairB = (player2, player1)
@@ -91,6 +95,10 @@ def interleave(*iterables):
       num_active -= 1
       nexts = cycle(islice(nexts, num_active))
 
+def normalize(player):
+  player = fullmatch(normals, player)[1]
+  return 'ProphetCoac' if player == 'CoacProphet' else player
+
 def stats_combine(statsA, statsB):
   if statsA is None:
     statsA = {'errs': 0, 'lost': 0, 'wins': 0}
@@ -141,10 +149,10 @@ def score(paths):
   for (player1, player2), results in sorted(stats.items()):
     if player1 != player2:
       players[player1] = stats_combine(players.get(player1), results)
-      score_print(f'{player1:>30} {player2:>30}', results)
+      score_print(f'{player1:>11} {player2:>11}', results)
 
   for player1, results in sorted(players.items(), key=lambda x: -x[1]['wins']):
-    score_print(f'{player1:>30}', results, f' avg={average(times[player1]):6.2f}±{std(times[player1]):5.2f}ms')
+    score_print(f'{player1:>11}', results, f' avg={average(times[player1]):6.2f}±{std(times[player1]):5.2f}ms')
 
 def score_print(title, stats, extra = ''):
   alls = stats['errs'] + stats['lost'] + stats['wins']
