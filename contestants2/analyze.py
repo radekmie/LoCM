@@ -163,5 +163,5 @@ def score_print(title, stats, extra = ''):
 
 if __name__ == '__main__':
   files = glob('out-*.txt')
-  graph(files)
+  graph(files, 5000)
   score(files)
