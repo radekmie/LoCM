@@ -74,7 +74,7 @@ func toSummary (id: int, avg: float, bests: openArray[Individual]): string =
 func toConfig (individual: Individual): Config =
   let lookup = func (card: Card): float = individual.gene[card.cardNumber - 1]
 
-  result = newConfig(player = "Random")
+  result = newConfig(player = "Greedy")
   result.evalDraftFn = func (config: Config, state: State): DraftResult =
     state.evaluateDraftWith(lookup)
 
@@ -332,7 +332,7 @@ proc plotBaselines (bests: Bests, lines: seq[Baseline]): void =
   for k, line in lines:
     echo &"$baseline{k} <<EOD"
 
-    let baseline = newConfig(draft = line.evaluator, player = "Random")
+    let baseline = newConfig(draft = line.evaluator, player = "Greedy")
 
     let score = 100.0 / 2 / baselinesGames / line.drafts.len.float
     for generation, group in bests:
@@ -491,8 +491,8 @@ proc plotPerformance (bests: Bests, drafts: Drafts): void =
   let games = plays
   let score = 100.0 / 2 / bestsGames / bests[0].len.float / drafts.len.float
   var enemies = [
-    newConfig(player = "Random", draft = "ClosetAI"),
-    newConfig(player = "Random", draft = "Icebox"),
+    newConfig(player = "Greedy", draft = "ClosetAI"),
+    newConfig(player = "Greedy", draft = "Icebox"),
     newIndividual(true).toConfig,
     newIndividual(true).toConfig,
     newIndividual(true).toConfig

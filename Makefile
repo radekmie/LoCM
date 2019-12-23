@@ -259,8 +259,48 @@ run-tester: Player Tester
 	  --replays=false \
 	  --threads=4
 
-sync: clean
-	rsync -LPav ~/Projects/LoCM/* -e 'ssh -p2222' vazco@szafa.vazco.eu:~/.LoCM --info=progress2 --exclude=.git --exclude=Results-Remote --delete
+run-CEC-2020: Detail $(SOURCES)
+	mkdir -p Results/CEC-2020
+
+	nim c -d:release --threads:on -d:mode="evolve-specialized" -d:generations=100 -d:populationSize=100 -d:scoreGames=20 -d:scoreRounds=2 -d:tournamentGames=5 -d:tournamentSize=4 Evolve.nim
+	/usr/bin/time -v ./Evolve > Results/CEC-2020/evolve-specialized.1.p & \
+	/usr/bin/time -v ./Evolve > Results/CEC-2020/evolve-specialized.2.p & \
+	/usr/bin/time -v ./Evolve > Results/CEC-2020/evolve-specialized.3.p & \
+	wait
+
+	nim c -d:release --threads:on -d:mode="evolve-specialized" -d:generations=100 -d:populationSize=100 -d:scoreGames=20 -d:scoreRounds=2 -d:tournamentGames=5 -d:tournamentSize=4 -d:mergeAllGenes=1 Evolve.nim
+	/usr/bin/time -v ./Evolve > Results/CEC-2020/evolve-specialized-all.1.p & \
+	/usr/bin/time -v ./Evolve > Results/CEC-2020/evolve-specialized-all.2.p & \
+	/usr/bin/time -v ./Evolve > Results/CEC-2020/evolve-specialized-all.3.p & \
+	wait
+
+	nim c -d:release --threads:on -d:mode="evolve-specialized" -d:generations=100 -d:populationSize=100 -d:scoreGames=20 -d:scoreRounds=2 -d:tournamentGames=5 -d:tournamentSize=4 -d:mergeGene=25 Evolve.nim
+	/usr/bin/time -v ./Evolve > Results/CEC-2020/evolve-specialized-lerp.1.p & \
+	/usr/bin/time -v ./Evolve > Results/CEC-2020/evolve-specialized-lerp.2.p & \
+	/usr/bin/time -v ./Evolve > Results/CEC-2020/evolve-specialized-lerp.3.p & \
+	wait
+
+	nim c -d:release --threads:on -d:mode="evolve-standard" -d:draftsEval=10 -d:elites=2 -d:generations=18 -d:populationSize=12 -d:scoreGames=20 -d:tournamentSize=4 Evolve.nim
+	/usr/bin/time -v ./Evolve > Results/CEC-2020/evolve-standard.1.p & \
+	/usr/bin/time -v ./Evolve > Results/CEC-2020/evolve-standard.2.p & \
+	/usr/bin/time -v ./Evolve > Results/CEC-2020/evolve-standard.3.p & \
+	wait
+
+	nim c -d:release --threads:on -d:mode="random-exhaustive" -d:draftsEval=10 -d:generations=1 -d:populationSize=50 -d:scoreGames=20 Evolve.nim
+	/usr/bin/time -v ./Evolve > Results/CEC-2020/random-exhaustive.1.p & \
+	/usr/bin/time -v ./Evolve > Results/CEC-2020/random-exhaustive.2.p & \
+	/usr/bin/time -v ./Evolve > Results/CEC-2020/random-exhaustive.3.p & \
+	wait
+
+	nim c -d:release --threads:on -d:mode="random-tournament" -d:draftsEval=10 -d:generations=1 -d:populationSize=5000 -d:scoreGames=20 Evolve.nim
+	/usr/bin/time -v ./Evolve > Results/CEC-2020/random-tournament.1.p & \
+	/usr/bin/time -v ./Evolve > Results/CEC-2020/random-tournament.2.p & \
+	/usr/bin/time -v ./Evolve > Results/CEC-2020/random-tournament.3.p & \
+	wait
+
+	/usr/bin/time -v ./Detail --drafts=2618 ./Results/CEC-2020/*.p | tee Results/CEC-2020/detail-1.txt
+	/usr/bin/time -v ./Detail --drafts=2618 ./Results/CEC-2020/*.p | tee Results/CEC-2020/detail-2.txt
+	/usr/bin/time -v ./Detail --drafts=2618 ./Results/CEC-2020/*.p | tee Results/CEC-2020/detail-3.txt
 
 Detail: $(SOURCES)
 	nim c -d:release --threads:on $@

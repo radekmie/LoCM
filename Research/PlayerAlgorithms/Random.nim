@@ -50,10 +50,10 @@ proc playerAlgorithmRandom * (config: Config, root: State): SearchResult =
   var state = root.copy
   var legal = state.computeActions
 
-  state.analyze
+  # state.analyze
 
   while legal.len > 0:
-    let action = legal.sample
+    let action = legal.rand
     result.actions.add(action)
     state.applyAction(action)
     legal = state.computeActions

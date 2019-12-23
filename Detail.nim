@@ -17,7 +17,7 @@ import std / [
 func toConfig (individual: array[160, float]): Config =
   let lookup = func (card: Card): float = individual[card.cardNumber - 1]
 
-  result = newConfig(player = "Random")
+  result = newConfig(player = "Greedy")
   result.evalDraftFn = func (config: Config, state: State): DraftResult =
     state.evaluateDraftWith(lookup)
 
@@ -40,8 +40,8 @@ proc main (): void =
   var games = 1
   var drafts = newSeqWith(1, newDraft(cards))
   var players = toOrderedTable({
-    "ClosetAI": @[newConfig(draft = "ClosetAI", player = "Random")],
-    "Icebox": @[newConfig(draft = "Icebox", player = "Random")]
+    "ClosetAI": @[newConfig(draft = "ClosetAI", player = "Greedy")],
+    "Icebox": @[newConfig(draft = "Icebox", player = "Greedy")]
   })
 
   for kind, key, value in getOpt():

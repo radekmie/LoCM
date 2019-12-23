@@ -13,7 +13,7 @@ proc playerAlgorithmMCTS * (config: Config, state: State): SearchResult =
 
       var legal = state.computeActions
       while legal.len > 0:
-        state.applyAction(legal.sample)
+        state.applyAction(legal.rand)
         legal = state.computeActions
         score = score.min(config.evalState(state.swap))
 
