@@ -12,7 +12,7 @@ for plot in *.svg; do
   perl -pi -e "s|\\\\textbf\{1x10\}\\\\textbf\{6\}|\\\\textbf{10x10\\\\textsuperscript{5}}|g" "${plot/svg/pdf_tex}"
   perl -pi -e "s|\\\\textbf\{(\d)00000\}|\\\\textbf{\1x10\\\\textsuperscript{5}}|g" "${plot/svg/pdf_tex}"
   perl -pi -e "s|\\\\textbf\{(.*?)\}\\\\textbf\{(.*?)\}|\\\\textbf{\1\\\\textsubscript{\2}}|g" "${plot/svg/pdf_tex}"
-  perl -pi -e "s|\\\\textbf\{(.*?)\}|\\\\texttt{\\\\textbf{\\\\small{\1}}}|g" "${plot/svg/pdf_tex}"
+  perl -pi -e "s|\\\\textbf\{(.*?)\}|\\\\texttt{\\\\textbf{\\\\footnotesize{\1}}}|g" "${plot/svg/pdf_tex}"
   perl -pi -e "s|% of wins|\\\\% of wins|g" "${plot/svg/pdf_tex}"
 done
 

@@ -1,5 +1,5 @@
 # set output ''
-set terminal svg font 'monospace:Bold,13' linewidth 1.5 size 588,400
+set terminal svg font 'monospace:Bold,12' linewidth 1.5 size 600,400
 set xlabel 'Computation cost (games)' offset 0,0.25
 set ylabel '% of wins' offset 1
 set xrange [0:1000000]
@@ -13,23 +13,23 @@ parse(group) = "<(paste " . group . ".*.p | grep '^ ' | awk '{print $1 \" \" (($
 
 array groups[8]
 groups[1] = "evolve-specialized"
-groups[2] = "evolve-standard"
+groups[2] = "evolve-specialized-lerp"
 groups[3] = "evolve-specialized-all"
-groups[4] = "evolve-specialized-lerp"
+groups[4] = "evolve-standard"
 groups[5] = "evolve-active-2"
 groups[6] = "evolve-active-4"
 groups[7] = "evolve-variant-2"
 groups[8] = "evolve-variant-4"
 
 array labels[8]
-labels[1] = "E_a"
-labels[2] = "E_b"
-labels[3] = "E_{all}"
-labels[4] = "E_{aw}"
-labels[5] = "E_{aw/2d}"
-labels[6] = "E_{aw/4d}"
-labels[7] = "E_{aw/2g}"
-labels[8] = "E_{aw/4g}"
+labels[1] = "AG"
+labels[2] = "AG_{weights}"
+labels[3] = "AG_{all}"
+labels[4] = "Evo_{base}"
+labels[5] = "AG_{weights/2d}"
+labels[6] = "AG_{weights/4d}"
+labels[7] = "AG_{weights/2g}"
+labels[8] = "AG_{weights/4g}"
 
 set output 'plot-performance-random.svg'
 plot for [i = 1 : 4] parse(groups[i]) using 1:2 title labels[i] with lines lc i lw 2

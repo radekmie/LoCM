@@ -1,5 +1,5 @@
 set output 'plot-performance-greedy.svg'
-set terminal svg font 'monospace:Bold,13' linewidth 1.5 size 588,400
+set terminal svg font 'monospace:Bold,12' linewidth 1.5 size 600,400
 set xlabel 'Computation cost (games)' offset 0,0.25
 set ylabel '% of wins' offset 1
 set xrange [0:1000000]
@@ -13,14 +13,14 @@ parse(group) = "<(paste " . group . ".*.p | grep '^ ' | awk '{print $1 \" \" (($
 
 array groups[4]
 groups[1] = "evolve-specialized"
-groups[2] = "evolve-standard"
+groups[2] = "evolve-specialized-lerp"
 groups[3] = "evolve-specialized-all"
-groups[4] = "evolve-specialized-lerp"
+groups[4] = "evolve-standard"
 
 array labels[4]
-labels[1] = "E_a"
-labels[2] = "E_b"
-labels[3] = "E_{all}"
-labels[4] = "E_{aw}"
+labels[1] = "AG"
+labels[2] = "AG_{weights}"
+labels[3] = "AG_{all}"
+labels[4] = "Evo_{base}"
 
 plot for [i = 1 : 4] parse(groups[i]) using 1:2 title labels[i] with lines lc i lw 2

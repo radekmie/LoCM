@@ -38,7 +38,7 @@
   \newcommand*\fsize{\dimexpr\f@size pt\relax}%
   \newcommand*\lineheight[1]{\fontsize{\fsize}{#1\fsize}\selectfont}%
   \ifx\svgwidth\undefined%
-    \setlength{\unitlength}{444.57663574bp}%
+    \setlength{\unitlength}{453.41689453bp}%
     \ifx\svgscale\undefined%
       \relax%
     \else%
@@ -50,47 +50,47 @@
   \global\let\svgwidth\undefined%
   \global\let\svgscale\undefined%
   \makeatother%
-  \begin{picture}(1,0.67479929)%
+  \begin{picture}(1,0.66164275)%
     \lineheight{1}%
     \setlength\tabcolsep{0pt}%
     \put(0,0){\includegraphics[width=\unitlength,page=1]{plot-performance-greedy.pdf}}%
-    \put(0.06945177,0.08974831){\makebox(0,0)[rt]{\lineheight{1.25}\smash{\begin{tabular}[t]{r}\texttt{\textbf{\small{60}}}\end{tabular}}}}%
+    \put(0.06245223,0.08138206){\makebox(0,0)[rt]{\lineheight{1.25}\smash{\begin{tabular}[t]{r}\texttt{\textbf{\footnotesize{60}}}\end{tabular}}}}%
     \put(0,0){\includegraphics[width=\unitlength,page=2]{plot-performance-greedy.pdf}}%
-    \put(0.06945177,0.16751892){\makebox(0,0)[rt]{\lineheight{1.25}\smash{\begin{tabular}[t]{r}\texttt{\textbf{\small{62}}}\end{tabular}}}}%
+    \put(0.06245223,0.15912508){\makebox(0,0)[rt]{\lineheight{1.25}\smash{\begin{tabular}[t]{r}\texttt{\textbf{\footnotesize{62}}}\end{tabular}}}}%
     \put(0,0){\includegraphics[width=\unitlength,page=3]{plot-performance-greedy.pdf}}%
-    \put(0.06945177,0.24545824){\makebox(0,0)[rt]{\lineheight{1.25}\smash{\begin{tabular}[t]{r}\texttt{\textbf{\small{64}}}\end{tabular}}}}%
+    \put(0.06245223,0.23670269){\makebox(0,0)[rt]{\lineheight{1.25}\smash{\begin{tabular}[t]{r}\texttt{\textbf{\footnotesize{64}}}\end{tabular}}}}%
     \put(0,0){\includegraphics[width=\unitlength,page=4]{plot-performance-greedy.pdf}}%
-    \put(0.06945177,0.32322886){\makebox(0,0)[rt]{\lineheight{1.25}\smash{\begin{tabular}[t]{r}\texttt{\textbf{\small{66}}}\end{tabular}}}}%
+    \put(0.06245223,0.31444572){\makebox(0,0)[rt]{\lineheight{1.25}\smash{\begin{tabular}[t]{r}\texttt{\textbf{\footnotesize{66}}}\end{tabular}}}}%
     \put(0,0){\includegraphics[width=\unitlength,page=5]{plot-performance-greedy.pdf}}%
-    \put(0.06945177,0.40099948){\makebox(0,0)[rt]{\lineheight{1.25}\smash{\begin{tabular}[t]{r}\texttt{\textbf{\small{68}}}\end{tabular}}}}%
+    \put(0.06245223,0.39218874){\makebox(0,0)[rt]{\lineheight{1.25}\smash{\begin{tabular}[t]{r}\texttt{\textbf{\footnotesize{68}}}\end{tabular}}}}%
     \put(0,0){\includegraphics[width=\unitlength,page=6]{plot-performance-greedy.pdf}}%
-    \put(0.06945177,0.4787701){\makebox(0,0)[rt]{\lineheight{1.25}\smash{\begin{tabular}[t]{r}\texttt{\textbf{\small{70}}}\end{tabular}}}}%
+    \put(0.06245223,0.46993176){\makebox(0,0)[rt]{\lineheight{1.25}\smash{\begin{tabular}[t]{r}\texttt{\textbf{\footnotesize{70}}}\end{tabular}}}}%
     \put(0,0){\includegraphics[width=\unitlength,page=7]{plot-performance-greedy.pdf}}%
-    \put(0.06945177,0.55670942){\makebox(0,0)[rt]{\lineheight{1.25}\smash{\begin{tabular}[t]{r}\texttt{\textbf{\small{72}}}\end{tabular}}}}%
+    \put(0.06245223,0.54750937){\makebox(0,0)[rt]{\lineheight{1.25}\smash{\begin{tabular}[t]{r}\texttt{\textbf{\footnotesize{72}}}\end{tabular}}}}%
     \put(0,0){\includegraphics[width=\unitlength,page=8]{plot-performance-greedy.pdf}}%
-    \put(0.06945177,0.63448004){\makebox(0,0)[rt]{\lineheight{1.25}\smash{\begin{tabular}[t]{r}\texttt{\textbf{\small{74}}}\end{tabular}}}}%
+    \put(0.06245223,0.6252524){\makebox(0,0)[rt]{\lineheight{1.25}\smash{\begin{tabular}[t]{r}\texttt{\textbf{\footnotesize{74}}}\end{tabular}}}}%
     \put(0,0){\includegraphics[width=\unitlength,page=9]{plot-performance-greedy.pdf}}%
-    \put(0.08480346,0.05685184){\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}\texttt{\textbf{\small{0}}}\end{tabular}}}}%
+    \put(0.07618131,0.05160813){\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}\texttt{\textbf{\footnotesize{0}}}\end{tabular}}}}%
     \put(0,0){\includegraphics[width=\unitlength,page=10]{plot-performance-greedy.pdf}}%
-    \put(0.25856428,0.05685184){\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}\texttt{\textbf{\small{2x10\textsuperscript{5}}}}\end{tabular}}}}%
+    \put(0.25267452,0.05160813){\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}\texttt{\textbf{\footnotesize{2x10\textsuperscript{5}}}}\end{tabular}}}}%
     \put(0,0){\includegraphics[width=\unitlength,page=11]{plot-performance-greedy.pdf}}%
-    \put(0.43232509,0.05685184){\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}\texttt{\textbf{\small{4x10\textsuperscript{5}}}}\end{tabular}}}}%
+    \put(0.42916772,0.05160813){\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}\texttt{\textbf{\footnotesize{4x10\textsuperscript{5}}}}\end{tabular}}}}%
     \put(0,0){\includegraphics[width=\unitlength,page=12]{plot-performance-greedy.pdf}}%
-    \put(0.60625461,0.05685184){\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}\texttt{\textbf{\small{6x10\textsuperscript{5}}}}\end{tabular}}}}%
+    \put(0.60566092,0.05160813){\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}\texttt{\textbf{\footnotesize{6x10\textsuperscript{5}}}}\end{tabular}}}}%
     \put(0,0){\includegraphics[width=\unitlength,page=13]{plot-performance-greedy.pdf}}%
-    \put(0.78001543,0.05685184){\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}\texttt{\textbf{\small{8x10\textsuperscript{5}}}}\end{tabular}}}}%
+    \put(0.78215413,0.05160813){\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}\texttt{\textbf{\footnotesize{8x10\textsuperscript{5}}}}\end{tabular}}}}%
     \put(0,0){\includegraphics[width=\unitlength,page=14]{plot-performance-greedy.pdf}}%
-    \put(0.95377625,0.05685184){\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}\texttt{\textbf{\small{10x10\textsuperscript{5}}}}\end{tabular}}}}%
+    \put(0.95864733,0.05160813){\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}\texttt{\textbf{\footnotesize{10x10\textsuperscript{5}}}}\end{tabular}}}}%
     \put(0,0){\includegraphics[width=\unitlength,page=15]{plot-performance-greedy.pdf}}%
-    \put(0.01782963,0.36928391){\rotatebox{90}{\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}\texttt{\textbf{\small{\% of wins}}}\end{tabular}}}}}%
-    \put(0.5192055,0.01568908){\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}\texttt{\textbf{\small{Computation cost (games)}}}\end{tabular}}}}%
-    \put(0.21014743,0.12247607){\makebox(0,0)[rt]{\lineheight{1.25}\smash{\begin{tabular}[t]{r}\texttt{\textbf{\small{E\textsubscript{a}}}}\end{tabular}}}}%
+    \put(0.01613723,0.35976824){\rotatebox{90}{\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}\texttt{\textbf{\footnotesize{\% of wins}}}\end{tabular}}}}}%
+    \put(0.51733162,0.01439073){\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}\texttt{\textbf{\footnotesize{Computation cost (games)}}}\end{tabular}}}}%
+    \put(0.42007013,0.14092991){\makebox(0,0)[rt]{\lineheight{1.25}\smash{\begin{tabular}[t]{r}\texttt{\textbf{\footnotesize{AG}}}\end{tabular}}}}%
     \put(0,0){\includegraphics[width=\unitlength,page=16]{plot-performance-greedy.pdf}}%
-    \put(0.41073152,0.12247607){\makebox(0,0)[rt]{\lineheight{1.25}\smash{\begin{tabular}[t]{r}\texttt{\textbf{\small{E\textsubscript{b}}}}\end{tabular}}}}%
+    \put(0.42007013,0.11115598){\makebox(0,0)[rt]{\lineheight{1.25}\smash{\begin{tabular}[t]{r}\texttt{\textbf{\footnotesize{AG\textsubscript{weights}}}}\end{tabular}}}}%
     \put(0,0){\includegraphics[width=\unitlength,page=17]{plot-performance-greedy.pdf}}%
-    \put(0.61131561,0.12247607){\makebox(0,0)[rt]{\lineheight{1.25}\smash{\begin{tabular}[t]{r}\texttt{\textbf{\small{E\textsubscript{all}}}}\end{tabular}}}}%
+    \put(0.65462249,0.14092991){\makebox(0,0)[rt]{\lineheight{1.25}\smash{\begin{tabular}[t]{r}\texttt{\textbf{\footnotesize{AG\textsubscript{all}}}}\end{tabular}}}}%
     \put(0,0){\includegraphics[width=\unitlength,page=18]{plot-performance-greedy.pdf}}%
-    \put(0.8118997,0.12247607){\makebox(0,0)[rt]{\lineheight{1.25}\smash{\begin{tabular}[t]{r}\texttt{\textbf{\small{E\textsubscript{aw}}}}\end{tabular}}}}%
+    \put(0.65462249,0.11115598){\makebox(0,0)[rt]{\lineheight{1.25}\smash{\begin{tabular}[t]{r}\texttt{\textbf{\footnotesize{Evo\textsubscript{base}}}}\end{tabular}}}}%
     \put(0,0){\includegraphics[width=\unitlength,page=19]{plot-performance-greedy.pdf}}%
   \end{picture}%
 \endgroup%
