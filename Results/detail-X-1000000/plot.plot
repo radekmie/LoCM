@@ -1,8 +1,9 @@
-set output 'plot-performance.svg'
-set terminal svg font 'monospace:Bold,16' linewidth 1.5 size 1000,600
-set xlabel 'Computation cost (games)' offset 0,0.5
-set ylabel '% of wins' offset 2
+# set output ''
+set terminal svg font 'monospace:Bold,13' linewidth 1.5 size 588,400
+set xlabel 'Computation cost (games)' offset 0,0.25
+set ylabel '% of wins' offset 1
 set xrange [0:1000000]
+set yrange [51:58]
 set ytics 1
 set lmargin 5
 set key bottom center horizontal width 3
@@ -30,4 +31,7 @@ labels[6] = "E_{aw/4d}"
 labels[7] = "E_{aw/2g}"
 labels[8] = "E_{aw/4g}"
 
-plot for [i = 1 : 8] parse(groups[i]) using 1:2 title labels[i] with lines lc i lw 2
+set output 'plot-performance-random.svg'
+plot for [i = 1 : 4] parse(groups[i]) using 1:2 title labels[i] with lines lc i lw 2
+set output 'plot-performance-random-variants.svg'
+plot for [i = 5 : 8] parse(groups[i]) using 1:2 title labels[i] with lines lc i lw 2

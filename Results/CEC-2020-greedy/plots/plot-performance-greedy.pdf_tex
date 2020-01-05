@@ -1,0 +1,96 @@
+%% Creator: Inkscape inkscape 0.92.4, www.inkscape.org
+%% PDF/EPS/PS + LaTeX output extension by Johan Engelen, 2010
+%% Accompanies image file 'plot-performance-greedy.pdf' (pdf, eps, ps)
+%%
+%% To include the image in your LaTeX document, write
+%%   \input{<filename>.pdf_tex}
+%%  instead of
+%%   \includegraphics{<filename>.pdf}
+%% To scale the image, write
+%%   \def\svgwidth{<desired width>}
+%%   \input{<filename>.pdf_tex}
+%%  instead of
+%%   \includegraphics[width=<desired width>]{<filename>.pdf}
+%%
+%% Images with a different path to the parent latex file can
+%% be accessed with the `import' package (which may need to be
+%% installed) using
+%%   \usepackage{import}
+%% in the preamble, and then including the image with
+%%   \import{<path to file>}{<filename>.pdf_tex}
+%% Alternatively, one can specify
+%%   \graphicspath{{<path to file>/}}
+%% 
+%% For more information, please see info/svg-inkscape on CTAN:
+%%   http://tug.ctan.org/tex-archive/info/svg-inkscape
+%%
+\begingroup%
+  \makeatletter%
+  \providecommand\color[2][]{%
+    \errmessage{(Inkscape) Color is used for the text in Inkscape, but the package 'color.sty' is not loaded}%
+    \renewcommand\color[2][]{}%
+  }%
+  \providecommand\transparent[1]{%
+    \errmessage{(Inkscape) Transparency is used (non-zero) for the text in Inkscape, but the package 'transparent.sty' is not loaded}%
+    \renewcommand\transparent[1]{}%
+  }%
+  \providecommand\rotatebox[2]{#2}%
+  \newcommand*\fsize{\dimexpr\f@size pt\relax}%
+  \newcommand*\lineheight[1]{\fontsize{\fsize}{#1\fsize}\selectfont}%
+  \ifx\svgwidth\undefined%
+    \setlength{\unitlength}{444.57663574bp}%
+    \ifx\svgscale\undefined%
+      \relax%
+    \else%
+      \setlength{\unitlength}{\unitlength * \real{\svgscale}}%
+    \fi%
+  \else%
+    \setlength{\unitlength}{\svgwidth}%
+  \fi%
+  \global\let\svgwidth\undefined%
+  \global\let\svgscale\undefined%
+  \makeatother%
+  \begin{picture}(1,0.67479929)%
+    \lineheight{1}%
+    \setlength\tabcolsep{0pt}%
+    \put(0,0){\includegraphics[width=\unitlength,page=1]{plot-performance-greedy.pdf}}%
+    \put(0.06945177,0.08974831){\makebox(0,0)[rt]{\lineheight{1.25}\smash{\begin{tabular}[t]{r}\texttt{\textbf{\small{60}}}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=2]{plot-performance-greedy.pdf}}%
+    \put(0.06945177,0.16751892){\makebox(0,0)[rt]{\lineheight{1.25}\smash{\begin{tabular}[t]{r}\texttt{\textbf{\small{62}}}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=3]{plot-performance-greedy.pdf}}%
+    \put(0.06945177,0.24545824){\makebox(0,0)[rt]{\lineheight{1.25}\smash{\begin{tabular}[t]{r}\texttt{\textbf{\small{64}}}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=4]{plot-performance-greedy.pdf}}%
+    \put(0.06945177,0.32322886){\makebox(0,0)[rt]{\lineheight{1.25}\smash{\begin{tabular}[t]{r}\texttt{\textbf{\small{66}}}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=5]{plot-performance-greedy.pdf}}%
+    \put(0.06945177,0.40099948){\makebox(0,0)[rt]{\lineheight{1.25}\smash{\begin{tabular}[t]{r}\texttt{\textbf{\small{68}}}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=6]{plot-performance-greedy.pdf}}%
+    \put(0.06945177,0.4787701){\makebox(0,0)[rt]{\lineheight{1.25}\smash{\begin{tabular}[t]{r}\texttt{\textbf{\small{70}}}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=7]{plot-performance-greedy.pdf}}%
+    \put(0.06945177,0.55670942){\makebox(0,0)[rt]{\lineheight{1.25}\smash{\begin{tabular}[t]{r}\texttt{\textbf{\small{72}}}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=8]{plot-performance-greedy.pdf}}%
+    \put(0.06945177,0.63448004){\makebox(0,0)[rt]{\lineheight{1.25}\smash{\begin{tabular}[t]{r}\texttt{\textbf{\small{74}}}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=9]{plot-performance-greedy.pdf}}%
+    \put(0.08480346,0.05685184){\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}\texttt{\textbf{\small{0}}}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=10]{plot-performance-greedy.pdf}}%
+    \put(0.25856428,0.05685184){\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}\texttt{\textbf{\small{2x10\textsuperscript{5}}}}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=11]{plot-performance-greedy.pdf}}%
+    \put(0.43232509,0.05685184){\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}\texttt{\textbf{\small{4x10\textsuperscript{5}}}}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=12]{plot-performance-greedy.pdf}}%
+    \put(0.60625461,0.05685184){\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}\texttt{\textbf{\small{6x10\textsuperscript{5}}}}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=13]{plot-performance-greedy.pdf}}%
+    \put(0.78001543,0.05685184){\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}\texttt{\textbf{\small{8x10\textsuperscript{5}}}}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=14]{plot-performance-greedy.pdf}}%
+    \put(0.95377625,0.05685184){\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}\texttt{\textbf{\small{10x10\textsuperscript{5}}}}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=15]{plot-performance-greedy.pdf}}%
+    \put(0.01782963,0.36928391){\rotatebox{90}{\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}\texttt{\textbf{\small{\% of wins}}}\end{tabular}}}}}%
+    \put(0.5192055,0.01568908){\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}\texttt{\textbf{\small{Computation cost (games)}}}\end{tabular}}}}%
+    \put(0.21014743,0.12247607){\makebox(0,0)[rt]{\lineheight{1.25}\smash{\begin{tabular}[t]{r}\texttt{\textbf{\small{E\textsubscript{a}}}}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=16]{plot-performance-greedy.pdf}}%
+    \put(0.41073152,0.12247607){\makebox(0,0)[rt]{\lineheight{1.25}\smash{\begin{tabular}[t]{r}\texttt{\textbf{\small{E\textsubscript{b}}}}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=17]{plot-performance-greedy.pdf}}%
+    \put(0.61131561,0.12247607){\makebox(0,0)[rt]{\lineheight{1.25}\smash{\begin{tabular}[t]{r}\texttt{\textbf{\small{E\textsubscript{all}}}}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=18]{plot-performance-greedy.pdf}}%
+    \put(0.8118997,0.12247607){\makebox(0,0)[rt]{\lineheight{1.25}\smash{\begin{tabular}[t]{r}\texttt{\textbf{\small{E\textsubscript{aw}}}}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=19]{plot-performance-greedy.pdf}}%
+  \end{picture}%
+\endgroup%
