@@ -1,16 +1,12 @@
-set output 'plot-evolution.svg'
-set terminal svg font 'monospace:Bold,16' linewidth 2 size 600,400
-# set terminal svg size 600,400
-set bmargin 1.5
-set lmargin 3
+set output 'plot-evolution.png'
+set terminal png font 'monospace:Bold,16' linewidth 2 size 600,400
+set bmargin 2.25
+set lmargin 4.75
 set rmargin 1
-set tmargin 1
-set xlabel 'Known drafts %'
-set ylabel 'Fresh drafts %'
-set key bottom horizontal Right
-unset xlabel
-unset ylabel
-unset key
+set tmargin 0.5
+set xlabel '% of wins on known drafts' offset 0, 0.75
+set ylabel '% of wins on fresh drafts' offset 2, 0
+set key bottom Left
 set style fill transparent solid 0.5 noborder
 set style circle radius 0.05
 set fit logfile '/dev/null'
@@ -27,13 +23,13 @@ y2(x) = a2 * x + b2; avg2(x) = c2; fit y2(x) data2 via a2, b2; fit avg2(x) data2
 y3(x) = a3 * x + b3; avg3(x) = c3; fit y3(x) data3 via a3, b3; fit avg3(x) data3 via c3
 y4(x) = a4 * x + b4; avg4(x) = c4; fit y4(x) data4 via a4, b4; fit avg4(x) data4 via c4
 
-name(name, a, b, c) = sprintf("%s (y = %.2fx + %5.2f, avg = %.2f)", name, a, b, c)
+name(a, b, c, name) = name
 
 plot \
-  data1 title name('evolve-specialized     ', a1, b1, c1) with circles lc 1, \
-  data2 title name('evolve-specialized-all ', a2, b2, c2) with circles lc 2, \
-  data3 title name('evolve-specialized-lerp', a3, b3, c3) with circles lc 3, \
-  data4 title name('evolve-standard        ', a4, b4, c4) with circles lc 4, \
+  data1 title name(a1, b1, c1, 'AG')           with circles lc 1, \
+  data2 title name(a2, b2, c2, 'AG_{all}')     with circles lc 2, \
+  data3 title name(a3, b3, c3, 'AG_{weights}') with circles lc 3, \
+  data4 title name(a4, b4, c4, 'Evo_{base}')   with circles lc 4, \
   y1(x) lc 1 notitle, \
   y2(x) lc 2 notitle, \
   y3(x) lc 3 notitle, \
